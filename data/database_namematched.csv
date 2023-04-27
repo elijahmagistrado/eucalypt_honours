@@ -1,0 +1,732 @@
+Unnamed: 0,Family,Species,Location,State,Code,Date,Notes,Day,Month,Year,current_name
+0,MYRTACEAE,Eucalyptus abbreviata,,NT,7129,27/8/1945,,27.0,August,1945.0,Corymbia abbreviata
+1,MYRTACEAE,Eucalyptus abergiana,,QLD,10413,28/5/1952,,28.0,May,1952.0,Corymbia abergiana
+13,MYRTACEAE,Eucalyptus accedens,Congelin,WA,1411,16/5/1941,,16.0,May,1941.0,Eucalyptus accedens
+14,MYRTACEAE,Eucalyptus accedens,Congelin,WA,1412,19/5/1941,,19.0,May,1941.0,Eucalyptus accedens
+15,MYRTACEAE,Eucalyptus accedens,Congelin,WA,1413,7/10/1940,,7.0,October,1940.0,Eucalyptus accedens
+4,MYRTACEAE,Eucalyptus accedens,Cuballing,WA,1401,5/10/1940,,5.0,October,1940.0,Eucalyptus accedens
+5,MYRTACEAE,Eucalyptus accedens,Cuballing,WA,1402,20/5/1941,,20.0,May,1941.0,Eucalyptus accedens
+6,MYRTACEAE,Eucalyptus accedens,Cuballing,WA,1403,5/10/1940,,5.0,October,1940.0,Eucalyptus accedens
+8,MYRTACEAE,Eucalyptus accedens,Cuballing,WA,1406,5/10/1940,,5.0,October,1940.0,Eucalyptus accedens
+9,MYRTACEAE,Eucalyptus accedens,Cuballing,WA,1407,7/10/1940,,7.0,October,1940.0,Eucalyptus accedens
+10,MYRTACEAE,Eucalyptus accedens,Cuballing,WA,1408,5/10/1940,,5.0,October,1940.0,Eucalyptus accedens
+11,MYRTACEAE,Eucalyptus accedens,Cuballing,WA,1409,20/5/1941,,20.0,May,1941.0,Eucalyptus accedens
+12,MYRTACEAE,Eucalyptus accedens,Narrogin,WA,1410,20/5/1941,,20.0,May,1941.0,Eucalyptus accedens
+7,MYRTACEAE,Eucalyptus accedens,West Contine,WA,1405,5/10/1940,,5.0,October,1940.0,Eucalyptus accedens
+16,MYRTACEAE,Eucalyptus acervula ,,TAS,8781,27/10/1952,,27.0,October,1952.0,Eucalyptus eugenioides
+19,MYRTACEAE,Eucalyptus acmenoides,Bunya,QLD,1257,27/6/1940,,27.0,June,1940.0,Eucalyptus acmenoides
+25,MYRTACEAE,Eucalyptus acmenoides,Burrawan State Forest,NSW,993,2/7/1940,,2.0,July,1940.0,Eucalyptus acmenoides
+24,MYRTACEAE,Eucalyptus acmenoides,Coopernook,NSW,706,2/7/1940,For School Camp,2.0,July,1940.0,Eucalyptus acmenoides
+17,MYRTACEAE,Eucalyptus acmenoides,Imbil,QLD,1041,27/6/1940,,27.0,June,1940.0,Eucalyptus acmenoides
+23,MYRTACEAE,Eucalyptus acmenoides,Lorne State Forest,NSW,3456,27/6/1940,No. 58,27.0,June,1940.0,Eucalyptus acmenoides
+21,MYRTACEAE,Eucalyptus acmenoides,"Narara State Forest, Gosford",QLD,1564,24/6/1940,,24.0,June,1940.0,Eucalyptus acmenoides
+18,MYRTACEAE,Eucalyptus acmenoides,Olney State Forest,NSW,1123,27/6/1940,,27.0,June,1940.0,Eucalyptus acmenoides
+22,MYRTACEAE,Eucalyptus acmenoides,"Orara, Coffs Harbour",NSW,1760,27/6/1940,,27.0,June,1940.0,Eucalyptus acmenoides
+20,MYRTACEAE,Eucalyptus acmenoides,Pechey,QLD,1268,27/6/1940,"Res. 26, C.F.S?",27.0,June,1940.0,Eucalyptus acmenoides
+30,MYRTACEAE,Eucalyptus alba,Atherton,QLD,11385,20/11/1956,,20.0,November,1956.0,Eucalyptus alba
+31,MYRTACEAE,Eucalyptus alba,Atherton,QLD,11452,20/11/1956,,20.0,November,1956.0,Eucalyptus alba
+33,MYRTACEAE,Eucalyptus albens,Heathcote,VIC,2163,2/7/1940,,2.0,July,1940.0,Eucalyptus albens
+34,MYRTACEAE,Eucalyptus albens,Tumut,NSW,2200,27/6/1940,,27.0,June,1940.0,Eucalyptus albens
+35,MYRTACEAE,Eucalyptus albens,,VIC,3751,,,,,,Eucalyptus albens
+37,MYRTACEAE,Eucalyptus amplifolia,Dooralong,NSW,1912,26/5/1938,,26.0,May,1938.0,Eucalyptus amplifolia
+38,MYRTACEAE,Eucalyptus amplifolia,Dooralong,NSW,1913,27/5/1938,,27.0,May,1938.0,Eucalyptus amplifolia
+39,MYRTACEAE,Eucalyptus amplifolia,Dooralong,NSW,D10064-128,1/7/1971,,1.0,July,1971.0,Eucalyptus amplifolia
+41,MYRTACEAE,Eucalyptus amygdalina,Herrick,TAS,2140,19/6/1940,,19.0,June,1940.0,Eucalyptus amygdalina
+42,MYRTACEAE,Eucalyptus amygdalina,Herrick,TAS,2141,22/6/1940,,22.0,June,1940.0,Eucalyptus amygdalina
+43,MYRTACEAE,Eucalyptus amygdalina,Herrick,TAS,2142,26/6/1948,,26.0,June,1948.0,Eucalyptus amygdalina
+44,MYRTACEAE,Eucalyptus amygdalina,Herrick,TAS,2143,26/6/1940,,26.0,June,1940.0,Eucalyptus amygdalina
+47,MYRTACEAE,Eucalyptus andreana,Wingello State Forest,NSW,R396-1,1/12/1971,,1.0,December,1971.0,Eucalyptus andreana
+48,MYRTACEAE,Eucalyptus andreana,Wingello State Forest,NSW,R399-1,12/7/1965,,12.0,July,1965.0,Eucalyptus andreana
+45,MYRTACEAE,Eucalyptus andrewsii,Brooklana,NSW,1845,9/3/1939,,9.0,March,1939.0,Eucalyptus andrewsii
+46,MYRTACEAE,Eucalyptus andrewsii,Brooklana,NSW,1850,7/3/1939,,7.0,March,1939.0,Eucalyptus andrewsii
+50,MYRTACEAE,Eucalyptus andrewsii,Eungella Range,QLD,14214,5/6/1959,,5.0,June,1959.0,Eucalyptus andrewsii
+51,MYRTACEAE,Eucalyptus andrewsii,Glen Innes,NSW,523,5/1/1956,,5.0,January,1956.0,Eucalyptus andrewsii
+52,MYRTACEAE,Eucalyptus andrewsii,Inverell,NSW,R483,13/7/1959,,13.0,July,1959.0,Eucalyptus andrewsii
+53,MYRTACEAE,Eucalyptus angophoroides,,NSW,D10088-59,,,,,,Eucalyptus angophoroides
+54,MYRTACEAE,Eucalyptus angophoroides,,NSW,R6470,15/6/1965,,15.0,June,1965.0,Eucalyptus angophoroides
+55,MYRTACEAE,Eucalyptus apodophylla,Stapleton,NT,7112,29/10/1945,,29.0,October,1945.0,Eucalyptus apodophylla
+56,MYRTACEAE,Eucalyptus astringens,,WA,3476,20/1/1956,,20.0,January,1956.0,Eucalyptus astringens
+57,MYRTACEAE,Eucalyptus astringens,,WA,3477,20/1/1956,,20.0,January,1956.0,Eucalyptus astringens
+58,MYRTACEAE,Eucalyptus astringens,,SA,3479,23/1/1956,,23.0,January,1956.0,Eucalyptus astringens
+59,MYRTACEAE,Eucalyptus astringens,,WA,3484,,,,,,Eucalyptus astringens
+62,MYRTACEAE,Eucalyptus australiana,Bright,VIC,3719,9/3/1939,,9.0,March,1939.0,Eucalyptus radiata subsp. radiata
+63,MYRTACEAE,Eucalyptus australiana,Broadford,VIC,3720,3/11/1938,,3.0,November,1938.0,Eucalyptus radiata subsp. radiata
+60,MYRTACEAE,Eucalyptus australiana,Creswick Forestry School,VIC,2173,3/11/1938,,3.0,November,1938.0,Eucalyptus radiata subsp. radiata
+64,MYRTACEAE,Eucalyptus australiana,Glen Park,VIC,3723,7/3/1939,,7.0,March,1939.0,Eucalyptus radiata subsp. radiata
+61,MYRTACEAE,Eucalyptus australiana,Orbost,VIC,3702,22/12/1938,,22.0,December,1938.0,Eucalyptus radiata subsp. radiata
+65,MYRTACEAE,Eucalyptus australiana,Taggerty,VIC,3801,9/3/1939,,9.0,March,1939.0,Eucalyptus radiata subsp. radiata
+66,MYRTACEAE,Eucalyptus badjensis,Nimitybelle,NSW,D10088-92,25/7/1961,,25.0,July,1961.0,Eucalyptus badjensis
+67,MYRTACEAE,Eucalyptus baileyana,Grafton,NSW,1791,4/9/1961,,4.0,September,1961.0,Eucalyptus baileyana
+68,MYRTACEAE,Eucalyptus baileyana,,NSW,8807,30/9/1959,,30.0,September,1959.0,Eucalyptus baileyana
+70,MYRTACEAE,Eucalyptus bancroftii,Grafton,NSW,1876,10/10/1955,,10.0,October,1955.0,Eucalyptus bancroftii
+69,MYRTACEAE,Eucalyptus bancroftii,,NSW,1789,10/10/1955,,10.0,October,1955.0,Eucalyptus bancroftii
+71,MYRTACEAE,Eucalyptus bancroftii,,NSW,D10064-99,,,,,,Eucalyptus bancroftii
+72,MYRTACEAE,Eucalyptus baueriana,Bonnyrigg,NSW,1609,25/8/1938,,25.0,August,1938.0,Eucalyptus baueriana
+73,MYRTACEAE,Eucalyptus baueriana,Bonnyrigg,NSW,1611,12/10/1938,,12.0,October,1938.0,Eucalyptus baueriana
+74,MYRTACEAE,Eucalyptus baueriana,Bonnyrigg,NSW,1612,25/8/1938,,25.0,August,1938.0,Eucalyptus baueriana
+75,MYRTACEAE,Eucalyptus baueriana,"Nullica, Eden",NSW,2347,28/9/1938,,28.0,September,1938.0,Eucalyptus baueriana
+76,MYRTACEAE,Eucalyptus baueriana,"Nullica, Eden",NSW,2349,9/9/1938,,9.0,September,1938.0,Eucalyptus baueriana
+79,MYRTACEAE,Eucalyptus baxteri,Marysville,SA,15504,20/7/1960,,20.0,July,1960.0,Eucalyptus baxteri
+78,MYRTACEAE,Eucalyptus baxteri,Penola Reserve,SA,11544,1/9/1959,,1.0,September,1959.0,Eucalyptus baxteri
+77,MYRTACEAE,Eucalyptus baxteri,,SA,11541,15/4/1953,,15.0,April,1953.0,Eucalyptus baxteri
+80,MYRTACEAE,Eucalyptus baxteri,,SA,1609,1/7/1953,,1.0,July,1953.0,Eucalyptus baxteri
+81,MYRTACEAE,Eucalyptus benthamii,The Oaks,NSW,D10064-54,26/8/1971,,26.0,August,1971.0,Eucalyptus benthamii
+82,MYRTACEAE,Eucalyptus bicolor ,Mildura,VIC,2105,2/5/1955,,2.0,May,1955.0,Eucalyptus largiflorens
+83,MYRTACEAE,Eucalyptus bicostata,Bago State Forest,NSW,2438,27/5/1938,,27.0,May,1938.0,Eucalyptus globulus subsp. bicostata
+84,MYRTACEAE,Eucalyptus bicostata,Bago State Forest,NSW,2439,27/5/1938,,27.0,May,1938.0,Eucalyptus globulus subsp. bicostata
+86,MYRTACEAE,Eucalyptus bicostata,St Arnaud,VIC,3728,27/5/1938,,27.0,May,1938.0,Eucalyptus globulus subsp. bicostata
+87,MYRTACEAE,Eucalyptus bicostata,Talbingo,NSW,D10094-20,1/7/1971,,1.0,July,1971.0,Eucalyptus globulus subsp. bicostata
+85,MYRTACEAE,Eucalyptus bicostata,You Yangs,VIC,3687,25/5/1938,,25.0,May,1938.0,Eucalyptus globulus subsp. bicostata
+88,MYRTACEAE,Eucalyptus blakelyi,Tumut,NSW,2202,20/5/1938,,20.0,May,1938.0,Eucalyptus blakelyi
+89,MYRTACEAE,Eucalyptus blakelyi,Tumut,NSW,D100064-220,26/8/1971,,26.0,August,1971.0,Eucalyptus blakelyi
+90,MYRTACEAE,Eucalyptus blaxlandii,Newnes,NSW,6318,25/1/1952,,25.0,January,1952.0,Eucalyptus blaxlandii
+91,MYRTACEAE,Eucalyptus blaxlandii,Penrose State Forest,NSW,D100064-217,1/12/1971,,1.0,December,1971.0,Eucalyptus blaxlandii
+95,MYRTACEAE,Eucalyptus bosistoana,Cann Valley,VIC,3694,28/9/1938,,28.0,September,1938.0,Eucalyptus bosistoana
+96,MYRTACEAE,Eucalyptus bosistoana,Mallacoota,VIC,3742,24/8/1949,,24.0,August,1949.0,Eucalyptus bosistoana
+97,MYRTACEAE,Eucalyptus bosistoana,Nowa Nowa,VIC,3772,5/10/1938,,5.0,October,1938.0,Eucalyptus bosistoana
+94,MYRTACEAE,Eucalyptus bosistoana,"Nullica, Eden",NSW,2348,28/9/1938,,28.0,September,1938.0,Eucalyptus bosistoana
+92,MYRTACEAE,Eucalyptus bosistoana,Orbost,VIC,2307,5/10/1938,,5.0,October,1938.0,Eucalyptus bosistoana
+93,MYRTACEAE,Eucalyptus bosistoana,Orbost,VIC,2308,1/10/1938,,1.0,October,1938.0,Eucalyptus bosistoana
+100,MYRTACEAE,Eucalyptus botryoides,"Boat Harbour, Kincumber",NSW,1922,22/6/1940,,22.0,June,1940.0,Eucalyptus botryoides
+102,MYRTACEAE,Eucalyptus botryoides,Cann Valley,VIC,3692,24/6/1940,,24.0,June,1940.0,Eucalyptus botryoides
+103,MYRTACEAE,Eucalyptus botryoides,Nowa Nowa,NSW,3771,22/6/1940,,22.0,June,1940.0,Eucalyptus botryoides
+104,MYRTACEAE,Eucalyptus botryoides,Nowa Nowa,NSW,3777,24/6/1940,,24.0,June,1940.0,Eucalyptus botryoides
+105,MYRTACEAE,Eucalyptus botryoides,Orbost,VIC,3790,24/6/1940,,24.0,June,1940.0,Eucalyptus botryoides
+99,MYRTACEAE,Eucalyptus botryoides,Stanwell Park,VIC,1656,24/6/1940,,24.0,June,1940.0,Eucalyptus botryoides
+101,MYRTACEAE,Eucalyptus botryoides,Termeil,NSW,2320,24/6/1940,,24.0,June,1940.0,Eucalyptus botryoides
+98,MYRTACEAE,Eucalyptus botryoides,,VIC,--,,,,,,Eucalyptus botryoides
+109,MYRTACEAE,Eucalyptus bridgesiana,Black Mountain,ACT,1202,3/7/1940,Labelled as F.C.T.,3.0,July,1940.0,Eucalyptus bridgesiana
+115,MYRTACEAE,Eucalyptus bridgesiana,Bright,VIC,473,7/4/1940,,7.0,April,1940.0,Eucalyptus bridgesiana
+108,MYRTACEAE,Eucalyptus bridgesiana,Canberra,ACT,1171,4/7/1940,,4.0,July,1940.0,Eucalyptus bridgesiana
+113,MYRTACEAE,Eucalyptus bridgesiana,Erica,VIC,2184,4/7/1940,,4.0,July,1940.0,Eucalyptus bridgesiana
+110,MYRTACEAE,Eucalyptus bridgesiana,Queanbeyan,ACT,2074,26/8/1940,,26.0,August,1940.0,Eucalyptus bridgesiana
+114,MYRTACEAE,Eucalyptus bridgesiana,Tumut,NSW,2211,3/7/1940,,3.0,July,1940.0,Eucalyptus bridgesiana
+116,MYRTACEAE,Eucalyptus bridgesiana,Valencia Creek,VIC,8627,28/10/1949,,28.0,October,1949.0,Eucalyptus bridgesiana
+111,MYRTACEAE,Eucalyptus bridgesiana,Yarram,VIC,2120,6/5/1954,,6.0,May,1954.0,Eucalyptus bridgesiana
+112,MYRTACEAE,Eucalyptus bridgesiana,Yarram,VIC,2121,26/8/1940,,26.0,August,1940.0,Eucalyptus bridgesiana
+117,MYRTACEAE,Eucalyptus brockwayi,,WA,R403-4,26/4/1957,,26.0,April,1957.0,Eucalyptus brockwayi
+124,MYRTACEAE,Eucalyptus calophylla,Busselton,WA,237,8/7/1938,,8.0,July,1938.0,Corymbia calophylla
+122,MYRTACEAE,Eucalyptus calophylla,Dwellingup,WA,1818,20/7/1938,,20.0,July,1938.0,Corymbia calophylla
+123,MYRTACEAE,Eucalyptus calophylla,East Kirup,WA,1822,2/7/1938,,2.0,July,1938.0,Corymbia calophylla
+121,MYRTACEAE,Eucalyptus calophylla,Pindalup,WA,1816,8/7/1938,N.ct?,8.0,July,1938.0,Corymbia calophylla
+125,MYRTACEAE,Eucalyptus calophylla,,WA,3041,5/5/1949,,5.0,May,1949.0,Corymbia calophylla
+126,MYRTACEAE,Eucalyptus calophylla,,WA,3503,8/7/1938,,8.0,July,1938.0,Corymbia calophylla
+127,MYRTACEAE,Eucalyptus calophylla,,WA,3505,8/7/1938,,8.0,July,1938.0,Corymbia calophylla
+128,MYRTACEAE,Eucalyptus calophylla,,WA,3506,1/7/1938,,1.0,July,1938.0,Corymbia calophylla
+129,MYRTACEAE,Eucalyptus calophylla,,WA,3507,5/5/1949,,5.0,May,1949.0,Corymbia calophylla
+137,MYRTACEAE,Eucalyptus camaldulensis,Balmoral,NSW,350,4/6/1940,,4.0,June,1940.0,Eucalyptus camaldulensis
+135,MYRTACEAE,Eucalyptus camaldulensis,Bowning,NSW,2236,27/2/1940,,27.0,February,1940.0,Eucalyptus camaldulensis
+132,MYRTACEAE,Eucalyptus camaldulensis,Cohuna,VIC,1215,17/10/1939,,17.0,October,1939.0,Eucalyptus camaldulensis
+133,MYRTACEAE,Eucalyptus camaldulensis,Cohuna,VIC,1219,2/11/1955,,2.0,November,1955.0,Eucalyptus camaldulensis
+138,MYRTACEAE,Eucalyptus camaldulensis,Gunbower,VIC,3699,27/2/1940,,27.0,February,1940.0,Eucalyptus camaldulensis
+131,MYRTACEAE,Eucalyptus camaldulensis,"Gunbower, Cohuna",VIC,1213,18/10/1939,,18.0,October,1939.0,Eucalyptus camaldulensis
+140,MYRTACEAE,Eucalyptus camaldulensis,Katherine,NT,7125,14/12/1945,,14.0,December,1945.0,Eucalyptus camaldulensis
+136,MYRTACEAE,Eucalyptus camaldulensis,Kuitpo Forest,SA,3333,5/6/1940,,5.0,June,1940.0,Eucalyptus camaldulensis
+139,MYRTACEAE,Eucalyptus camaldulensis,Mildura,VIC,3758,26/10/1938,,26.0,October,1938.0,Eucalyptus camaldulensis
+134,MYRTACEAE,Eucalyptus camaldulensis,Shepparton,VIC,1507,27/2/1940,,27.0,February,1940.0,Eucalyptus camaldulensis
+142,MYRTACEAE,Eucalyptus cameronii,Glen Innes,NSW,R482-12,13/7/1959,,13.0,July,1959.0,Eucalyptus cameronii
+143,MYRTACEAE,Eucalyptus cameronii,Glen Innes,NSW,R482-13,13/7/1959,,13.0,July,1959.0,Eucalyptus cameronii
+144,MYRTACEAE,Eucalyptus cameronii,Glen Innes,NSW,R482-14,13/7/1959,,13.0,July,1959.0,Eucalyptus cameronii
+145,MYRTACEAE,Eucalyptus cameronii,Glen Innes,NSW,R482-15,13/7/1959,,13.0,July,1959.0,Eucalyptus cameronii
+146,MYRTACEAE,Eucalyptus cameronii,Glen Innes,NSW,R482-6,13/7/1959,,13.0,July,1959.0,Eucalyptus cameronii
+147,MYRTACEAE,Eucalyptus cameronii,Glen Innes,NSW,R482-8,13/7/1959,,13.0,July,1959.0,Eucalyptus cameronii
+141,MYRTACEAE,Eucalyptus cameronii,,NSW,11686,6/4/1934,,6.0,April,1934.0,Eucalyptus cameronii
+152,MYRTACEAE,Eucalyptus campanulata,Glen Innes,NSW,R482-10,13/7/1959,,13.0,July,1959.0,Eucalyptus campanulata
+153,MYRTACEAE,Eucalyptus campanulata,Glen Innes,NSW,R482-5,13/7/1959,,13.0,July,1959.0,Eucalyptus campanulata
+154,MYRTACEAE,Eucalyptus campanulata,Glen Innes,NSW,R482-9,13/7/1959,,13.0,July,1959.0,Eucalyptus campanulata
+150,MYRTACEAE,Eucalyptus campanulata,New England,NSW,7906,9/4/1952,,9.0,April,1952.0,Eucalyptus campanulata
+148,MYRTACEAE,Eucalyptus campanulata,,NSW,11685,7/4/1954,,7.0,April,1954.0,Eucalyptus campanulata
+149,MYRTACEAE,Eucalyptus campanulata,,NSW,6329,9/4/1952,,9.0,April,1952.0,Eucalyptus campanulata
+151,MYRTACEAE,Eucalyptus campanulata,,NSW,7971,3/6/1948,,3.0,June,1948.0,Eucalyptus campanulata
+155,MYRTACEAE,Eucalyptus campaspe,Calooli,WA,2068,28/4/1952,,28.0,April,1952.0,Eucalyptus campaspe
+156,MYRTACEAE,Eucalyptus campaspe,,WA,R403-2B,26/4/1957,,26.0,April,1957.0,Eucalyptus campaspe
+157,MYRTACEAE,Eucalyptus camphora,Bago State Forest,NSW,6110,18/11/1940,,18.0,November,1940.0,Eucalyptus camphora
+158,MYRTACEAE,Eucalyptus camphora,Batlow,NSW,D10094-11,26/8/1971,,26.0,August,1971.0,Eucalyptus camphora
+159,MYRTACEAE,Eucalyptus canaliculata,Fosterton,NSW,D10064-148,26/7/1965,,26.0,July,1965.0,Eucalyptus canaliculata
+162,MYRTACEAE,Eucalyptus capitellata,"Boyd Town Hill, Eden",NSW,2357,13/3/1940,,13.0,March,1940.0,Eucalyptus capitellata
+163,MYRTACEAE,Eucalyptus capitellata,Cann Valley,VIC,3697,7/3/1940,,7.0,March,1940.0,Eucalyptus capitellata
+165,MYRTACEAE,Eucalyptus capitellata,Forrest,VIC,3767,18/10/1939,,18.0,October,1939.0,Eucalyptus capitellata
+166,MYRTACEAE,Eucalyptus capitellata,Heywood,VIC,3811,22/11/1939,,22.0,November,1939.0,Eucalyptus capitellata
+167,MYRTACEAE,Eucalyptus capitellata,Neerim/Stawell,VIC,R260-275,,,,,,Eucalyptus capitellata
+161,MYRTACEAE,Eucalyptus capitellata,"Pittwater Rd, St Ives",NSW,1550,31/5/1940,,31.0,May,1940.0,Eucalyptus capitellata
+160,MYRTACEAE,Eucalyptus capitellata,St Ives,NSW,1549,31/5/1940,,31.0,May,1940.0,Eucalyptus capitellata
+164,MYRTACEAE,Eucalyptus capitellata,Upper Yarra,VIC,3762,22/11/1939,,22.0,November,1939.0,Eucalyptus capitellata
+170,MYRTACEAE,Eucalyptus carnea,Bago State Forest,NSW,1082,4/7/1940,,4.0,July,1940.0,Eucalyptus carnea
+175,MYRTACEAE,Eucalyptus carnea,Craven,NSW,1941,26/8/1940,,26.0,August,1940.0,Eucalyptus carnea
+171,MYRTACEAE,Eucalyptus carnea,Nambucca State Forest,NSW,1094,24/8/1940,,24.0,August,1940.0,Eucalyptus carnea
+169,MYRTACEAE,Eucalyptus carnea,Newry State Forest,NSW,1040,6/7/1940,,6.0,July,1940.0,Eucalyptus carnea
+172,MYRTACEAE,Eucalyptus carnea,Olney State Forest,NSW,1122,6/7/1940,,6.0,July,1940.0,Eucalyptus carnea
+173,MYRTACEAE,Eucalyptus carnea,Ourimbah,NSW,1126,4/7/1940,,4.0,July,1940.0,Eucalyptus carnea
+174,MYRTACEAE,Eucalyptus carnea,Tomego,NSW,1705,4/7/1940,,4.0,July,1940.0,Eucalyptus carnea
+176,MYRTACEAE,Eucalyptus cinerea,Belanglo,NSW,11667,13/3/1940,,13.0,March,1940.0,Eucalyptus cinerea
+178,MYRTACEAE,Eucalyptus cinerea,Belanglo,NSW,1666,7/3/1940,,7.0,March,1940.0,Eucalyptus cinerea
+177,MYRTACEAE,Eucalyptus cinerea,Collector,NSW,12086,13/3/1940,,13.0,March,1940.0,Eucalyptus cinerea
+179,MYRTACEAE,Eucalyptus cinerea,Collector,NSW,2090,,,,,,Eucalyptus cinerea
+180,MYRTACEAE,Eucalyptus cinerea,Collector,NSW,2091,7/3/1939,,7.0,March,1939.0,Eucalyptus cinerea
+181,MYRTACEAE,Eucalyptus citriodora,Atherton,QLD,12721,3/1/1957,,3.0,January,1957.0,Corymbia citriodora
+182,MYRTACEAE,Eucalyptus cladocalyx,Lara,VIC,4602,10/11/1949,,10.0,November,1949.0,Eucalyptus cladocalyx
+183,MYRTACEAE,Eucalyptus cladocalyx,,VIC,R89-7,4/4/1974,,4.0,April,1974.0,Eucalyptus cladocalyx
+185,MYRTACEAE,Eucalyptus clavigera,Adelaide River,NT,6483,30/7/1945,,30.0,July,1945.0,Corymbia clavigera
+184,MYRTACEAE,Eucalyptus clavigera,Darwin,NT,6371,17/2/1943,,17.0,February,1943.0,Corymbia clavigera
+186,MYRTACEAE,Eucalyptus clavigera,Darwin,NT,6633,18/11/1957,,18.0,November,1957.0,Corymbia clavigera
+187,MYRTACEAE,Eucalyptus clavigera var diffusa,Bathurst Island,NT,7118,22/8/1945,,22.0,August,1945.0,Corymbia pauciseta
+188,MYRTACEAE,Eucalyptus clavigera var diffusa,Pine Creek,NT,719,7/8/1945,,7.0,August,1945.0,Corymbia pauciseta
+189,MYRTACEAE,Eucalyptus cloeziana,,QLD,R841,14/10/1971,,14.0,October,1971.0,Eucalyptus cloeziana
+190,MYRTACEAE,Eucalyptus cneorifolia,,SA,11579,2/7/1953,,2.0,July,1953.0,Eucalyptus cneorifolia
+191,MYRTACEAE,Eucalyptus cneorifolia,,SA,11580,3/7/1953,,3.0,July,1953.0,Eucalyptus cneorifolia
+192,MYRTACEAE,Eucalyptus confertiflora,Pine Creek,NT,7119,18/11/1957,,18.0,November,1957.0,Corymbia confertiflora
+193,MYRTACEAE,Eucalyptus conica,Baradine,NSW,1100,6/6/1952,,6.0,June,1952.0,Eucalyptus conica
+196,MYRTACEAE,Eucalyptus consideniana,Erica,VIC,2238,18/3/1958,,18.0,March,1958.0,Eucalyptus consideniana
+201,MYRTACEAE,Eucalyptus consideniana,Mudgee,NSW,A4528,,,,,,Eucalyptus consideniana
+199,MYRTACEAE,Eucalyptus consideniana,Orbost,VIC,3701,16/8/1938,,16.0,August,1938.0,Eucalyptus consideniana
+198,MYRTACEAE,Eucalyptus consideniana,"Watson, G. Lands",VIC,252,18/3/1958,,18.0,March,1958.0,Eucalyptus consideniana
+195,MYRTACEAE,Eucalyptus consideniana,,VIC,2186,5/4/1950,,5.0,April,1950.0,Eucalyptus consideniana
+197,MYRTACEAE,Eucalyptus consideniana,,NSW,2393,5/4/1950,,5.0,April,1950.0,Eucalyptus consideniana
+200,MYRTACEAE,Eucalyptus consideniana,,VIC,8752,5/4/1950,,5.0,April,1950.0,Eucalyptus consideniana
+202,MYRTACEAE,Eucalyptus coolabah,Charleville,QLD,1890,21/5/1941,,21.0,May,1941.0,Eucalyptus coolabah
+204,MYRTACEAE,Eucalyptus coriacea,Bago State Forest,NSW,6187,18/11/1940,,18.0,November,1940.0,Eucalyptus pauciflora
+203,MYRTACEAE,Eucalyptus coriacea,Matlock,VIC,5079,6/5/1941,,6.0,May,1941.0,Eucalyptus pauciflora
+205,MYRTACEAE,Eucalyptus cornuta,Wonnerup,WA,1807,22/5/1941,,22.0,May,1941.0,Eucalyptus cornuta
+206,MYRTACEAE,Eucalyptus cornuta,Wonnerup,WA,1808,22/5/1941,,22.0,May,1941.0,Eucalyptus cornuta
+207,MYRTACEAE,Eucalyptus cornuta,,WA,2044,4/1/1952,,4.0,January,1952.0,Eucalyptus cornuta
+209,MYRTACEAE,Eucalyptus corymbosa ,Beecroft,NSW,1452,28/3/1940,,28.0,March,1940.0,Corymbia gummifera
+212,MYRTACEAE,Eucalyptus corymbosa ,Coffs Creek,NSW,1836,16/3/1939,,16.0,March,1939.0,Corymbia gummifera
+210,MYRTACEAE,Eucalyptus corymbosa ,Raymond Terrace,NSW,1656,28/3/1940,,28.0,March,1940.0,Corymbia gummifera
+211,MYRTACEAE,Eucalyptus corymbosa ,Raymond Terrace,NSW,1691,7/10/1938,,7.0,October,1938.0,Corymbia gummifera
+208,MYRTACEAE,Eucalyptus corymbosa ,,NSW,--,,,,,,Corymbia gummifera
+215,MYRTACEAE,Eucalyptus crebra,Dalby,QLD,1195,2/9/1940,,2.0,September,1940.0,Eucalyptus crebra
+217,MYRTACEAE,Eucalyptus crebra,Galgandra,NSW,1315,26/8/1940,,26.0,August,1940.0,Eucalyptus crebra
+219,MYRTACEAE,Eucalyptus crebra,Kuitpo Forest,SA,3321,6/7/1940,,6.0,July,1940.0,Eucalyptus crebra
+214,MYRTACEAE,Eucalyptus crebra,Narrabri,NSW,1142,24/8/1940,,24.0,August,1940.0,Eucalyptus crebra
+216,MYRTACEAE,Eucalyptus crebra,Pechey,QLD,1267,2/9/1940,,2.0,September,1940.0,Eucalyptus crebra
+218,MYRTACEAE,Eucalyptus crebra,Yarraman,QLD,1466,24/8/1940,QFB,24.0,August,1940.0,Eucalyptus crebra
+225,MYRTACEAE,Eucalyptus dalrympleana,Bago State Forest,NSW,3411-2426,,,,,,Eucalyptus dalrympleana
+226,MYRTACEAE,Eucalyptus dalrympleana,Bago State Forest,NSW,3472,19/5/1938,,19.0,May,1938.0,Eucalyptus dalrympleana
+227,MYRTACEAE,Eucalyptus dalrympleana,Bago State Forest,NSW,3474,25/5/1938,,25.0,May,1938.0,Eucalyptus dalrympleana
+228,MYRTACEAE,Eucalyptus dalrympleana,Bago State Forest,NSW,6104,17/11/1940,,17.0,November,1940.0,Eucalyptus dalrympleana
+229,MYRTACEAE,Eucalyptus dalrympleana,Bago State Forest,NSW,6105,18/11/1940,,18.0,November,1940.0,Eucalyptus dalrympleana
+230,MYRTACEAE,Eucalyptus dalrympleana,Bago State Forest,NSW,6106,18/11/1940,,18.0,November,1940.0,Eucalyptus dalrympleana
+231,MYRTACEAE,Eucalyptus dalrympleana,Bindoora at 5000'?,ACT,7555,25/3/1949,,25.0,March,1949.0,Eucalyptus dalrympleana
+223,MYRTACEAE,Eucalyptus dalrympleana,Glenbog,NSW,2412,,,,,,Eucalyptus dalrympleana
+224,MYRTACEAE,Eucalyptus dalrympleana,"Hansen's Mill, Barton",NSW,2498,28/3/1940,,28.0,March,1940.0,Eucalyptus dalrympleana
+233,MYRTACEAE,Eucalyptus dawsonii,,NSW,--,,,,,,Eucalyptus dawsonii
+234,MYRTACEAE,Eucalyptus dawsonii,,NSW,D6441,,,,,,Eucalyptus dawsonii
+235,MYRTACEAE,Eucalyptus dealbata,Bowning,NSW,2226,19/5/1938,,19.0,May,1938.0,Eucalyptus dealbata
+236,MYRTACEAE,Eucalyptus dealbata,Bowning,NSW,2227,24/5/1938,,24.0,May,1938.0,Eucalyptus dealbata
+237,MYRTACEAE,Eucalyptus dealbata,Cowra,NSW,2288,27/5/1938,,27.0,May,1938.0,Eucalyptus dealbata
+238,MYRTACEAE,Eucalyptus dealbata,Cowra,NSW,2289,20/5/1938,,20.0,May,1938.0,Eucalyptus dealbata
+239,MYRTACEAE,Eucalyptus deanei,,NSW,1592,12/4/1954,,12.0,April,1954.0,Eucalyptus deanei
+240,MYRTACEAE,Eucalyptus deanei,,NSW,1901,14/4/1954,,14.0,April,1954.0,Eucalyptus deanei
+241,MYRTACEAE,Eucalyptus deanei,,NSW,D10022-44,12/8/1949,,12.0,August,1949.0,Eucalyptus deanei
+242,MYRTACEAE,Eucalyptus deanei,,NSW,D10064-121,11/5/1977,,11.0,May,1977.0,Eucalyptus deanei
+243,MYRTACEAE,Eucalyptus deanei,,NSW,D7068,17/8/1949,,17.0,August,1949.0,Eucalyptus deanei
+247,MYRTACEAE,Eucalyptus deglupta,,QLD,1694,16/2/1954,,16.0,February,1954.0,Eucalyptus deglupta
+261,MYRTACEAE,Eucalyptus delegatensis,Bago State Forest,NSW,3467,,,,,,Eucalyptus delegatensis
+262,MYRTACEAE,Eucalyptus delegatensis,Bago State Forest,NSW,3467,,,,,,Eucalyptus delegatensis
+263,MYRTACEAE,Eucalyptus delegatensis,Bago State Forest,NSW,3468,15/5/1940,,15.0,May,1940.0,Eucalyptus delegatensis
+264,MYRTACEAE,Eucalyptus delegatensis,Bago State Forest,NSW,3469,10/2/1959,,10.0,February,1959.0,Eucalyptus delegatensis
+266,MYRTACEAE,Eucalyptus delegatensis,Bendora,ACT,3816,18/10/1939,,18.0,October,1939.0,Eucalyptus delegatensis
+267,MYRTACEAE,Eucalyptus delegatensis,Bendora,ACT,3818,10/2/1939,,10.0,February,1939.0,Eucalyptus delegatensis
+256,MYRTACEAE,Eucalyptus delegatensis,Bright,VIC,1072,17/10/1939,,17.0,October,1939.0,Eucalyptus delegatensis
+259,MYRTACEAE,Eucalyptus delegatensis,Mount Torbreck,VIC,11534,11/3/1953,,11.0,March,1953.0,Eucalyptus delegatensis
+260,MYRTACEAE,Eucalyptus delegatensis,Niagaroon,VIC,1311,4/12/1939,,4.0,December,1939.0,Eucalyptus delegatensis
+258,MYRTACEAE,Eucalyptus delegatensis,Tumut,NSW,1150,1/12/1939,,1.0,December,1939.0,Eucalyptus delegatensis
+265,MYRTACEAE,Eucalyptus delegatensis,"Upper Ovens, Bright",VIC,3717,17/5/1940,,17.0,May,1940.0,Eucalyptus delegatensis
+257,MYRTACEAE,Eucalyptus delegatensis,,VIC,11434,,,,,,Eucalyptus delegatensis
+268,MYRTACEAE,Eucalyptus delegatensis,,NSW,6150,7/1/1955,,7.0,January,1955.0,Eucalyptus delegatensis
+269,MYRTACEAE,Eucalyptus delegatensis,,NSW,8316,,,,,,Eucalyptus delegatensis
+270,MYRTACEAE,Eucalyptus delegatensis,,TAS,8784,23/10/1952,,23.0,October,1952.0,Eucalyptus delegatensis
+274,MYRTACEAE,Eucalyptus dichromophloia,Between Newcastle Waters and Alice Springs,NT,7137,4/12/1945,,4.0,December,1945.0,Corymbia dichromophloia
+275,MYRTACEAE,Eucalyptus dichromophloia,Between Newcastle Waters and Alice Springs,NT,7138,11/12/1945,,11.0,December,1945.0,Corymbia dichromophloia
+273,MYRTACEAE,Eucalyptus dichromophloia,Daly Waters,NT,7130,10/12/1945,,10.0,December,1945.0,Corymbia dichromophloia
+283,MYRTACEAE,Eucalyptus diversicolor,Boyanup,WA,919,15/5/1941,,15.0,May,1941.0,Eucalyptus diversicolor
+284,MYRTACEAE,Eucalyptus diversicolor,Boyanup,WA,949,8/4/1938,,8.0,April,1938.0,Eucalyptus diversicolor
+279,MYRTACEAE,Eucalyptus diversicolor,Busselton,WA,244,10/5/1938,,10.0,May,1938.0,Eucalyptus diversicolor
+277,MYRTACEAE,Eucalyptus diversicolor,Manjimup,WA,142,29/7/1938,,29.0,July,1938.0,Eucalyptus diversicolor
+282,MYRTACEAE,Eucalyptus diversicolor,Manjimup,WA,887,3/5/1954,,3.0,May,1954.0,Eucalyptus diversicolor
+285,MYRTACEAE,Eucalyptus diversicolor,Manjimup,WA,950,19/7/1938,,19.0,July,1938.0,Eucalyptus diversicolor
+286,MYRTACEAE,Eucalyptus diversicolor,Manjimup,WA,951,15/5/1941,,15.0,May,1941.0,Eucalyptus diversicolor
+276,MYRTACEAE,Eucalyptus diversicolor,Pemberton,WA,10979,4/5/1954,,4.0,May,1954.0,Eucalyptus diversicolor
+278,MYRTACEAE,Eucalyptus diversicolor,Pemberton,WA,155,4/7/1938,,4.0,July,1938.0,Eucalyptus diversicolor
+280,MYRTACEAE,Eucalyptus diversicolor,Pemberton,WA,878,10/5/1938,,10.0,May,1938.0,Eucalyptus diversicolor
+281,MYRTACEAE,Eucalyptus diversicolor,Pemberton,WA,886,26/7/1938,,26.0,July,1938.0,Eucalyptus diversicolor
+287,MYRTACEAE,Eucalyptus diversicolor,,WA,D9581,,,,,,Eucalyptus diversicolor
+288,MYRTACEAE,Eucalyptus diversifolia,,SA,H1172,31/7/1939,Root water storage tissue,31.0,July,1939.0,Eucalyptus diversifolia
+289,MYRTACEAE,Eucalyptus dives,Southern Highlands,NSW,2442,22/12/1938,,22.0,December,1938.0,Eucalyptus dives
+290,MYRTACEAE,Eucalyptus dives,Southern Highlands,NSW,2443,26/10/1938,,26.0,October,1938.0,Eucalyptus dives
+292,MYRTACEAE,Eucalyptus dives,Taggerty,VIC,3799,22/12/1938,,22.0,December,1938.0,Eucalyptus dives
+291,MYRTACEAE,Eucalyptus dives,"Upper Ovens, Bright",VIC,3718,3/11/1938,,3.0,November,1938.0,Eucalyptus dives
+294,MYRTACEAE,Eucalyptus drepanophylla,,QLD,10412,6/2/1952,,6.0,February,1952.0,Eucalyptus crebra
+304,MYRTACEAE,Eucalyptus elaeophora ,Broadford,NSW,10404,20/12/1951,,20.0,December,1951.0,Eucalyptus goniocalyx
+305,MYRTACEAE,Eucalyptus elaeophora ,Broadford,NSW,10407,20/12/1951,,20.0,December,1951.0,Eucalyptus goniocalyx
+306,MYRTACEAE,Eucalyptus elaeophora ,Burrinjuck,NSW,2260,20/9/1960,,20.0,September,1960.0,Eucalyptus goniocalyx
+307,MYRTACEAE,Eucalyptus elaeophora ,Burrinjuck,NSW,2261,22/8/1940,,22.0,August,1940.0,Eucalyptus goniocalyx
+309,MYRTACEAE,Eucalyptus erythronema,,WA,R403-1,26/4/1957,,26.0,April,1957.0,Eucalyptus erythronema
+310,MYRTACEAE,Eucalyptus eugenioides,"Castlereagh, Penrith",NSW,1536,17/11/1939,,17.0,November,1939.0,Eucalyptus eugenioides
+311,MYRTACEAE,Eucalyptus eugenioides,Coffs Harbour,NSW,1750,1/12/1939,,1.0,December,1939.0,Eucalyptus eugenioides
+312,MYRTACEAE,Eucalyptus eugenioides,Coffs Harbour,NSW,1752,,,,,,Eucalyptus eugenioides
+314,MYRTACEAE,Eucalyptus eugenioides,Kuitpo Forest,SA,3317,,,,,,Eucalyptus eugenioides
+316,MYRTACEAE,Eucalyptus eugenioides,Nowa Nowa,VIC,3774,5/10/1937,,5.0,October,1937.0,Eucalyptus eugenioides
+313,MYRTACEAE,Eucalyptus eugenioides,Nowra,NSW,2297,6/12/1939,,6.0,December,1939.0,Eucalyptus eugenioides
+315,MYRTACEAE,Eucalyptus eugenioides,Yarram district,VIC,3754,17/10/1939,,17.0,October,1939.0,Eucalyptus eugenioides
+321,MYRTACEAE,Eucalyptus eximia,Cowan,NSW,1928,2/9/1940,,2.0,September,1940.0,Corymbia eximia
+322,MYRTACEAE,Eucalyptus eximia,Cowan,NSW,1929,9/9/1940,,9.0,September,1940.0,Corymbia eximia
+323,MYRTACEAE,Eucalyptus eximia,Cowan,NSW,1930,9/9/1940,,9.0,September,1940.0,Corymbia eximia
+318,MYRTACEAE,Eucalyptus eximia,Glenorie,NSW,1895,21/2/1957,,21.0,February,1957.0,Corymbia eximia
+319,MYRTACEAE,Eucalyptus eximia,Glenorie,NSW,1896,14/9/1940,,14.0,September,1940.0,Corymbia eximia
+320,MYRTACEAE,Eucalyptus eximia,Glenorie,NSW,1897,9/9/1940,,9.0,September,1940.0,Corymbia eximia
+317,MYRTACEAE,Eucalyptus eximia,Maroota,NSW,1493,21/2/1957,,21.0,February,1957.0,Corymbia eximia
+324,MYRTACEAE,Eucalyptus fasciculosa ,,SA,--,31/7/1959,Root water storage tissue,31.0,July,1959.0,Eucalyptus fasciculosa
+328,MYRTACEAE,Eucalyptus fastigata,Orbost,VIC,2305,23/11/1939,,23.0,November,1939.0,Eucalyptus fastigata
+327,MYRTACEAE,Eucalyptus fastigata,Palerang,NSW,1968,1/12/1939,,1.0,December,1939.0,Eucalyptus fastigata
+329,MYRTACEAE,Eucalyptus fastigata,Sassafras,NSW,2398,4/12/1939,,4.0,December,1939.0,Eucalyptus fastigata
+325,MYRTACEAE,Eucalyptus fastigata,Tallaganda State Forest,NSW,1132,6/12/1939,,6.0,December,1939.0,Eucalyptus fastigata
+326,MYRTACEAE,Eucalyptus fastigata,Vulcan State Forest,NSW,1153,4/12/1939,,4.0,December,1939.0,Eucalyptus fastigata
+330,MYRTACEAE,Eucalyptus fastigata,,NSW,D7141,,,,,,Eucalyptus fastigata
+331,MYRTACEAE,Eucalyptus fastigata,,NSW,D8035,,,,,,Eucalyptus fastigata
+333,MYRTACEAE,Eucalyptus ferruginea,Batchelor,NT,7140,11/10/1945,,11.0,October,1945.0,Corymbia ferruginea
+334,MYRTACEAE,Eucalyptus fibrosa,,NSW,D8524,,,,,,Eucalyptus fibrosa
+335,MYRTACEAE,Eucalyptus fibrosa,,NSW,D8524,,,,,,Eucalyptus fibrosa
+336,MYRTACEAE,Eucalyptus fibrosa,,NSW,D8524,,,,,,Eucalyptus fibrosa
+337,MYRTACEAE,Eucalyptus fibrosa,,NSW,R515-6,14/3/1979,,14.0,March,1979.0,Eucalyptus fibrosa
+338,MYRTACEAE,Eucalyptus fibrosa,,NSW,R516-7,9/4/1979,,9.0,April,1979.0,Eucalyptus fibrosa
+339,MYRTACEAE,Eucalyptus fibrosa,,NSW,R683-5,9/4/1979,,9.0,April,1979.0,Eucalyptus fibrosa
+341,MYRTACEAE,Eucalyptus fibrosa,,NSW,R715-4,9/4/1979,,9.0,April,1979.0,Eucalyptus fibrosa
+348,MYRTACEAE,Eucalyptus fraxinoides,Braidwood,NSW,6310,1/10/1941,,1.0,October,1941.0,Eucalyptus fraxinoides
+346,MYRTACEAE,Eucalyptus fraxinoides,Nimmitabel,NSW,6308,1/10/1941,,1.0,October,1941.0,Eucalyptus fraxinoides
+344,MYRTACEAE,Eucalyptus fraxinoides,"Parkers Gap, Captains Flat",NSW,1974,5/8/1938,,5.0,August,1938.0,Eucalyptus fraxinoides
+349,MYRTACEAE,Eucalyptus fraxinoides,Tallagandra,NSW,7557,31/3/1952,Maybe Tallaganda SF?,31.0,March,1952.0,Eucalyptus fraxinoides
+345,MYRTACEAE,Eucalyptus fraxinoides,"Tantawangalo Mountain, Bega",NSW,6307,1/10/1941,,1.0,October,1941.0,Eucalyptus fraxinoides
+347,MYRTACEAE,Eucalyptus fraxinoides,,NSW,6309,28/3/1952,,28.0,March,1952.0,Eucalyptus fraxinoides
+351,MYRTACEAE,Eucalyptus fruticetorum,,NSW,R692,14/10/1970,,14.0,October,1970.0,Eucalyptus cajuputea
+358,MYRTACEAE,Eucalyptus globulus,Aireys Inlet,VIC,3769,15/11/1937,,15.0,November,1937.0,Eucalyptus globulus
+355,MYRTACEAE,Eucalyptus globulus,Forrest,VIC,2115,25/5/1938,,25.0,May,1938.0,Eucalyptus globulus
+356,MYRTACEAE,Eucalyptus globulus,National Park,TAS,2293,18/10/1939,"Written as ""Nat. Park"", no mention of which one",18.0,October,1939.0,Eucalyptus globulus
+357,MYRTACEAE,Eucalyptus globulus,National Park,TAS,2293,24/5/1938,,24.0,May,1938.0,Eucalyptus globulus
+352,MYRTACEAE,Eucalyptus globulus,,NSW,--,,,,,,Eucalyptus globulus
+354,MYRTACEAE,Eucalyptus globulus,,VIC,11189,14/11/1952,,14.0,November,1952.0,Eucalyptus globulus
+359,MYRTACEAE,Eucalyptus globulus,,TAS,87799,23/10/1952,,23.0,October,1952.0,Eucalyptus globulus
+360,MYRTACEAE,Eucalyptus gomphocephala,14 miles south of Freemantle,WA,1365,17/1/1940,,17.0,January,1940.0,Eucalyptus gomphocephala
+362,MYRTACEAE,Eucalyptus gomphocephala,8 miles north of Perth,WA,1368,17/1/1940,,17.0,January,1940.0,Eucalyptus gomphocephala
+364,MYRTACEAE,Eucalyptus gomphocephala,"Bullock Paddock, Ludlow",WA,1376,18/1/1940,,18.0,January,1940.0,Eucalyptus gomphocephala
+363,MYRTACEAE,Eucalyptus gomphocephala,"Horse Paddock, Ludlow",WA,1372,17/1/1940,,17.0,January,1940.0,Eucalyptus gomphocephala
+361,MYRTACEAE,Eucalyptus gomphocephala,Jandakot,WA,1366,9/8/1954,,9.0,August,1954.0,Eucalyptus gomphocephala
+365,MYRTACEAE,Eucalyptus gomphocephala,Ludlow,WA,242,17/1/1940,,17.0,January,1940.0,Eucalyptus gomphocephala
+366,MYRTACEAE,Eucalyptus gomphocephala,"Tuart Hill, near Perth",WA,614,17/1/1940,,17.0,January,1940.0,Eucalyptus gomphocephala
+372,MYRTACEAE,Eucalyptus goniocalyx,Cann Valley,VIC,3691,18/10/1939,,18.0,October,1939.0,Eucalyptus goniocalyx
+371,MYRTACEAE,Eucalyptus goniocalyx,Eden,NSW,2361,1/12/1939,,1.0,December,1939.0,Eucalyptus goniocalyx
+369,MYRTACEAE,Eucalyptus goniocalyx,Erica,VIC,2187,6/12/1939,,6.0,December,1939.0,Eucalyptus goniocalyx
+367,MYRTACEAE,Eucalyptus goniocalyx,Forrest,VIC,2116,17/11/1939,,17.0,November,1939.0,Eucalyptus goniocalyx
+368,MYRTACEAE,Eucalyptus goniocalyx,Powelltown,VIC,2127,19/10/1939,,19.0,October,1939.0,Eucalyptus goniocalyx
+370,MYRTACEAE,Eucalyptus goniocalyx,Sassafras,NSW,2323,22/11/1939,,22.0,November,1939.0,Eucalyptus goniocalyx
+373,MYRTACEAE,Eucalyptus goniocalyx,Yarram district,VIC,3755,18/10/1939,,18.0,October,1939.0,Eucalyptus goniocalyx
+376,MYRTACEAE,Eucalyptus grandifolia,Katherine,NT,7117,17/10/1945,,17.0,October,1945.0,Corymbia grandifolia
+378,MYRTACEAE,Eucalyptus grandis,Bucca,NSW,1770,24/5/1938,Day not visible on slide - assuming 24 from other slides,24.0,May,1938.0,Eucalyptus grandis
+379,MYRTACEAE,Eucalyptus grandis,Bucca,NSW,1771,24/5/1938,,24.0,May,1938.0,Eucalyptus grandis
+380,MYRTACEAE,Eucalyptus grandis,Coffs Harbour,NSW,1776,22/5/1940,,22.0,May,1940.0,Eucalyptus grandis
+381,MYRTACEAE,Eucalyptus grandis,Coffs Harbour,NSW,1777,19/5/1938,,19.0,May,1938.0,Eucalyptus grandis
+382,MYRTACEAE,Eucalyptus grandis,,NSW,6330,12/4/1954,,12.0,April,1954.0,Eucalyptus grandis
+383,MYRTACEAE,Eucalyptus grandis,,QLD,7941,17/3/1949,Q.F.S.,17.0,March,1949.0,Eucalyptus grandis
+385,MYRTACEAE,Eucalyptus gummifera,Beecroft,NSW,1452,20/5/1957,,20.0,May,1957.0,Corymbia gummifera
+386,MYRTACEAE,Eucalyptus gummifera,Taree,NSW,999,20/5/1957,,20.0,May,1957.0,Corymbia gummifera
+387,MYRTACEAE,Eucalyptus gunnii,,TAS,R7869,28/6/1965,"Code is ""D7869"" on the slide",28.0,June,1965.0,Eucalyptus gunnii
+388,MYRTACEAE,Eucalyptus haemastoma,Moonee,NSW,1650,27/10/1940,,27.0,October,1940.0,Eucalyptus haemastoma
+389,MYRTACEAE,Eucalyptus haemastoma,,NSW,535-9,26/8/1971,"National Herbarium? Written as ""Nat'l Herb""",26.0,August,1971.0,Eucalyptus haemastoma
+400,MYRTACEAE,Eucalyptus haematoxylon,Busselton,WA,235,1/7/1938,,1.0,July,1938.0,Corymbia haematoxylon
+391,MYRTACEAE,Eucalyptus haematoxylon,Dardanup,WA,1824,4/7/1938,,4.0,July,1938.0,Corymbia haematoxylon
+394,MYRTACEAE,Eucalyptus haematoxylon,"East of Crooked Brook, Near Dardanup",WA,1826,19/7/1938,,19.0,July,1938.0,Corymbia haematoxylon
+395,MYRTACEAE,Eucalyptus haematoxylon,"East of Crooked Brook, Near Dardanup",WA,1827,30/4/1938,,30.0,April,1938.0,Corymbia haematoxylon
+396,MYRTACEAE,Eucalyptus haematoxylon,"East of Crooked Brook, Near Dardanup",WA,1828,30/7/1938,,30.0,July,1938.0,Corymbia haematoxylon
+397,MYRTACEAE,Eucalyptus haematoxylon,"East of Crooked Brook, Near Dardanup",WA,1829,26/7/1938,,26.0,July,1938.0,Corymbia haematoxylon
+390,MYRTACEAE,Eucalyptus haematoxylon,Near Dardanup,WA,1823,,,,,,Corymbia haematoxylon
+392,MYRTACEAE,Eucalyptus haematoxylon,Near Dardanup,WA,1824,1/7/1957,,1.0,July,1957.0,Corymbia haematoxylon
+393,MYRTACEAE,Eucalyptus haematoxylon,Near Dardanup,WA,1825,1/7/1957,,1.0,July,1957.0,Corymbia haematoxylon
+398,MYRTACEAE,Eucalyptus haematoxylon,Near Dardanup,WA,1830,1/7/1938,,1.0,July,1938.0,Corymbia haematoxylon
+399,MYRTACEAE,Eucalyptus haematoxylon,Near Dardanup,WA,1831,1/7/1957,,1.0,July,1957.0,Corymbia haematoxylon
+402,MYRTACEAE,Eucalyptus hemiphloia,"Chiltern district, Beechworth",VIC,2175,21/2/1939,Day half-visible on slide - I'm assuming it's 21,21.0,February,1939.0,Eucalyptus moluccana
+403,MYRTACEAE,Eucalyptus hemiphloia,Gunbower Island,VIC,2218,18/1/1940,,18.0,January,1940.0,Eucalyptus moluccana
+404,MYRTACEAE,Eucalyptus hemiphloia,Heathcote,VIC,3726,28/3/1939,,28.0,March,1939.0,Eucalyptus moluccana
+405,MYRTACEAE,Eucalyptus hemiphloia,Maryborough district,VIC,373,11/1/1940,,11.0,January,1940.0,Eucalyptus moluccana
+401,MYRTACEAE,Eucalyptus hemiphloia,Rushworth district,VIC,2096,18/1/1940,,18.0,January,1940.0,Eucalyptus moluccana
+406,MYRTACEAE,Eucalyptus hemiphloia,,QLD,6327,24/8/1949,,24.0,August,1949.0,Eucalyptus moluccana
+407,MYRTACEAE,Eucalyptus hillii,Batchelor,NT,7115,9/8/1945,,9.0,August,1945.0,Eucalyptus oligantha
+408,MYRTACEAE,Eucalyptus hillii,Bathurst Island,NT,7139,23/8/1945,,23.0,August,1945.0,Eucalyptus oligantha
+410,MYRTACEAE,Eucalyptus intermedia,Atherton,QLD,10556,20/3/1957,,20.0,March,1957.0,Corymbia intermedia
+414,MYRTACEAE,Eucalyptus intertexta,Alice Springs,NT,7133,20/12/1945,,20.0,December,1945.0,Eucalyptus intertexta
+416,MYRTACEAE,Eucalyptus jacksonii,,WA,4078,16/5/1938,Day on slide is not visible on image - folded over - assuming 16 like slide 4079,16.0,May,1938.0,Eucalyptus jacksonii
+417,MYRTACEAE,Eucalyptus jacksonii,,WA,4078,12/2/1941,WA Forest Service,12.0,February,1941.0,Eucalyptus jacksonii
+418,MYRTACEAE,Eucalyptus jacksonii,,WA,4079,16/5/1938,,16.0,May,1938.0,Eucalyptus jacksonii
+419,MYRTACEAE,Eucalyptus jacksonii,,WA,4080,16/5/1938,,16.0,May,1938.0,Eucalyptus jacksonii
+420,MYRTACEAE,Eucalyptus jacksonii,,WA,4080,10/2/1941,WA Forest Service,10.0,February,1941.0,Eucalyptus jacksonii
+421,MYRTACEAE,Eucalyptus jacksonii,,WA,4081,10/2/1941,WA Forest Service,10.0,February,1941.0,Eucalyptus jacksonii
+422,MYRTACEAE,Eucalyptus jacksonii,,WA,D9958-9,,,,,,Eucalyptus jacksonii
+423,MYRTACEAE,Eucalyptus jacksonii,,WA,D9958-9,,,,,,Eucalyptus jacksonii
+424,MYRTACEAE,Eucalyptus laevopinea,Dumaresq?,NSW,C07211,9/6/1954,,9.0,June,1954.0,Eucalyptus laevopinea
+426,MYRTACEAE,Eucalyptus laevopinea,Glen Innes,NSW,R482-1,13/7/1959,,13.0,July,1959.0,Eucalyptus laevopinea
+427,MYRTACEAE,Eucalyptus laevopinea,Glen Innes,NSW,R482-16,13/7/1959,,13.0,July,1959.0,Eucalyptus laevopinea
+428,MYRTACEAE,Eucalyptus laevopinea,Glen Innes,NSW,R482-17,13/7/1959,,13.0,July,1959.0,Eucalyptus laevopinea
+429,MYRTACEAE,Eucalyptus laevopinea,Glen Innes,NSW,R482-2,13/7/1959,,13.0,July,1959.0,Eucalyptus laevopinea
+430,MYRTACEAE,Eucalyptus laevopinea,Glen Innes,NSW,R482-3,13/7/1959,,13.0,July,1959.0,Eucalyptus laevopinea
+431,MYRTACEAE,Eucalyptus laevopinea,Glen Innes,NSW,R482-4,13/7/1959,,13.0,July,1959.0,Eucalyptus laevopinea
+432,MYRTACEAE,Eucalyptus laevopinea,Glen Innes,NSW,R482-4,13/7/1959,,13.0,July,1959.0,Eucalyptus laevopinea
+425,MYRTACEAE,Eucalyptus laevopinea,,NSW,D7603,9/6/1954,,9.0,June,1954.0,Eucalyptus laevopinea
+433,MYRTACEAE,Eucalyptus largeana,Avon River State Forest,NSW,D10064-88,15/6/1945,Year is blurry on the slide,15.0,June,1945.0,Eucalyptus largeana
+434,MYRTACEAE,Eucalyptus largiflorens,,NSW,R4639-8,,,,,,Eucalyptus largiflorens
+435,MYRTACEAE,Eucalyptus latifolia,Melville Island,NT,7123,22/2/1946,,22.0,February,1946.0,Corymbia latifolia
+436,MYRTACEAE,Eucalyptus leiophloia,Batchelor,NT,7114,17/10/1945,,17.0,October,1945.0,Corymbia foelscheana
+437,MYRTACEAE,Eucalyptus leiophloia,Darwin,NT,7116,22/3/1946,,22.0,March,1946.0,Corymbia foelscheana
+438,MYRTACEAE,Eucalyptus leptophylla,,VIC,11566,6/10/1953,,6.0,October,1953.0,Eucalyptus leptophylla
+445,MYRTACEAE,Eucalyptus leucoxylon,Bendigo,VIC,373,10/1/1940,,10.0,January,1940.0,Eucalyptus leucoxylon
+439,MYRTACEAE,Eucalyptus leucoxylon,Dunolly district,VIC,2108,12/1/1940,,12.0,January,1940.0,Eucalyptus leucoxylon
+441,MYRTACEAE,Eucalyptus leucoxylon,Maryborough,VIC,2180,28/3/1939,,28.0,March,1939.0,Eucalyptus leucoxylon
+444,MYRTACEAE,Eucalyptus leucoxylon,Maryborough district,VIC,3729,10/1/1940,,10.0,January,1940.0,Eucalyptus leucoxylon
+442,MYRTACEAE,Eucalyptus leucoxylon,Maryborough State Forest,VIC,2181,12/1/1940,,12.0,January,1940.0,Eucalyptus leucoxylon
+443,MYRTACEAE,Eucalyptus leucoxylon,"Moormbool State Forest, Heathcote",VIC,3725,9/1/1940,,9.0,January,1940.0,Eucalyptus leucoxylon
+440,MYRTACEAE,Eucalyptus leucoxylon,Rushworth district,VIC,2110,9/1/1940,,9.0,January,1940.0,Eucalyptus leucoxylon
+446,MYRTACEAE,Eucalyptus longicornis,Bullfinch district,WA,2056,25/7/1941,,25.0,July,1941.0,Eucalyptus longicornis
+447,MYRTACEAE,Eucalyptus longicornis,Kellandi,WA,2057,24/7/1941,,24.0,July,1941.0,Eucalyptus longicornis
+449,MYRTACEAE,Eucalyptus longicornis,Kellandi,WA,2061,25/7/1941,,25.0,July,1941.0,Eucalyptus longicornis
+452,MYRTACEAE,Eucalyptus longicornis,Kellandi,WA,2066,23/7/1941,,23.0,July,1941.0,Eucalyptus longicornis
+448,MYRTACEAE,Eucalyptus longicornis,Marvel Lock,WA,2058,23/7/1941,,23.0,July,1941.0,Eucalyptus longicornis
+450,MYRTACEAE,Eucalyptus longicornis,Southern Cross,WA,2062,23/7/1941,,23.0,July,1941.0,Eucalyptus longicornis
+451,MYRTACEAE,Eucalyptus longicornis,Southern Cross,WA,2063,24/7/1941,,24.0,July,1941.0,Eucalyptus longicornis
+453,MYRTACEAE,Eucalyptus longifolia,Castlereagh,NSW,1600,12/3/1954,,12.0,March,1954.0,Eucalyptus longifolia
+455,MYRTACEAE,Eucalyptus longifolia,Dooralong,NSW,1914,12/10/1938,,12.0,October,1938.0,Eucalyptus longifolia
+456,MYRTACEAE,Eucalyptus longifolia,Dooralong,NSW,1915,7/10/1938,,7.0,October,1938.0,Eucalyptus longifolia
+457,MYRTACEAE,Eucalyptus longifolia,"Nullica, Eden",NSW,234-,9/3/1939,,9.0,March,1939.0,Eucalyptus longifolia
+458,MYRTACEAE,Eucalyptus longifolia,"Nullica, Eden",NSW,2343,21/9/1939,Day half-visible on slide - I'm assuming it's 21,21.0,September,1939.0,Eucalyptus longifolia
+454,MYRTACEAE,Eucalyptus longifolia,Tomego,NSW,1713,24/3/1954,,24.0,March,1954.0,Eucalyptus longifolia
+470,MYRTACEAE,Eucalyptus macrorhyncha,Beaufort,VIC,1208,17/5/1940,,17.0,May,1940.0,Eucalyptus macrorhyncha
+461,MYRTACEAE,Eucalyptus macrorhyncha,Daylesford,VIC,1205,24/3/1959,,24.0,March,1959.0,Eucalyptus macrorhyncha
+469,MYRTACEAE,Eucalyptus macrorhyncha,Delatite,VIC,3786,24/3/1959,,24.0,March,1959.0,Eucalyptus macrorhyncha
+462,MYRTACEAE,Eucalyptus macrorhyncha,Mount Cole State Forest,VIC,1206,17/5/1940,,17.0,May,1940.0,Eucalyptus macrorhyncha
+465,MYRTACEAE,Eucalyptus macrorhyncha,Queanbeyan,NSW,2084,30/7/1941,,30.0,July,1941.0,Eucalyptus macrorhyncha
+468,MYRTACEAE,Eucalyptus macrorhyncha,Southern Highlands,NSW,2445,17/5/1940,,17.0,May,1940.0,Eucalyptus macrorhyncha
+463,MYRTACEAE,Eucalyptus macrorhyncha,Stawell,VIC,1209,22/5/1940,,22.0,May,1940.0,Eucalyptus macrorhyncha
+464,MYRTACEAE,Eucalyptus macrorhyncha,Stawell,VIC,1212,,,,,,Eucalyptus macrorhyncha
+471,MYRTACEAE,Eucalyptus macrorhyncha,Stawell,VIC,1210,,,,,,Eucalyptus macrorhyncha
+466,MYRTACEAE,Eucalyptus macrorhyncha,Tumut,NSW,2215,24/3/1959,,24.0,March,1959.0,Eucalyptus macrorhyncha
+467,MYRTACEAE,Eucalyptus macrorhyncha,Tumut,VIC,2216,15/5/1940,,15.0,May,1940.0,Eucalyptus macrorhyncha
+484,MYRTACEAE,Eucalyptus maculata,Batemans Bay,NSW,3486,19/7/1940,,19.0,July,1940.0,Corymbia maculata
+485,MYRTACEAE,Eucalyptus maculata,Batemans Bay,NSW,3487,19/7/1940,,19.0,July,1940.0,Corymbia maculata
+481,MYRTACEAE,Eucalyptus maculata,Braemar State Forest,QLD,3435,24/7/1940,,24.0,July,1940.0,Corymbia maculata
+482,MYRTACEAE,Eucalyptus maculata,Dalby,QLD,3436,5/5/1949,,5.0,May,1949.0,Corymbia maculata
+477,MYRTACEAE,Eucalyptus maculata,Mogill,QLD,3421,5/5/1949,,5.0,May,1949.0,Corymbia maculata
+475,MYRTACEAE,Eucalyptus maculata,Narra Glen Creek,NSW,1865,5/2/1957,,5.0,February,1957.0,Corymbia maculata
+483,MYRTACEAE,Eucalyptus maculata,Redlands,QLD,3438,23/7/1940,,23.0,July,1940.0,Corymbia maculata
+474,MYRTACEAE,Eucalyptus maculata,Smithfield,NSW,1608,5/2/1957,,5.0,February,1957.0,Corymbia maculata
+479,MYRTACEAE,Eucalyptus maculata,South Burnett,QLD,3433,5/5/1949,,5.0,May,1949.0,Corymbia maculata
+478,MYRTACEAE,Eucalyptus maculata,"Wondai, South Burnett",QLD,3432,23/7/1940,,23.0,July,1940.0,Corymbia maculata
+476,MYRTACEAE,Eucalyptus maculata,,NSW,2340,6/5/1949,,6.0,May,1949.0,Corymbia maculata
+480,MYRTACEAE,Eucalyptus maculata,,QLD,3434,6/5/1949,,6.0,May,1949.0,Corymbia maculata
+486,MYRTACEAE,Eucalyptus maculata,,QLD,7354,9/5/1949,,9.0,May,1949.0,Corymbia maculata
+488,MYRTACEAE,Eucalyptus maculata,,NSW,R1251-1,1/12/1982,Young stem,1.0,December,1982.0,Corymbia maculata
+489,MYRTACEAE,Eucalyptus maculosa,Bowning,NSW,2263,19/5/1949,,19.0,May,1949.0,Eucalyptus mannifera subsp. mannifera
+490,MYRTACEAE,Eucalyptus maculosa,Bowning,NSW,2264,19/5/1949,,19.0,May,1949.0,Eucalyptus mannifera subsp. mannifera
+492,MYRTACEAE,Eucalyptus maculosa,Newnes,NSW,6322,13/5/1949,,13.0,May,1949.0,Eucalyptus mannifera subsp. mannifera
+491,MYRTACEAE,Eucalyptus maculosa,Yarangobilly,NSW,2444,19/5/1949,,19.0,May,1949.0,Eucalyptus mannifera subsp. mannifera
+494,MYRTACEAE,Eucalyptus maideni,Cann Valley,VIC,3696,16/8/1938,,16.0,August,1938.0,Eucalyptus globulus subsp. maidenii
+495,MYRTACEAE,Eucalyptus maideni,Nowa Nowa,VIC,3770,16/8/1938,,16.0,August,1938.0,Eucalyptus globulus subsp. maidenii
+497,MYRTACEAE,Eucalyptus major,Casino,NSW,R412,1/7/1971,,1.0,July,1971.0,Eucalyptus major
+496,MYRTACEAE,Eucalyptus major,,NSW,D10064-119,1/7/1965,,1.0,July,1965.0,Eucalyptus major
+498,MYRTACEAE,Eucalyptus malacoxylon,,NSW,12955,7/6/1955,,7.0,June,1955.0,Eucalyptus malacoxylon
+499,MYRTACEAE,Eucalyptus malacoxylon,,NSW,12957,12/9/1955,,12.0,September,1955.0,Eucalyptus malacoxylon
+500,MYRTACEAE,Eucalyptus malacoxylon,,NSW,R412,26/4/1957,,26.0,April,1957.0,Eucalyptus malacoxylon
+501,MYRTACEAE,Eucalyptus mannifera,,QLD,12429,14/5/1952,,14.0,May,1952.0,Eucalyptus mannifera
+506,MYRTACEAE,Eucalyptus marginata,Duncan's North of Pindalup,WA,1813,29/7/1938,,29.0,July,1938.0,Eucalyptus marginata
+513,MYRTACEAE,Eucalyptus marginata,Dwellingup,WA,920,19/7/1938,,19.0,July,1938.0,Eucalyptus marginata
+505,MYRTACEAE,Eucalyptus marginata,East lennox Siding,WA,1812,28/8/1939,,28.0,August,1939.0,Eucalyptus marginata
+509,MYRTACEAE,Eucalyptus marginata,Hoffman Bush,WA,4048,5/9/1939,,5.0,September,1939.0,Eucalyptus marginata
+508,MYRTACEAE,Eucalyptus marginata,Huntly,WA,1820,21/4/1938,,21.0,April,1938.0,Eucalyptus marginata
+510,MYRTACEAE,Eucalyptus marginata,Jarrah Wood,WA,4055,5/9/1939,,5.0,September,1939.0,Eucalyptus marginata
+511,MYRTACEAE,Eucalyptus marginata,Jarrah Wood,WA,4055,24/1/1938,,24.0,January,1938.0,Eucalyptus marginata
+504,MYRTACEAE,Eucalyptus marginata,Keenan State Forest,WA,1811,1/7/1938,,1.0,July,1938.0,Eucalyptus marginata
+503,MYRTACEAE,Eucalyptus marginata,Ludlow,WA,1810,4/7/1938,,4.0,July,1938.0,Eucalyptus marginata
+512,MYRTACEAE,Eucalyptus marginata,Manjimup,WA,866,6/5/1938,,6.0,May,1938.0,Eucalyptus marginata
+514,MYRTACEAE,Eucalyptus marginata,Nannup,WA,947,6/5/1938,,6.0,May,1938.0,Eucalyptus marginata
+507,MYRTACEAE,Eucalyptus marginata,North of Pindalup,WA,1815,22/8/1939,,22.0,August,1939.0,Eucalyptus marginata
+502,MYRTACEAE,Eucalyptus marginata,,WA,--,,,,,,Eucalyptus marginata
+515,MYRTACEAE,Eucalyptus marginata,,WA,G9958-12,,,,,,Eucalyptus marginata
+516,MYRTACEAE,Eucalyptus megacarpa,,WA,R165-6,15/6/1965,,15.0,June,1965.0,Eucalyptus megacarpa
+525,MYRTACEAE,Eucalyptus melliodora,Beaufort,VIC,3778,10/1/1940,"Written as ""Beauford"" on the slide",10.0,January,1940.0,Eucalyptus melliodora
+522,MYRTACEAE,Eucalyptus melliodora,Bruthen,VIC,281,10/1/1940,,10.0,January,1940.0,Eucalyptus melliodora
+521,MYRTACEAE,Eucalyptus melliodora,Creswick Forestry School,VIC,2166,18/1/1940,,18.0,January,1940.0,Eucalyptus melliodora
+523,MYRTACEAE,Eucalyptus melliodora,Heathcote,VIC,287,17/1/1940,,17.0,January,1940.0,Eucalyptus melliodora
+524,MYRTACEAE,Eucalyptus melliodora,Shepparton district,VIC,3772,17/1/1940,,17.0,January,1940.0,Eucalyptus melliodora
+526,MYRTACEAE,Eucalyptus melliodora,Taggerty,VIC,3804,10/1/1940,,10.0,January,1940.0,Eucalyptus melliodora
+519,MYRTACEAE,Eucalyptus melliodora,,VIC,--,,,,,,Eucalyptus melliodora
+529,MYRTACEAE,Eucalyptus micrantha,Dorrigo,NSW,D10064-117A,,,,,,Eucalyptus racemosa
+528,MYRTACEAE,Eucalyptus micrantha,Nowra,NSW,2300,3/11/1938,,3.0,November,1938.0,Eucalyptus racemosa
+527,MYRTACEAE,Eucalyptus micrantha,Queanbeyan,NSW,2078,16/8/1938,,16.0,August,1938.0,Eucalyptus racemosa
+530,MYRTACEAE,Eucalyptus microcarpa,,NSW,R587-15,,,,,,Eucalyptus microcarpa
+534,MYRTACEAE,Eucalyptus microcorys,Craven,NSW,3373,28/3/1940,,28.0,March,1940.0,Eucalyptus microcorys
+533,MYRTACEAE,Eucalyptus microcorys,Whian Whian State Forest,NSW,1136,2/8/1949,,2.0,August,1949.0,Eucalyptus microcorys
+535,MYRTACEAE,Eucalyptus microcorys,,QLD,7327,2/8/1949,,2.0,August,1949.0,Eucalyptus microcorys
+538,MYRTACEAE,Eucalyptus microtheca,Narrabri,NSW,D6511,1/1/1971,,1.0,January,1971.0,Eucalyptus microtheca
+541,MYRTACEAE,Eucalyptus miniata,Darwin,NT,6367,8/3/1962,,8.0,March,1962.0,Eucalyptus miniata
+542,MYRTACEAE,Eucalyptus miniata,Near Darwin,NT,6367,22/2/1943,,22.0,February,1943.0,Eucalyptus miniata
+544,MYRTACEAE,Eucalyptus miniata,Yirrkala,NT,8520,8/3/1962,,8.0,March,1962.0,Eucalyptus miniata
+539,MYRTACEAE,Eucalyptus miniata,,NT,6355,8/3/1962,,8.0,March,1962.0,Eucalyptus miniata
+540,MYRTACEAE,Eucalyptus miniata,,NT,6357,8/3/1962,,8.0,March,1962.0,Eucalyptus miniata
+543,MYRTACEAE,Eucalyptus miniata,,NT,6743,8/3/1962,,8.0,March,1962.0,Eucalyptus miniata
+550,MYRTACEAE,Eucalyptus muelleriana,Eden,NSW,2352,27/4/1959,,27.0,April,1959.0,Eucalyptus muelleriana
+555,MYRTACEAE,Eucalyptus muelleriana,Narrabri,NSW,662,,,,,,Eucalyptus muelleriana
+551,MYRTACEAE,Eucalyptus muelleriana,"Nullica, Eden",NSW,2370,27/4/1959,,27.0,April,1959.0,Eucalyptus muelleriana
+552,MYRTACEAE,Eucalyptus muelleriana,"Nullica, Eden",NSW,2370,31/5/1940,,31.0,May,1940.0,Eucalyptus muelleriana
+547,MYRTACEAE,Eucalyptus muelleriana,Orbost,VIC,2153,29/5/1940,,29.0,May,1940.0,Eucalyptus muelleriana
+549,MYRTACEAE,Eucalyptus muelleriana,Orbost,VIC,2154,29/5/1940,,29.0,May,1940.0,Eucalyptus muelleriana
+553,MYRTACEAE,Eucalyptus muelleriana,Tanjil,VIC,3741,5/6/1940,,5.0,June,1940.0,Eucalyptus muelleriana
+545,MYRTACEAE,Eucalyptus muelleriana,Yarram,VIC,2117,27/4/1959,,27.0,April,1959.0,Eucalyptus muelleriana
+546,MYRTACEAE,Eucalyptus muelleriana,Yarram,VIC,2118,29/5/1940,,29.0,May,1940.0,Eucalyptus muelleriana
+554,MYRTACEAE,Eucalyptus muelleriana,Yarram,VIC,3757,5/10/1937,,5.0,October,1937.0,Eucalyptus muelleriana
+556,MYRTACEAE,Eucalyptus nitens,Glenbog,NSW,2401,15/2/1940,,15.0,February,1940.0,Eucalyptus nitens
+557,MYRTACEAE,Eucalyptus nitens,Glenbog,NSW,2402,15/2/1940,,15.0,February,1940.0,Eucalyptus nitens
+558,MYRTACEAE,Eucalyptus nitens,Glenbog,NSW,2403 BH,15/2/1940,,15.0,February,1940.0,Eucalyptus nitens
+559,MYRTACEAE,Eucalyptus nitens,Upper Yarra,VIC,3761,15/2/1940,,15.0,February,1940.0,Eucalyptus nitens
+560,MYRTACEAE,Eucalyptus nitens,Upper Yarra,VIC,3766,15/2/1940,,15.0,February,1940.0,Eucalyptus nitens
+561,MYRTACEAE,Eucalyptus notabilis,Blaxland,NSW,R413,14/10/1971,,14.0,October,1971.0,Eucalyptus notabilis
+563,MYRTACEAE,Eucalyptus nova-anglica,Glen Innes,NSW,R691-2,1/12/1971,,1.0,December,1971.0,Eucalyptus nova-anglica
+562,MYRTACEAE,Eucalyptus nova-anglica,,NSW,D7214,17/8/1961,,17.0,August,1961.0,Eucalyptus nova-anglica
+564,MYRTACEAE,Eucalyptus nowraensis,Nowra,NSW,2294,2/9/1940,,2.0,September,1940.0,Eucalyptus x nowraensis
+565,MYRTACEAE,Eucalyptus nowraensis,Nowra,NSW,2295,2/9/1940,,2.0,September,1940.0,Eucalyptus x nowraensis
+566,MYRTACEAE,Eucalyptus nowraensis,Nowra,NSW,2310,9/9/1940,,9.0,September,1940.0,Eucalyptus x nowraensis
+587,MYRTACEAE,Eucalyptus obliqua,Barrington Tops,NSW,R387-1,,,,,,Eucalyptus obliqua
+579,MYRTACEAE,Eucalyptus obliqua,Fitzgerald,TAS,4140,16/11/1939,,16.0,November,1939.0,Eucalyptus obliqua
+588,MYRTACEAE,Eucalyptus obliqua,Glen Innes,NSW,R482-11,13/7/1959,,13.0,July,1959.0,Eucalyptus obliqua
+573,MYRTACEAE,Eucalyptus obliqua,National Park Derwent Valley,TAS,2007,19/10/1939,,19.0,October,1939.0,Eucalyptus obliqua
+571,MYRTACEAE,Eucalyptus obliqua,Neerim South,VIC,1320,17/10/1939,,17.0,October,1939.0,Eucalyptus obliqua
+569,MYRTACEAE,Eucalyptus obliqua,Otways,VIC,11553,2/4/1953,,2.0,April,1953.0,Eucalyptus obliqua
+584,MYRTACEAE,Eucalyptus obliqua,Powelltown,VIC,3926,17/10/1939,,17.0,October,1939.0,Eucalyptus obliqua
+574,MYRTACEAE,Eucalyptus obliqua,Sassafras,NSW,2393,6/12/1939,,6.0,December,1939.0,Eucalyptus obliqua
+578,MYRTACEAE,Eucalyptus obliqua,Taggerty,VIC,3802,16/11/1939,,16.0,November,1939.0,Eucalyptus obliqua
+572,MYRTACEAE,Eucalyptus obliqua,Wingello State Forest,NSW,1676,18/10/1939,,18.0,October,1939.0,Eucalyptus obliqua
+567,MYRTACEAE,Eucalyptus obliqua,,VIC,1108,3/3/1953,,3.0,March,1953.0,Eucalyptus obliqua
+568,MYRTACEAE,Eucalyptus obliqua,,VIC,11188,21/11/1953,,21.0,November,1953.0,Eucalyptus obliqua
+570,MYRTACEAE,Eucalyptus obliqua,,NSW,11687,7/4/1954,,7.0,April,1954.0,Eucalyptus obliqua
+576,MYRTACEAE,Eucalyptus obliqua,,SA,3113,17/9/1948,,17.0,September,1948.0,Eucalyptus obliqua
+577,MYRTACEAE,Eucalyptus obliqua,,VIC,3713,3/3/1953,,3.0,March,1953.0,Eucalyptus obliqua
+580,MYRTACEAE,Eucalyptus obliqua,,VIC,530,4/3/1953,,4.0,March,1953.0,Eucalyptus obliqua
+581,MYRTACEAE,Eucalyptus obliqua,,VIC,8666,6/3/1953,,6.0,March,1953.0,Eucalyptus obliqua
+582,MYRTACEAE,Eucalyptus obliqua,,TAS,8783,24/10/1952,,24.0,October,1952.0,Eucalyptus obliqua
+583,MYRTACEAE,Eucalyptus obliqua,,VIC,8792,15/10/1958,,15.0,October,1958.0,Eucalyptus obliqua
+590,MYRTACEAE,Eucalyptus occidentalis,,WA,R403-3,26/4/1957,,26.0,April,1957.0,Eucalyptus occidentalis
+593,MYRTACEAE,Eucalyptus oreades,Mount Irvine-Wilson,NSW,2335,31/7/1941,,31.0,July,1941.0,Eucalyptus oreades
+594,MYRTACEAE,Eucalyptus oreades,Mount Irvine-Wilson,NSW,2336,31/7/1941,,31.0,July,1941.0,Eucalyptus oreades
+597,MYRTACEAE,Eucalyptus ovata,Healesville,VIC,8476,13/5/1949,,13.0,May,1949.0,Eucalyptus ovata
+598,MYRTACEAE,Eucalyptus ovata,Healesville,VIC,8477,19/5/1949,,19.0,May,1949.0,Eucalyptus ovata
+600,MYRTACEAE,Eucalyptus paniculata,,NSW,D10022-17,14/6/1967,,14.0,June,1967.0,Eucalyptus paniculata
+601,MYRTACEAE,Eucalyptus paniculata,,NSW,D10064-974,14/6/1967,,14.0,June,1967.0,Eucalyptus paniculata
+607,MYRTACEAE,Eucalyptus papuana,Atherton,QLD,10518,13/9/1957,,13.0,September,1957.0,Corymbia papuana
+608,MYRTACEAE,Eucalyptus papuana,Castlereagh,NSW,1526,3/11/1938,,3.0,November,1938.0,Corymbia papuana
+609,MYRTACEAE,Eucalyptus papuana,Castlereagh,NSW,1527,9/3/1939,,9.0,March,1939.0,Corymbia papuana
+611,MYRTACEAE,Eucalyptus papuana,Oenpelli,NT,8531,13/9/1957,,13.0,September,1957.0,Corymbia papuana
+606,MYRTACEAE,Eucalyptus papuana,,QLD,10456,27/5/1952,,27.0,May,1952.0,Corymbia papuana
+610,MYRTACEAE,Eucalyptus papuana,,NT,8134,7/10/1948,,7.0,October,1948.0,Corymbia papuana
+612,MYRTACEAE,Eucalyptus patens,Barronhurst,WA,1377,14/4/1938,,14.0,April,1938.0,Eucalyptus patens
+614,MYRTACEAE,Eucalyptus patens,Dingup,WA,1380,28/4/1938,,28.0,April,1938.0,Eucalyptus patens
+615,MYRTACEAE,Eucalyptus patens,East Kirup,WA,1383,7/7/1938,,7.0,July,1938.0,Eucalyptus patens
+616,MYRTACEAE,Eucalyptus patens,East Kirup,WA,1384,7/7/1938,,7.0,July,1938.0,Eucalyptus patens
+613,MYRTACEAE,Eucalyptus patens,Palgarup,WA,1379,11/4/1938,,11.0,April,1938.0,Eucalyptus patens
+618,MYRTACEAE,Eucalyptus patens,South East of Cambray,WA,1388,7/7/1938,,7.0,July,1938.0,Eucalyptus patens
+617,MYRTACEAE,Eucalyptus patens,South East of Claymore,WA,1387,7/7/1938,,7.0,July,1938.0,Eucalyptus patens
+619,MYRTACEAE,Eucalyptus pauciflora,Kosciuszko,NSW,R777-78,26/8/1971,,26.0,August,1971.0,Eucalyptus pauciflora
+620,MYRTACEAE,Eucalyptus pauciflora x obliqua,Barrington Tops,NSW,R387-1,,,,,,
+621,MYRTACEAE,Eucalyptus pellita,,QLD,10418,22/5/1952,,22.0,May,1952.0,Eucalyptus pellita
+622,MYRTACEAE,Eucalyptus pellita,,NSW,R936-25,14/10/1971,,14.0,October,1971.0,Eucalyptus pellita
+623,MYRTACEAE,Eucalyptus peltata,Archers Creek,QLD,11793,22/10/1957,,22.0,October,1957.0,Corymbia peltata
+625,MYRTACEAE,Eucalyptus peltata,Barakula,QLD,129,2/9/1940,,2.0,September,1940.0,Corymbia peltata
+626,MYRTACEAE,Eucalyptus peltata,Nudley,QLD,130,9/9/1940,,9.0,September,1940.0,Corymbia peltata
+624,MYRTACEAE,Eucalyptus peltata,,QLD,12554,22/10/1957,,22.0,October,1957.0,Corymbia peltata
+627,MYRTACEAE,Eucalyptus phoenicea,Katherine,NT,7124,4/1/1946,,4.0,January,1946.0,Eucalyptus phoenicea
+634,MYRTACEAE,Eucalyptus pilularis,Beecroft,NSW,1456,6/6/1940,,6.0,June,1940.0,Eucalyptus pilularis
+642,MYRTACEAE,Eucalyptus pilularis,Beecroft,NSW,2776,14/6/1940,,14.0,June,1940.0,Eucalyptus pilularis
+638,MYRTACEAE,Eucalyptus pilularis,Bucca,NSW,1773,20/8/1959,,20.0,August,1959.0,Eucalyptus pilularis
+639,MYRTACEAE,Eucalyptus pilularis,Bucca,NSW,1773,6/6/1940,,6.0,June,1940.0,Eucalyptus pilularis
+633,MYRTACEAE,Eucalyptus pilularis,Castle Hill,NSW,1447,14/6/1940,,14.0,June,1940.0,Eucalyptus pilularis
+644,MYRTACEAE,Eucalyptus pilularis,Coopernook,NSW,963,11/8/1959,,11.0,August,1959.0,Eucalyptus pilularis
+636,MYRTACEAE,Eucalyptus pilularis,Coramba,NSW,1745,11/6/1940,,11.0,June,1940.0,Eucalyptus pilularis
+632,MYRTACEAE,Eucalyptus pilularis,Fraser Island,NSW,1292,6/6/1940,,6.0,June,1940.0,Eucalyptus pilularis
+645,MYRTACEAE,Eucalyptus pilularis,Moruya,NSW,981,13/8/1959,,13.0,August,1959.0,Eucalyptus pilularis
+640,MYRTACEAE,Eucalyptus pilularis,Nowra,NSW,2301,12/10/1938,,12.0,October,1938.0,Eucalyptus pilularis
+641,MYRTACEAE,Eucalyptus pilularis,Nowra,NSW,2303,26/10/1938,,26.0,October,1938.0,Eucalyptus pilularis
+637,MYRTACEAE,Eucalyptus pilularis,"Orara State Forest, Coffs Harbour",NSW,1767,11/6/1940,,11.0,June,1940.0,Eucalyptus pilularis
+635,MYRTACEAE,Eucalyptus pilularis,Raymond Terrace,NSW,1684,14/6/1940,,14.0,June,1940.0,Eucalyptus pilularis
+631,MYRTACEAE,Eucalyptus pilularis,West Kempsey,NSW,1062,13/8/1959,,13.0,August,1959.0,Eucalyptus pilularis
+629,MYRTACEAE,Eucalyptus pilularis,,NSW,--,,,,,,Eucalyptus pilularis
+643,MYRTACEAE,Eucalyptus pilularis,,QLD,7325,11/8/1949,,11.0,August,1949.0,Eucalyptus pilularis
+651,MYRTACEAE,Eucalyptus piperita,Nowra,NSW,2386,3/11/1938,,3.0,November,1938.0,Eucalyptus piperita
+652,MYRTACEAE,Eucalyptus piperita,Nowra,NSW,2387,3/11/1938,,3.0,November,1938.0,Eucalyptus piperita
+650,MYRTACEAE,Eucalyptus piperita,,NSW,11787,8/12/1953,,8.0,December,1953.0,Eucalyptus piperita
+654,MYRTACEAE,Eucalyptus planchoniana,8 Mile Plains,QLD,7322,2/8/1949,,2.0,August,1949.0,Eucalyptus planchoniana
+655,MYRTACEAE,Eucalyptus planchoniana,Grafton,NSW,8806,16/1/1952,,16.0,January,1952.0,Eucalyptus planchoniana
+656,MYRTACEAE,Eucalyptus platyphylla,Darwin,NT,7126,17/1/1946,,17.0,January,1946.0,Eucalyptus platyphylla
+657,MYRTACEAE,Eucalyptus platyphylla var tintinnans,Near Pine Creek,NT,7113,29/10/1945,,29.0,October,1945.0,Eucalyptus tintinnans
+661,MYRTACEAE,Eucalyptus polycarpa,,NT,10064,6/8/1957,,6.0,August,1957.0,Corymbia polycarpa
+662,MYRTACEAE,Eucalyptus polycarpa,,QLD,8583,7/8/1957,,7.0,August,1957.0,Corymbia polycarpa
+663,MYRTACEAE,Eucalyptus populifolia,,NSW,931,7/7/1952,,7.0,July,1952.0,Eucalyptus tereticornis
+665,MYRTACEAE,Eucalyptus propinqua,Casino,NSW,1144,11/11/1937,,11.0,November,1937.0,Eucalyptus propinqua
+666,MYRTACEAE,Eucalyptus propinqua,,NSW,D10064-86,15/3/1979,,15.0,March,1979.0,Eucalyptus propinqua
+667,MYRTACEAE,Eucalyptus propinqua,,NSW,D7637,,,,,,Eucalyptus propinqua
+669,MYRTACEAE,Eucalyptus propinqua var major,,NSW,D10064-119,23/4/1979,,23.0,April,1979.0,Eucalyptus major
+670,MYRTACEAE,Eucalyptus pruinosa,Katherine,NT,7131,18/1/1946,,18.0,January,1946.0,Eucalyptus pruinosa
+671,MYRTACEAE,Eucalyptus ptychocarpa,Darwin,NT,7128,4/1/1946,,4.0,January,1946.0,Corymbia ptychocarpa
+675,MYRTACEAE,Eucalyptus punctata,Beecroft,NSW,D10064-52,27/7/1961,,27.0,July,1961.0,Eucalyptus punctata
+681,MYRTACEAE,Eucalyptus quadrangulata,Bundanoon,NSW,D9620,30/9/1965,,30.0,September,1965.0,Eucalyptus quadrangulata
+683,MYRTACEAE,Eucalyptus quadrangulata,Carrai State Forest,NSW,R389-1,1/7/1955,,1.0,July,1955.0,Eucalyptus quadrangulata
+682,MYRTACEAE,Eucalyptus quadrangulata,Kangaroo Valley,NSW,R1005,30/9/1965,,30.0,September,1965.0,Eucalyptus quadrangulata
+680,MYRTACEAE,Eucalyptus quadrangulata,Oakdale-Picton,NSW,D10022-45,30/9/1965,,30.0,September,1965.0,Eucalyptus quadrangulata
+684,MYRTACEAE,Eucalyptus radiata,,VIC,11191,21/11/1952,,21.0,November,1952.0,Eucalyptus radiata
+685,MYRTACEAE,Eucalyptus radiata,,NSW,D064-188,8/8/1949,,8.0,August,1949.0,Eucalyptus radiata
+686,MYRTACEAE,Eucalyptus radiata,,NSW,D088-28,9/8/1949,,9.0,August,1949.0,Eucalyptus radiata
+687,MYRTACEAE,Eucalyptus radiata var australiana,Powelltown,VIC,2129,17/3/1949,,17.0,March,1949.0,Eucalyptus radiata subsp. radiata
+688,MYRTACEAE,Eucalyptus radiata var australiana,Powelltown,VIC,2131,17/3/1949,,17.0,March,1949.0,Eucalyptus radiata subsp. radiata
+690,MYRTACEAE,Eucalyptus redunca var elata ,Congelin,NT,1392,16/5/1941,,16.0,May,1941.0,Eucalyptus wandoo subsp. wandoo
+689,MYRTACEAE,Eucalyptus redunca var elata ,Contine,WA,1391,15/5/1941,,15.0,May,1941.0,Eucalyptus wandoo subsp. wandoo
+692,MYRTACEAE,Eucalyptus redunca var elata ,Narrogin,WA,1394,16/5/1941,,16.0,May,1941.0,Eucalyptus wandoo subsp. wandoo
+693,MYRTACEAE,Eucalyptus redunca var elata ,Near Cuballing,WA,1400,12/1/1940,,12.0,January,1940.0,Eucalyptus wandoo subsp. wandoo
+691,MYRTACEAE,Eucalyptus redunca var elata ,"Southern area, Congelin",WA,1393,16/5/1941,,16.0,May,1941.0,Eucalyptus wandoo subsp. wandoo
+694,MYRTACEAE,Eucalyptus redunca var elata ,,WA,2499,18/1/1940,,18.0,January,1940.0,Eucalyptus wandoo subsp. wandoo
+695,MYRTACEAE,Eucalyptus redunca var elata ,,WA,347,18/1/1940,,18.0,January,1940.0,Eucalyptus wandoo subsp. wandoo
+696,MYRTACEAE,Eucalyptus redunca var elata ,,WA,3500,12/1/1940,,12.0,January,1940.0,Eucalyptus wandoo subsp. wandoo
+697,MYRTACEAE,Eucalyptus redunca var elata ,,WA,3501,18/1/1940,,18.0,January,1940.0,Eucalyptus wandoo subsp. wandoo
+709,MYRTACEAE,Eucalyptus regnans,Belgrave,VIC,3745,19/8/1958,,19.0,August,1958.0,Eucalyptus regnans
+712,MYRTACEAE,Eucalyptus regnans,Fitzgerald,TAS,4139,6/12/1939,,6.0,December,1939.0,Eucalyptus regnans
+700,MYRTACEAE,Eucalyptus regnans,Forrest,VIC,1109,22/11/1939,,22.0,November,1939.0,Eucalyptus regnans
+702,MYRTACEAE,Eucalyptus regnans,Milgrove,VIC,1237,16/11/1939,,16.0,November,1939.0,Eucalyptus regnans
+704,MYRTACEAE,Eucalyptus regnans,Mount Field,TAS,2017,19/8/1958,,19.0,August,1958.0,Eucalyptus regnans
+703,MYRTACEAE,Eucalyptus regnans,National Park Derwent Valley,TAS,2008,18/10/1939,,18.0,October,1939.0,Eucalyptus regnans
+706,MYRTACEAE,Eucalyptus regnans,Near Scottsdale,TAS,2136,19/8/1958,,19.0,August,1958.0,Eucalyptus regnans
+701,MYRTACEAE,Eucalyptus regnans,Otways,VIC,11554,2/4/1953,,2.0,April,1953.0,Eucalyptus regnans
+708,MYRTACEAE,Eucalyptus regnans,Powelltown,VIC,2543,19/8/1958,,19.0,August,1958.0,Eucalyptus regnans
+710,MYRTACEAE,Eucalyptus regnans,Powelltown,VIC,3918,18/10/1939,,18.0,October,1939.0,Eucalyptus regnans
+711,MYRTACEAE,Eucalyptus regnans,Powelltown,VIC,3923,22/11/1939,,22.0,November,1939.0,Eucalyptus regnans
+699,MYRTACEAE,Eucalyptus regnans,Rubicon State Forest,VIC,1092,22/11/1939,,22.0,November,1939.0,Eucalyptus regnans
+705,MYRTACEAE,Eucalyptus regnans,Sideling near Scottsdale,VIC,2135,18/10/1939,,18.0,October,1939.0,Eucalyptus regnans
+707,MYRTACEAE,Eucalyptus regnans,,VIC,2526,1/12/1939,,1.0,December,1939.0,Eucalyptus regnans
+713,MYRTACEAE,Eucalyptus regnans,,VIC,9798,21/12/1950,,21.0,December,1950.0,Eucalyptus regnans
+714,MYRTACEAE,Eucalyptus regnans,,VIC,9799,21/12/1950,,21.0,December,1950.0,Eucalyptus regnans
+715,MYRTACEAE,Eucalyptus regnans,,VIC,9800,2/2/1951,,2.0,February,1951.0,Eucalyptus regnans
+716,MYRTACEAE,Eucalyptus regnans,,VIC,9801,1/2/1951,,1.0,February,1951.0,Eucalyptus regnans
+717,MYRTACEAE,Eucalyptus regnans,,VIC,9802,20/12/1950,,20.0,December,1950.0,Eucalyptus regnans
+718,MYRTACEAE,Eucalyptus regnans,,VIC,9803,20/12/1950,,20.0,December,1950.0,Eucalyptus regnans
+719,MYRTACEAE,Eucalyptus regnans,,VIC,9804,5/1/1956,,5.0,January,1956.0,Eucalyptus regnans
+720,MYRTACEAE,Eucalyptus regnans,,VIC,9805,21/12/1950,,21.0,December,1950.0,Eucalyptus regnans
+721,MYRTACEAE,Eucalyptus regnans,,VIC,9810,21/12/1950,,21.0,December,1950.0,Eucalyptus regnans
+722,MYRTACEAE,Eucalyptus regnans,,VIC,9811,21/12/1950,,21.0,December,1950.0,Eucalyptus regnans
+723,MYRTACEAE,Eucalyptus regnans,,VIC,9812,21/12/1950,,21.0,December,1950.0,Eucalyptus regnans
+729,MYRTACEAE,Eucalyptus resinifera,Castle Hill,NSW,1440,29/5/1940,,29.0,May,1940.0,Eucalyptus resinifera
+730,MYRTACEAE,Eucalyptus resinifera,Castle Hill,NSW,1449,31/5/1940,,31.0,May,1940.0,Eucalyptus resinifera
+733,MYRTACEAE,Eucalyptus resinifera,Coffs Harbour,NSW,1832,21/9/1939,,21.0,September,1939.0,Eucalyptus resinifera
+728,MYRTACEAE,Eucalyptus resinifera,Fraser Island,QLD,1295,5/6/1940,,5.0,June,1940.0,Eucalyptus resinifera
+732,MYRTACEAE,Eucalyptus resinifera,"Halfway Creek, Woolgoolga-Grafton",NSW,1792,29/5/1940,,29.0,May,1940.0,Eucalyptus resinifera
+731,MYRTACEAE,Eucalyptus resinifera,Maroota,NSW,1495,31/5/1940,,31.0,May,1940.0,Eucalyptus resinifera
+726,MYRTACEAE,Eucalyptus resinifera,"Newee Creek, Coffs Harbour",NSW,1032,28/3/1940,"Written as ""Nouee CK.""",28.0,March,1940.0,Eucalyptus resinifera
+734,MYRTACEAE,Eucalyptus resinifera,Tabbimoble State Forest,NSW,4065,26/7/1939,,26.0,July,1939.0,Eucalyptus resinifera
+735,MYRTACEAE,Eucalyptus resinifera,Tabbimoble State Forest,NSW,4066,26/7/1939,,26.0,July,1939.0,Eucalyptus resinifera
+736,MYRTACEAE,Eucalyptus resinifera,"Tabbimoble State Forest, Casino",NSW,4067,25/7/1939,,25.0,July,1939.0,Eucalyptus resinifera
+727,MYRTACEAE,Eucalyptus resinifera,Yandina,QLD,1184,29/5/1940,,29.0,May,1940.0,Eucalyptus resinifera
+738,MYRTACEAE,Eucalyptus robertsonii,Bago State Forest,NSW,2425,8/1/1953,,8.0,January,1953.0,Eucalyptus radiata subsp. robertsonii
+741,MYRTACEAE,Eucalyptus robusta,Gosford,NSW,1646,24/5/1938,,24.0,May,1938.0,Eucalyptus robusta
+742,MYRTACEAE,Eucalyptus robusta,Gosford,NSW,1647,25/5/1938,,25.0,May,1938.0,Eucalyptus robusta
+743,MYRTACEAE,Eucalyptus robusta,Gosford,NSW,1648,20/5/1938,,20.0,May,1938.0,Eucalyptus robusta
+740,MYRTACEAE,Eucalyptus robusta,North QLD,QLD,10515,15/1/1954,,15.0,January,1954.0,Eucalyptus robusta
+744,MYRTACEAE,Eucalyptus robusta,Woolgoolga,NSW,1779,26/5/1938,,26.0,May,1938.0,Eucalyptus robusta
+745,MYRTACEAE,Eucalyptus robusta,,NSW,8805,15/1/1954,,15.0,January,1954.0,Eucalyptus robusta
+747,MYRTACEAE,Eucalyptus rubida,Belanglo,NSW,1672,5/6/1940,,5.0,June,1940.0,Eucalyptus rubida
+748,MYRTACEAE,Eucalyptus rubida,Belanglo,NSW,1673,21/2/1940,,21.0,February,1940.0,Eucalyptus rubida
+749,MYRTACEAE,Eucalyptus rubida,Belanglo,NSW,1674,5/6/1940,,5.0,June,1940.0,Eucalyptus rubida
+750,MYRTACEAE,Eucalyptus rubida,Bowning,NSW,2229,21/2/1940,,21.0,February,1940.0,Eucalyptus rubida
+751,MYRTACEAE,Eucalyptus rubida,Bowning,NSW,2230,21/2/1940,,21.0,February,1940.0,Eucalyptus rubida
+752,MYRTACEAE,Eucalyptus rubida,Bowning,NSW,2231,21/2/1940,,21.0,February,1940.0,Eucalyptus rubida
+753,MYRTACEAE,Eucalyptus rubida,Bowning,NSW,2232,18/5/1938,,18.0,May,1938.0,Eucalyptus rubida
+754,MYRTACEAE,Eucalyptus rubida,Southern Highlands,NSW,2446,21/2/1940,,21.0,February,1940.0,Eucalyptus rubida
+756,MYRTACEAE,Eucalyptus rudderi,Tahmoor,NSW,166,14/9/1940,,14.0,September,1940.0,Eucalyptus rudderi
+757,MYRTACEAE,Eucalyptus rudderi,Thirlmere,NSW,D7067,26/8/1971,,26.0,August,1971.0,Eucalyptus rudderi
+758,MYRTACEAE,Eucalyptus rummeryi,,NSW,D10064-90,26/3/1979,,26.0,March,1979.0,Eucalyptus rummeryi
+759,MYRTACEAE,Eucalyptus rummeryi,,NSW,D1255-37,1/7/1955,,1.0,July,1955.0,Eucalyptus rummeryi
+760,MYRTACEAE,Eucalyptus rummeryi,,NSW,D1255-37,1/7/1955,,1.0,July,1955.0,Eucalyptus rummeryi
+761,MYRTACEAE,Eucalyptus rummeryi,,NSW,R398-1,26/3/1979,,26.0,March,1979.0,Eucalyptus rummeryi
+762,MYRTACEAE,Eucalyptus rummeryi,,NSW,R851,23/4/1979,,23.0,April,1979.0,Eucalyptus rummeryi
+763,MYRTACEAE,Eucalyptus salicifolia,,TAS,8782,14/10/1952,,14.0,October,1952.0,Eucalyptus amygdalina
+765,MYRTACEAE,Eucalyptus saligna,Beecroft,NSW,1599,25/5/1938,,25.0,May,1938.0,Eucalyptus saligna
+766,MYRTACEAE,Eucalyptus saligna,Craven State Forest,NSW,1723,28/5/1938,,28.0,May,1938.0,Eucalyptus saligna
+764,MYRTACEAE,Eucalyptus saligna,"Narara State Forest, Gosford",NSW,1567,21/5/1938,,21.0,May,1938.0,Eucalyptus saligna
+767,MYRTACEAE,Eucalyptus saligna,Ourimbah Creek,NSW,1904,1/9/1939,,1.0,September,1939.0,Eucalyptus saligna
+768,MYRTACEAE,Eucalyptus saligna,Termeil,NSW,2313,18/5/1938,,18.0,May,1938.0,Eucalyptus saligna
+771,MYRTACEAE,Eucalyptus salmonophloia,,WA,9990,28/2/1951,,28.0,February,1951.0,Eucalyptus salmonophloia
+772,MYRTACEAE,Eucalyptus salubris,Goongarrie district,WA,1424,1/4/1958,,1.0,April,1958.0,Eucalyptus salubris
+773,MYRTACEAE,Eucalyptus salubris,Vospertin,WA,1514,1/4/1958,,1.0,April,1958.0,Eucalyptus salubris
+774,MYRTACEAE,Eucalyptus salubris,,WA,R403-6,26/4/1957,,26.0,April,1957.0,Eucalyptus salubris
+775,MYRTACEAE,Eucalyptus sargenti,,WA,11870,19/2/1954,,19.0,February,1954.0,Eucalyptus sargentii
+777,MYRTACEAE,Eucalyptus seeana,Dorrigo,NSW,D10064-116,26/6/1971,,26.0,June,1971.0,Eucalyptus seeana
+776,MYRTACEAE,Eucalyptus seeana,Grafton,NSW,1167,13/7/1954,,13.0,July,1954.0,Eucalyptus seeana
+778,MYRTACEAE,Eucalyptus setosa,,NSW,R977-180,,,,,,Corymbia setosa
+779,MYRTACEAE,Eucalyptus sideroxylon,Narrabri,NSW,1141,9/9/1940,,9.0,September,1940.0,Eucalyptus sideroxylon
+782,MYRTACEAE,Eucalyptus sideroxylon,"Nullica State Forest, Eden",NSW,D10080-37,17/8/1961,,17.0,August,1961.0,Eucalyptus sideroxylon
+780,MYRTACEAE,Eucalyptus sideroxylon,,NSW,D10022-24,27/4/1979,,27.0,April,1979.0,Eucalyptus sideroxylon
+781,MYRTACEAE,Eucalyptus sideroxylon,,NSW,D10064-259,27/4/1979,,27.0,April,1979.0,Eucalyptus sideroxylon
+783,MYRTACEAE,Eucalyptus sideroxylon,,NSW,D8539,,,,,,Eucalyptus sideroxylon
+796,MYRTACEAE,Eucalyptus sieberi,Cann Valley,VIC,3690,26/10/1938,,26.0,October,1938.0,Eucalyptus sieberi
+793,MYRTACEAE,Eucalyptus sieberi,"East Boyd State Forest, Twofold Bay",NSW,3360,11/6/1940,,11.0,June,1940.0,Eucalyptus sieberi
+795,MYRTACEAE,Eucalyptus sieberi,Eden,VIC,3563,28/9/1937,,28.0,September,1937.0,Eucalyptus sieberi
+794,MYRTACEAE,Eucalyptus sieberi,"Narrabarna, County of Auckland",NSW,3494,5/6/1940,,5.0,June,1940.0,Eucalyptus sieberi
+786,MYRTACEAE,Eucalyptus sieberi,Neerim South,VIC,1321,17/6/1958,,17.0,June,1958.0,Eucalyptus sieberi
+790,MYRTACEAE,Eucalyptus sieberi,Nowra,NSW,2314,11/6/1940,,11.0,June,1940.0,Eucalyptus sieberi
+791,MYRTACEAE,Eucalyptus sieberi,Nowra,NSW,2315,14/6/1940,,14.0,June,1940.0,Eucalyptus sieberi
+792,MYRTACEAE,Eucalyptus sieberi,Nowra,NSW,2316,11/6/1940,,11.0,June,1940.0,Eucalyptus sieberi
+789,MYRTACEAE,Eucalyptus sieberi,Palerang,NSW,1967,14/6/1940,,14.0,June,1940.0,Eucalyptus sieberi
+787,MYRTACEAE,Eucalyptus sieberi,Pittwater,NSW,1502,17/6/1958,,17.0,June,1958.0,Eucalyptus sieberi
+788,MYRTACEAE,Eucalyptus sieberi,Pittwater,NSW,1504,,,,,,Eucalyptus sieberi
+797,MYRTACEAE,Eucalyptus sieberi,Upper Yarra,VIC,3764,26/9/1937,,26.0,September,1937.0,Eucalyptus sieberi
+785,MYRTACEAE,Eucalyptus sieberi,Wyong,NSW,1124,17/6/1958,,17.0,June,1958.0,Eucalyptus sieberi
+799,MYRTACEAE,Eucalyptus smithii,Eden,NSW,D10088-64,1/12/1971,,1.0,December,1971.0,Eucalyptus smithii
+798,MYRTACEAE,Eucalyptus smithii,Palerang,NSW,1966,1/12/1939,,1.0,December,1939.0,Eucalyptus smithii
+802,MYRTACEAE,Eucalyptus stellulata,Bago State Forest,NSW,6108,18/11/1940,,18.0,November,1940.0,Eucalyptus stellulata
+801,MYRTACEAE,Eucalyptus stellulata,Bago State Forest,NSW,2435,16/8/1938,,16.0,August,1938.0,Eucalyptus stellulata
+803,MYRTACEAE,Eucalyptus stellulata,Rydal,NSW,D7145,1/12/1971,,1.0,December,1971.0,Eucalyptus stellulata
+805,MYRTACEAE,Eucalyptus stricta,Chinchilla,QLD,R503-1,5/7/1965,,5.0,July,1965.0,Eucalyptus stricta
+804,MYRTACEAE,Eucalyptus stricta,Wingella,NSW,R500-1,1/7/1965,,1.0,July,1965.0,Eucalyptus stricta
+811,MYRTACEAE,Eucalyptus tereticornis,Bundaleer,SA,3242,12/10/1938,,12.0,October,1938.0,Eucalyptus tereticornis
+807,MYRTACEAE,Eucalyptus tereticornis,"Caseys Gully, Imbil",VIC,1482,17/10/1939,,17.0,October,1939.0,Eucalyptus tereticornis
+813,MYRTACEAE,Eucalyptus tereticornis,Chiltern,VIC,3749,12/10/1938,,12.0,October,1938.0,Eucalyptus tereticornis
+809,MYRTACEAE,Eucalyptus tereticornis,Fosterton,NSW,1940,7/10/1938,,7.0,October,1938.0,Eucalyptus tereticornis
+814,MYRTACEAE,Eucalyptus tereticornis,Imbil,QLD,3954,26/10/1938,,26.0,October,1938.0,Eucalyptus tereticornis
+815,MYRTACEAE,Eucalyptus tereticornis,Imbil,QLD,3957,5/10/1938,,5.0,October,1938.0,Eucalyptus tereticornis
+806,MYRTACEAE,Eucalyptus tereticornis,Moormuring,VIC,1306,26/10/1938,,26.0,October,1938.0,Eucalyptus tereticornis
+810,MYRTACEAE,Eucalyptus tereticornis,Moruya,NSW,2372,12/10/1938,,12.0,October,1938.0,Eucalyptus tereticornis
+812,MYRTACEAE,Eucalyptus tereticornis,Tallangatta,VIC,3744,26/10/1938,,26.0,October,1938.0,Eucalyptus tereticornis
+808,MYRTACEAE,Eucalyptus tereticornis,Tomego,NSW,1709,26/10/1938,,26.0,October,1938.0,Eucalyptus tereticornis
+816,MYRTACEAE,Eucalyptus tereticornis,,VIC,8621,30/7/1954,,30.0,July,1954.0,Eucalyptus tereticornis
+819,MYRTACEAE,Eucalyptus terminalis,Darwin,NT,7122,6/12/1945,,6.0,December,1945.0,Corymbia terminalis
+818,MYRTACEAE,Eucalyptus terminalis,Katherine,NT,7121,7/12/1945,,7.0,December,1945.0,Corymbia terminalis
+820,MYRTACEAE,Eucalyptus terminalis,,NT,R1021,,,,,,Corymbia terminalis
+821,MYRTACEAE,Eucalyptus tesselaris,Fraser Island,QLD,1299,20/1/1958,,20.0,January,1958.0,Corymbia tessellaris
+822,MYRTACEAE,Eucalyptus tesselaris,Imbil,QLD,1480,16/1/1958,,16.0,January,1958.0,Corymbia tessellaris
+823,MYRTACEAE,Eucalyptus tessellaris,Narrabri,NSW,463,16/1/1958,,16.0,January,1958.0,Corymbia tessellaris
+824,MYRTACEAE,Eucalyptus tetrodonta,,NT,6360,28/1/1962,,28.0,January,1962.0,Eucalyptus tetrodonta
+825,MYRTACEAE,Eucalyptus tetrodonta,,NT,8133,28/1/1962,,28.0,January,1962.0,Eucalyptus tetrodonta
+826,MYRTACEAE,Eucalyptus thozetiana,East of Alice Springs,NT,7136,4/12/1945,,4.0,December,1945.0,Eucalyptus thozetiana
+827,MYRTACEAE,Eucalyptus tinghaensis,Mount Topper State Forest,NSW,R507-3,26/7/1965,,26.0,July,1965.0,Eucalyptus x tinghaensis
+828,MYRTACEAE,Eucalyptus todtiana,,WA,11876,16/2/1954,,16.0,February,1954.0,Eucalyptus todtiana
+829,MYRTACEAE,Eucalyptus torelliana,,WA,R286-29,22/3/1974,,22.0,March,1974.0,Corymbia torelliana
+830,MYRTACEAE,Eucalyptus torquata,,WA,R403-5,26/4/1957,,26.0,April,1957.0,Eucalyptus torquata
+831,MYRTACEAE,Eucalyptus trachyphloia,Monogorilby,QLD,11873,10/4/1957,,10.0,April,1957.0,Corymbia trachyphloia
+832,MYRTACEAE,Eucalyptus trachyphloia,Narrabri,QLD,620,10/4/1957,,10.0,April,1957.0,Corymbia trachyphloia
+834,MYRTACEAE,Eucalyptus umbra,Cowan,NSW,1557,25/1/1952,,25.0,January,1952.0,Eucalyptus umbra
+833,MYRTACEAE,Eucalyptus umbra,,NSW,1035,16/1/1952,,16.0,January,1952.0,Eucalyptus umbra
+836,MYRTACEAE,Eucalyptus umbra,,NSW,D10064-120,27/4/1979,,27.0,April,1979.0,Eucalyptus umbra
+843,MYRTACEAE,Eucalyptus viminalis,Bright,VIC,3715,17/10/1939,,17.0,October,1939.0,Eucalyptus viminalis
+844,MYRTACEAE,Eucalyptus viminalis,Delatite,VIC,3788,22/11/1939,,22.0,November,1939.0,Eucalyptus viminalis
+840,MYRTACEAE,Eucalyptus viminalis,Herrick,TAS,2--8,22/11/1939,,22.0,November,1939.0,Eucalyptus viminalis
+842,MYRTACEAE,Eucalyptus viminalis,Otway West,VIC,3708,17/10/1939,,17.0,October,1939.0,Eucalyptus viminalis
+839,MYRTACEAE,Eucalyptus viminalis,"Parkers Gap, Captains Flat",NSW,1980,1/12/1939,,1.0,December,1939.0,Eucalyptus viminalis
+841,MYRTACEAE,Eucalyptus viminalis,Sassafras,NSW,2328,16/11/1939,,16.0,November,1939.0,Eucalyptus viminalis
+838,MYRTACEAE,Eucalyptus viminalis,Taralga-Bungendore,NSW,1960,17/10/1939,"Written as ""Taraga""",17.0,October,1939.0,Eucalyptus viminalis
+837,MYRTACEAE,Eucalyptus viminalis,,VIC,11190,19/11/1952,,19.0,November,1952.0,Eucalyptus viminalis
+845,MYRTACEAE,Eucalyptus viridis,Girilambone,NSW,D6232,12/7/1965,,12.0,July,1965.0,Eucalyptus viridis
+846,MYRTACEAE,Eucalyptus vitrea,Penrose State Forest,NSW,1678,7/3/1939,,7.0,March,1939.0,Eucalyptus x vitrea
+847,MYRTACEAE,Eucalyptus vitrea,Tallaganda,NSW,2041,7/3/1939,,7.0,March,1939.0,Eucalyptus x vitrea
+848,MYRTACEAE,Eucalyptus vitrea,Tallaganda,NSW,2042,7/3/1939,,7.0,March,1939.0,Eucalyptus x vitrea
+849,MYRTACEAE,Eucalyptus vitrea,Tallaganda,NSW,2043,9/3/1939,,9.0,March,1939.0,Eucalyptus x vitrea
+850,MYRTACEAE,Eucalyptus wilkinsoniana,The Oaks,NSW,1624,21/12/1938,,21.0,December,1938.0,Eucalyptus eugenioides
+851,MYRTACEAE,Eucalyptus wilkinsoniana,The Oaks,NSW,1625,26/10/1938,,26.0,October,1938.0,Eucalyptus eugenioides

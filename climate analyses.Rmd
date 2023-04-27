@@ -1,0 +1,63 @@
+---
+title: "Xylem climate analyses"
+author: "Elijah Magistrado"
+date: "2023-04-26"
+output: html_document
+---
+
+Loading Eucalypt occurrences
+```{r}
+library(sp)
+library(dplyr)
+library(tidyr)
+
+eucalypt_occ <- read.csv("data/euc_coords.csv", header=T)
+eucalypt_occ <- eucalypt_occ %>% drop_na()
+
+coords <- cbind(eucalypt_occ$decimalLongitude, eucalypt_occ$decimalLatitude)
+
+euc_sp <- SpatialPoints(coords, proj4string=CRS("+init=epsg:4326"))
+
+```
+
+
+Loading precipitation rasters from worldclim
+```{r}
+library(raster)
+
+MAP <- raster("data/MAP.tif")
+MAT <- raster("data/MAT.tif")
+seasonality <- raster("data/seasonality.tif")
+wet_quarter <- raster("data/wet_quarter.tif")
+dry_quarter <- raster("data/dry_quarter.tif")
+
+```
+
+
+Extracting climate data from points
+```{r}
+eucalypt_occ$MAP <- raster::extract(MAP, euc_sp, method='simple')
+eucalypt_occ$MAT <- raster::extract(MAT, euc_sp, method='simple')
+eucalypt_occ$seasonality <- raster::extract(seasonality, euc_sp, method='simple')
+eucalypt_occ$wet_quarter <- raster::extract(wet_quarter, euc_sp, method='simple')
+eucalypt_occ$dry_quarter <- raster::extract(dry_quarter, euc_sp, method='simple')
+
+eucalypt_occ %>% drop_na()
+
+eucalypt_sum <- eucalypt_occ %>% 
+  group_by(scientificName) %>% 
+  summarise(MAP=mean(MAP, na.rm=T), 
+            MAT=mean(MAT, na.rm=T),
+            seasonality=mean(seasonality, na.rm=T),
+            wet_quarter=mean(wet_quarter, na.rm=T),
+            dry_quarter=mean(dry_quarter, na.rm=T))
+```
+
+Filtering species in database
+```{r}
+euc_database <- read.csv("data/database_namematched.csv", header=T)
+
+climate_prefs <- eucalypt_sum %>% filter(scientificName %in% euc_database$current_name)
+```
+
+
