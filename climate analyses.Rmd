@@ -42,8 +42,6 @@ eucalypt_occ$seasonality <- raster::extract(seasonality, euc_sp, method='simple'
 eucalypt_occ$wet_quarter <- raster::extract(wet_quarter, euc_sp, method='simple')
 eucalypt_occ$dry_quarter <- raster::extract(dry_quarter, euc_sp, method='simple')
 
-eucalypt_occ %>% drop_na()
-
 eucalypt_sum <- eucalypt_occ %>% 
   group_by(scientificName) %>% 
   summarise(MAP=mean(MAP, na.rm=T), 
