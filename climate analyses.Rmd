@@ -58,4 +58,12 @@ euc_database <- read.csv("data/database_namematched.csv", header=T)
 climate_prefs <- eucalypt_sum %>% filter(scientificName %in% euc_database$current_name)
 ```
 
+Plotting distributions of climate preferences 
+```{r}
+hist(climate_prefs$MAP)
+hist(climate_prefs$MAT)
+hist(climate_prefs$seasonality)
+hist(climate_prefs$wet_quarter)
+hist(climate_prefs$dry_quarter)
+```
 
