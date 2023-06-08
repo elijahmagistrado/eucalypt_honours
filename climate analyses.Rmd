@@ -30,7 +30,6 @@ MAT <- raster("data/MAT.tif")
 seasonality <- raster("data/seasonality.tif")
 wet_quarter <- raster("data/wet_quarter.tif")
 dry_quarter <- raster("data/dry_quarter.tif")
-
 ```
 
 
@@ -42,7 +41,7 @@ eucalypt_occ$seasonality <- raster::extract(seasonality, euc_sp, method='simple'
 eucalypt_occ$wet_quarter <- raster::extract(wet_quarter, euc_sp, method='simple')
 eucalypt_occ$dry_quarter <- raster::extract(dry_quarter, euc_sp, method='simple')
 
-eucalypt_occ %>% drop_na()
+eucalypt_occ <- eucalypt_occ %>% drop_na()
 
 eucalypt_sum <- eucalypt_occ %>% 
   group_by(scientificName) %>% 
@@ -58,6 +57,38 @@ Filtering species in database
 euc_database <- read.csv("data/database_namematched.csv", header=T)
 
 climate_prefs <- eucalypt_sum %>% filter(scientificName %in% euc_database$current_name)
+```
+
+Importing xylem data
+```{r}
+areas <- read.csv("data/xylem_areas.csv", header=T)
+
+xylem_only <- areas %>% filter(Name=="vessel")
+
+xylem_only <- xylem_only %>% 
+  separate(Image, c("Family", "Other"), sep = " ", extra = "merge") %>% 
+  separate(Other, c("Species", "Other"), sep = "_", extra = "merge")
+
+species_sum <- xylem_only %>% 
+  group_by(Species) %>% 
+  summarise(mean_area=mean(Area.µm.2, na.rm=T))
+
+```
+
+Adding to climate pref data
+```{r}
+species_sum <- species_sum %>% 
+  left_join(euc_database, by = "Species") %>% 
+  left_join(climate_prefs, by = c("current_name" = "scientificName"))
+
+species_sum <- species_sum %>% 
+  group_by(current_name) %>% 
+  summarise(MAP=mean(MAP, na.rm=T), 
+            MAT=mean(MAT, na.rm=T),
+            seasonality=mean(seasonality, na.rm=T),
+            wet_quarter=mean(wet_quarter, na.rm=T),
+            dry_quarter=mean(dry_quarter, na.rm=T),
+            mean_area=mean(mean_area, na.rm=T))
 ```
 
 
