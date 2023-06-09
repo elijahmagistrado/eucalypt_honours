@@ -67,3 +67,57 @@ hist(climate_prefs$wet_quarter)
 hist(climate_prefs$dry_quarter)
 ```
 
+<<<<<<< HEAD
+=======
+Adding to climate pref data
+```{r}
+species_sum <- species_sum %>% 
+  left_join(euc_database, by = "Species") %>% 
+  left_join(climate_prefs, by = c("current_name" = "scientificName"))
+
+species_sum <- species_sum %>% 
+  group_by(current_name) %>% 
+  summarise(MAP=mean(MAP, na.rm=T), 
+            MAT=mean(MAT, na.rm=T),
+            seasonality=mean(seasonality, na.rm=T),
+            wet_quarter=mean(wet_quarter, na.rm=T),
+            dry_quarter=mean(dry_quarter, na.rm=T),
+            mean_area=mean(mean_area, na.rm=T)) %>% 
+  drop_na()
+```
+
+Plotting area to climate variables
+```{r}
+library(ggplot2)
+library(patchwork)
+
+MAP_plot <- ggplot(species_sum, aes(x=mean_area, y=MAP)) + geom_point()
+MAT_plot <- ggplot(species_sum, aes(x=mean_area, y=MAT)) + geom_point()
+seasonality_plot <- ggplot(species_sum, aes(x=mean_area, y=seasonality)) + geom_point()
+wetq_plot <- ggplot(species_sum, aes(x=mean_area, y=wet_quarter)) + geom_point()
+dryq_plot <- ggplot(species_sum, aes(x=mean_area, y=dry_quarter)) + geom_point()
+
+MAP_plot + MAT_plot
+wetq_plot + dryq_plot
+seasonality_plot
+```
+
+Data transform
+```{r}
+species_sum$log_area <- log(species_sum$mean_area)
+species_sum$log_MAP <- log(species_sum$MAP)
+species_sum$log_wetq <- log(species_sum$wet_quarter)
+
+logMAP_plot <- ggplot(species_sum, aes(x=log_area, y=log_MAP)) + geom_point()
+logWetq_plot <- ggplot(species_sum, aes(x=log_area, y=log_wetq)) + geom_point()
+
+logMAP_plot + logWetq_plot
+
+MAP_lm <- lm(log_MAP~log_area, data = species_sum)
+summary(MAP_lm)
+plot(MAP_lm, which=1)
+
+Wetq_lm <- lm(log_wetq~log_area, data = species_sum)
+summary(Wetq_lm)
+plot(Wetq_lm, which=1)
+```
