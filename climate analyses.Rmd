@@ -108,4 +108,16 @@ wetq_plot + dryq_plot
 seasonality_plot
 ```
 
+Data transform
+```{r}
+species_sum$log_area <- log(species_sum$mean_area)
+species_sum$log_MAP <- log(species_sum$MAP)
+
+ggplot(species_sum, aes(x=log_area, y=log_MAP)) + geom_point()
+
+MAP_lm <- lm(log_MAP~log_area, data = species_sum)
+summary(MAP_lm)
+plot(MAP_lm)
+```
+
 
