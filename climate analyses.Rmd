@@ -76,11 +76,14 @@ xylem_database <- xylem_only %>%
   drop_na(current_name)
 
 sample_counts <- xylem_database %>% group_by(species, other) %>% summarise(n = n())
-vessel_counts <- xylem_database %>% group_by(species) %>% summarise(n = n())
 
 species_sum <- xylem_database %>% 
   group_by(species) %>% 
-  summarise(mean_area=mean(Area.µm.2, na.rm=T))
+  summarise(mean_area=mean(Area.µm.2, na.rm=T),
+            sd=sd(Area.µm.2, na.rm=T),
+            n=n())
+
+species_sum$SE <- species_sum$sd/(sqrt(species_sum$n))
 
 ```
 
