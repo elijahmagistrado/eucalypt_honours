@@ -67,8 +67,6 @@ hist(climate_prefs$wet_quarter)
 hist(climate_prefs$dry_quarter)
 ```
 
-<<<<<<< HEAD
-=======
 Adding to climate pref data
 ```{r}
 species_sum <- species_sum %>% 
