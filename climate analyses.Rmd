@@ -69,6 +69,9 @@ xylem_only <- xylem_only %>%
   separate(Image, c("Family", "Other"), sep = " ", extra = "merge") %>% 
   separate(Other, c("Species", "Other"), sep = "_", extra = "merge")
 
+sample_counts <- xylem_only %>% group_by(Species, Other) %>% summarise(n = n())
+vessel_counts <- xylem_only %>% group_by(Species) %>% summarise(n = n())
+
 species_sum <- xylem_only %>% 
   group_by(Species) %>% 
   summarise(mean_area=mean(Area.µm.2, na.rm=T))
