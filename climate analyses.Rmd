@@ -54,7 +54,8 @@ eucalypt_sum <- eucalypt_occ %>%
 
 Filtering species in database
 ```{r}
-euc_database <- read.csv("data/database_namematched.csv", header=T)
+euc_database <- read.csv("data/name_matched_list.csv", header=T)
+
 
 climate_prefs <- eucalypt_sum %>% filter(scientificName %in% euc_database$current_name)
 ```
@@ -66,19 +67,19 @@ areas <- read.csv("data/xylem_areas.csv", header=T)
 xylem_only <- areas %>% filter(Name=="vessel")
 
 xylem_only <- xylem_only %>% 
-  separate(Image, c("Family", "Other"), sep = " ", extra = "merge") %>% 
-  separate(Other, c("Species", "Other"), sep = "_", extra = "merge")
+  separate(Image, c("family", "other"), sep = " ", extra = "merge") %>% 
+  separate(other, c("species", "other"), sep = "_", extra = "merge")
 
 xylem_database <- xylem_only %>% 
-  left_join(euc_database, by = "Species") %>% 
+  left_join(euc_database, by = "species") %>% 
   left_join(climate_prefs, by = c("current_name" = "scientificName")) %>% 
   drop_na(current_name)
 
-sample_counts <- xylem_database %>% group_by(Species, Other) %>% summarise(n = n())
-vessel_counts <- xylem_database %>% group_by(Species) %>% summarise(n = n())
+sample_counts <- xylem_database %>% group_by(species, other) %>% summarise(n = n())
+vessel_counts <- xylem_database %>% group_by(species) %>% summarise(n = n())
 
 species_sum <- xylem_database %>% 
-  group_by(Species) %>% 
+  group_by(species) %>% 
   summarise(mean_area=mean(Area.µm.2, na.rm=T))
 
 ```
@@ -86,7 +87,7 @@ species_sum <- xylem_database %>%
 Adding to climate pref data
 ```{r}
 species_sum <- species_sum %>% 
-  left_join(euc_database, by = "Species") %>% 
+  left_join(euc_database, by = "species") %>% 
   left_join(climate_prefs, by = c("current_name" = "scientificName"))
 
 species_sum <- species_sum %>% 
@@ -130,7 +131,6 @@ logMAP_plot + logWetq_plot
 
 MAP_lm <- lm(log_MAP~log_area, data = species_sum)
 summary(MAP_lm)
-plot(MAP_lm)
 plot(MAP_lm, which=1)
 
 Wetq_lm <- lm(log_wetq~log_area, data = species_sum)
