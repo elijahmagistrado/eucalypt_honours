@@ -69,10 +69,15 @@ xylem_only <- xylem_only %>%
   separate(Image, c("Family", "Other"), sep = " ", extra = "merge") %>% 
   separate(Other, c("Species", "Other"), sep = "_", extra = "merge")
 
-sample_counts <- xylem_only %>% group_by(Species, Other) %>% summarise(n = n())
-vessel_counts <- xylem_only %>% group_by(Species) %>% summarise(n = n())
+xylem_database <- xylem_only %>% 
+  left_join(euc_database, by = "Species") %>% 
+  left_join(climate_prefs, by = c("current_name" = "scientificName")) %>% 
+  drop_na(current_name)
 
-species_sum <- xylem_only %>% 
+sample_counts <- xylem_database %>% group_by(Species, Other) %>% summarise(n = n())
+vessel_counts <- xylem_database %>% group_by(Species) %>% summarise(n = n())
+
+species_sum <- xylem_database %>% 
   group_by(Species) %>% 
   summarise(mean_area=mean(Area.µm.2, na.rm=T))
 
