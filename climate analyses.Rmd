@@ -134,6 +134,7 @@ plot(MAP_lm, which=1)
 Wetq_lm <- lm(log_wetq~log_area, data = species_sum)
 summary(Wetq_lm)
 plot(Wetq_lm, which=1)
+
 ```
 
 
