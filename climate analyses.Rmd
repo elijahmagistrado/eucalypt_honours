@@ -30,7 +30,6 @@ MAT <- raster("data/MAT.tif")
 seasonality <- raster("data/seasonality.tif")
 wet_quarter <- raster("data/wet_quarter.tif")
 dry_quarter <- raster("data/dry_quarter.tif")
-
 ```
 
 
@@ -41,6 +40,8 @@ eucalypt_occ$MAT <- raster::extract(MAT, euc_sp, method='simple')
 eucalypt_occ$seasonality <- raster::extract(seasonality, euc_sp, method='simple')
 eucalypt_occ$wet_quarter <- raster::extract(wet_quarter, euc_sp, method='simple')
 eucalypt_occ$dry_quarter <- raster::extract(dry_quarter, euc_sp, method='simple')
+
+eucalypt_occ <- eucalypt_occ %>% drop_na()
 
 eucalypt_sum <- eucalypt_occ %>% 
   group_by(scientificName) %>% 
@@ -58,13 +59,28 @@ euc_database <- read.csv("data/database_namematched.csv", header=T)
 climate_prefs <- eucalypt_sum %>% filter(scientificName %in% euc_database$current_name)
 ```
 
-Plotting distributions of climate preferences 
+Importing xylem data
 ```{r}
-hist(climate_prefs$MAP)
-hist(climate_prefs$MAT)
-hist(climate_prefs$seasonality)
-hist(climate_prefs$wet_quarter)
-hist(climate_prefs$dry_quarter)
+areas <- read.csv("data/xylem_areas.csv", header=T)
+
+xylem_only <- areas %>% filter(Name=="vessel")
+
+xylem_only <- xylem_only %>% 
+  separate(Image, c("Family", "Other"), sep = " ", extra = "merge") %>% 
+  separate(Other, c("Species", "Other"), sep = "_", extra = "merge")
+
+xylem_database <- xylem_only %>% 
+  left_join(euc_database, by = "Species") %>% 
+  left_join(climate_prefs, by = c("current_name" = "scientificName")) %>% 
+  drop_na(current_name)
+
+sample_counts <- xylem_database %>% group_by(Species, Other) %>% summarise(n = n())
+vessel_counts <- xylem_database %>% group_by(Species) %>% summarise(n = n())
+
+species_sum <- xylem_database %>% 
+  group_by(Species) %>% 
+  summarise(mean_area=mean(Area.µm.2, na.rm=T))
+
 ```
 
 Adding to climate pref data
@@ -91,7 +107,7 @@ library(patchwork)
 
 MAP_plot <- ggplot(species_sum, aes(x=mean_area, y=MAP)) + geom_point()
 MAT_plot <- ggplot(species_sum, aes(x=mean_area, y=MAT)) + geom_point()
-seasonality_plot <- ggplot(species_sum, aes(x=mean_area, y=seasonality)) + geom_point()
+seasonality_plot <- ggplot(species_sum, aes(x=mean_area, y=seasonality)) + geom_point() + scale_x_log10() + scale_y_log10()
 wetq_plot <- ggplot(species_sum, aes(x=mean_area, y=wet_quarter)) + geom_point()
 dryq_plot <- ggplot(species_sum, aes(x=mean_area, y=dry_quarter)) + geom_point()
 
@@ -106,6 +122,7 @@ species_sum$log_area <- log(species_sum$mean_area)
 species_sum$log_MAP <- log(species_sum$MAP)
 species_sum$log_wetq <- log(species_sum$wet_quarter)
 
+ggplot(species_sum, aes(x=log_area, y=log_MAP)) + geom_point()
 logMAP_plot <- ggplot(species_sum, aes(x=log_area, y=log_MAP)) + geom_point()
 logWetq_plot <- ggplot(species_sum, aes(x=log_area, y=log_wetq)) + geom_point()
 
@@ -113,6 +130,7 @@ logMAP_plot + logWetq_plot
 
 MAP_lm <- lm(log_MAP~log_area, data = species_sum)
 summary(MAP_lm)
+plot(MAP_lm)
 plot(MAP_lm, which=1)
 
 Wetq_lm <- lm(log_wetq~log_area, data = species_sum)
