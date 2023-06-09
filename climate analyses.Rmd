@@ -88,7 +88,24 @@ species_sum <- species_sum %>%
             seasonality=mean(seasonality, na.rm=T),
             wet_quarter=mean(wet_quarter, na.rm=T),
             dry_quarter=mean(dry_quarter, na.rm=T),
-            mean_area=mean(mean_area, na.rm=T))
+            mean_area=mean(mean_area, na.rm=T)) %>% 
+  drop_na()
+```
+
+Plotting area to climate variables
+```{r}
+library(ggplot2)
+library(patchwork)
+
+MAP_plot <- ggplot(species_sum, aes(x=mean_area, y=MAP)) + geom_point()
+MAT_plot <- ggplot(species_sum, aes(x=mean_area, y=MAT)) + geom_point()
+seasonality_plot <- ggplot(species_sum, aes(x=mean_area, y=seasonality)) + geom_point()
+wetq_plot <- ggplot(species_sum, aes(x=mean_area, y=wet_quarter)) + geom_point()
+dryq_plot <- ggplot(species_sum, aes(x=mean_area, y=dry_quarter)) + geom_point()
+
+MAP_plot + MAT_plot
+wetq_plot + dryq_plot
+seasonality_plot
 ```
 
 
