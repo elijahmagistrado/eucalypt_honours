@@ -173,13 +173,35 @@ xylem_Dh <- xylem_Dh %>% group_by(species) %>% summarise(mean_Dh = mean(Dh)) %>%
   left_join(species_climate, by = "current_name") %>% 
   drop_na()
 
-Dh_MAP_plot <- ggplot(xylem_Dh, aes(x=mean_Dh, y=MAP)) + geom_point()
-Dh_wetq_plot <- ggplot(xylem_Dh, aes(x=mean_Dh, y=wet_quarter)) + geom_point()
+Dh_MAP_plot <- ggplot(xylem_Dh, aes(y=mean_Dh, x=MAP)) + geom_point()
+Dh_wetq_plot <- ggplot(xylem_Dh, aes(y=mean_Dh, x=wet_quarter)) + geom_point()
 
 plot(Dh_MAP_plot + Dh_wetq_plot)
-#species_areas <- areas %>% 
-#  group_by(species, other, Name) %>% 
-#  summarise(total_area = sum(Area.µm.2, na.rm=T),
-#            )
 ```
+
+Calculating lumen fraction
+```{r}
+species_areas <- areas %>% 
+  group_by(species, other, Name) %>% 
+  summarise(total_area = sum(Area.µm.2, na.rm=T))
+
+species_areas_wider <- species_areas %>% pivot_wider(names_from = Name, values_from = total_area)
+species_areas_wider <- species_areas_wider %>% 
+  mutate(total_vessel = vessel + part,
+         lumen_fraction = total_vessel/PathAnnotationObject)
+
+lumen_fractions <- species_areas_wider %>% 
+  summarise(mean_lumen_frac = mean(lumen_fraction))
+
+lumen_fractions <- lumen_fractions %>% 
+  left_join(euc_database, by = "species") %>% 
+  left_join(species_climate, by = "current_name") %>% 
+  drop_na()
+
+lumen_MAP_plot <- ggplot(lumen_fractions, aes(y=mean_lumen_frac, x=MAP)) + geom_point()
+lumen_wetq_plot <- ggplot(lumen_fractions, aes(y=mean_lumen_frac, x=wet_quarter)) + geom_point()
+
+plot(lumen_MAP_plot + lumen_wetq_plot)
+```
+
 
