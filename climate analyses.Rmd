@@ -215,12 +215,22 @@ plot(lumen_MAP_plot + lumen_MAT_plot + lumen_wetq_plot + lumen_dryq_plot)
 
 Comparing lumenfrac to diameter
 ```{r}
-Dh_lumen <- lumen_fractions %>% left_join(xylem_Dh, by = "species")
+Dh_lumen <- lumen_fractions[1:2] %>% left_join(xylem_Dh[1:2], by = "species") %>% 
+  left_join(xylem_Dh[, c(1,5)], by = "species")
 
 Dh_lumen_plot <- ggplot(Dh_lumen, aes(x=mean_Dh, y=mean_lumen_frac)) +
   geom_point()
 
 plot(Dh_lumen_plot)
+
+
 ```
 
+```{r}
+library(vegan)
+
+vessel_data <- Dh_lumen[,2:4]
+vessel_mds <- metaMDS(comm = vessel_data, distance = "bray", trace = FALSE, autotransform = FALSE)
+plot(vessel_mds$points)
+```
 
