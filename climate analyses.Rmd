@@ -62,7 +62,7 @@ climate_prefs <- eucalypt_sum %>% filter(scientificName %in% euc_database$curren
 
 Importing xylem data
 ```{r}
-areas <- read.csv("data/xylem_areas.csv", header=T)
+areas <- read.csv("data/xylem_areas2.csv", header=T)
 
 xylem_only <- areas %>% filter(Name=="vessel")
 
@@ -89,11 +89,11 @@ species_sum$SE <- species_sum$sd/(sqrt(species_sum$n))
 
 Adding to climate pref data
 ```{r}
-species_sum <- species_sum %>% 
+species_climate <- species_sum %>% 
   left_join(euc_database, by = "species") %>% 
   left_join(climate_prefs, by = c("current_name" = "scientificName"))
 
-species_sum <- species_sum %>% 
+species_climate <- species_climate %>% 
   group_by(current_name) %>% 
   summarise(MAP=mean(MAP, na.rm=T), 
             MAT=mean(MAT, na.rm=T),
@@ -102,6 +102,8 @@ species_sum <- species_sum %>%
             dry_quarter=mean(dry_quarter, na.rm=T),
             mean_area=mean(mean_area, na.rm=T)) %>% 
   drop_na()
+
+
 ```
 
 Plotting area to climate variables
@@ -109,11 +111,11 @@ Plotting area to climate variables
 library(ggplot2)
 library(patchwork)
 
-MAP_plot <- ggplot(species_sum, aes(x=mean_area, y=MAP)) + geom_point()
-MAT_plot <- ggplot(species_sum, aes(x=mean_area, y=MAT)) + geom_point()
-seasonality_plot <- ggplot(species_sum, aes(x=mean_area, y=seasonality)) + geom_point() + scale_x_log10() + scale_y_log10()
-wetq_plot <- ggplot(species_sum, aes(x=mean_area, y=wet_quarter)) + geom_point()
-dryq_plot <- ggplot(species_sum, aes(x=mean_area, y=dry_quarter)) + geom_point()
+MAP_plot <- ggplot(species_climate, aes(x=mean_area, y=MAP)) + geom_point()
+MAT_plot <- ggplot(species_climate, aes(x=mean_area, y=MAT)) + geom_point()
+seasonality_plot <- ggplot(species_climate, aes(x=mean_area, y=seasonality)) + geom_point() + scale_x_log10() + scale_y_log10()
+wetq_plot <- ggplot(species_climate, aes(x=mean_area, y=wet_quarter)) + geom_point()
+dryq_plot <- ggplot(species_climate, aes(x=mean_area, y=dry_quarter)) + geom_point()
 
 MAP_plot + MAT_plot
 wetq_plot + dryq_plot
@@ -122,21 +124,62 @@ seasonality_plot
 
 Data transform
 ```{r}
-species_sum$log_area <- log(species_sum$mean_area)
-species_sum$log_MAP <- log(species_sum$MAP)
-species_sum$log_wetq <- log(species_sum$wet_quarter)
+species_climate$log_area <- log(species_climate$mean_area)
+species_climate$log_MAP <- log(species_climate$MAP)
+species_climate$log_wetq <- log(species_climate$wet_quarter)
 
-ggplot(species_sum, aes(x=log_area, y=log_MAP)) + geom_point()
-logMAP_plot <- ggplot(species_sum, aes(x=log_area, y=log_MAP)) + geom_point()
-logWetq_plot <- ggplot(species_sum, aes(x=log_area, y=log_wetq)) + geom_point()
+ggplot(species_climate, aes(x=log_area, y=log_MAP)) + geom_point()
+logMAP_plot <- ggplot(species_climate, aes(x=log_area, y=log_MAP, label = rownames(species_climate))) + 
+  geom_point() + 
+  geom_text(check_overlap = T) +
+  geom_smooth(method = "lm", se = FALSE)
+
+logWetq_plot <- ggplot(species_climate, aes(x=log_area, y=log_wetq)) + geom_point()
 
 logMAP_plot + logWetq_plot
 
-MAP_lm <- lm(log_MAP~log_area, data = species_sum)
+MAP_lm <- lm(log_MAP~log_area, data = species_climate)
 summary(MAP_lm)
 plot(MAP_lm, which=1)
 
-Wetq_lm <- lm(log_wetq~log_area, data = species_sum)
+Wetq_lm <- lm(log_wetq~log_area, data = species_climate)
 summary(Wetq_lm)
 plot(Wetq_lm, which=1)
 ```
+
+Calculating hydraulically weighted diameter
+```{r}
+#areas <- areas %>% 
+ # separate(Image, c("family", "other"), sep = " ", extra = "merge") %>% 
+  #separate(other, c("species", "other"), sep = "_", extra = "merge")
+
+species_diameters <- areas
+species_diameters$radius <- sqrt(species_diameters$Area.µm.2/pi)
+species_diameters$r5 <- species_diameters$radius^5
+species_diameters$r4 <- species_diameters$radius^4
+species_diameters$diameter <- species_diameters$radius*2
+
+species_diameters <- species_diameters %>% 
+  group_by(species, other, Name) %>% 
+  summarise(sum_r5 = sum(r5),
+            sum_r4 = sum(r4),
+            n = n())
+
+species_diameters$Dh <- species_diameters$sum_r5/species_diameters$sum_r4
+
+xylem_Dh <- species_diameters %>% filter(Name == "vessel")
+xylem_Dh <- xylem_Dh %>% group_by(species) %>% summarise(mean_Dh = mean(Dh)) %>% 
+  left_join(euc_database, by = "species") %>% 
+  left_join(species_climate, by = "current_name") %>% 
+  drop_na()
+
+Dh_MAP_plot <- ggplot(xylem_Dh, aes(x=mean_Dh, y=MAP)) + geom_point()
+Dh_wetq_plot <- ggplot(xylem_Dh, aes(x=mean_Dh, y=wet_quarter)) + geom_point()
+
+plot(Dh_MAP_plot + Dh_wetq_plot)
+#species_areas <- areas %>% 
+#  group_by(species, other, Name) %>% 
+#  summarise(total_area = sum(Area.µm.2, na.rm=T),
+#            )
+```
+
