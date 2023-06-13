@@ -174,9 +174,14 @@ xylem_Dh <- xylem_Dh %>% group_by(species) %>% summarise(mean_Dh = mean(Dh)) %>%
   drop_na()
 
 Dh_MAP_plot <- ggplot(xylem_Dh, aes(y=mean_Dh, x=MAP)) + geom_point()
+Dh_MAT_plot <- ggplot(xylem_Dh, aes(y=mean_Dh, x=MAT)) + geom_point()
 Dh_wetq_plot <- ggplot(xylem_Dh, aes(y=mean_Dh, x=wet_quarter)) + geom_point()
+Dh_dryq_plot <- ggplot(xylem_Dh, aes(y=mean_Dh, x=dry_quarter)) + geom_point()
+Dh_seasonality <- ggplot(xylem_Dh, aes(y=mean_Dh, x=seasonality)) + geom_point()
 
-plot(Dh_MAP_plot + Dh_wetq_plot)
+plot(Dh_MAP_plot + Dh_MAT_plot + Dh_wetq_plot + Dh_dryq_plot)
+plot(Dh_seasonality)
+#plot(Dh_wetq_plot + Dh_dryq_plot)
 ```
 
 Calculating lumen fraction
@@ -191,6 +196,7 @@ species_areas_wider <- species_areas_wider %>%
          lumen_fraction = total_vessel/PathAnnotationObject)
 
 lumen_fractions <- species_areas_wider %>% 
+  group_by(species) %>% 
   summarise(mean_lumen_frac = mean(lumen_fraction))
 
 lumen_fractions <- lumen_fractions %>% 
@@ -199,9 +205,22 @@ lumen_fractions <- lumen_fractions %>%
   drop_na()
 
 lumen_MAP_plot <- ggplot(lumen_fractions, aes(y=mean_lumen_frac, x=MAP)) + geom_point()
+lumen_MAT_plot <- ggplot(lumen_fractions, aes(y=mean_lumen_frac, x=MAT)) + geom_point()
 lumen_wetq_plot <- ggplot(lumen_fractions, aes(y=mean_lumen_frac, x=wet_quarter)) + geom_point()
+lumen_dryq_plot <- ggplot(lumen_fractions, aes(y=mean_lumen_frac, x=dry_quarter)) + geom_point()
 
-plot(lumen_MAP_plot + lumen_wetq_plot)
+plot(lumen_MAP_plot + lumen_MAT_plot + lumen_wetq_plot + lumen_dryq_plot)
+#plot(lumen_wetq_plot + lumen_dryq_plot)
+```
+
+Comparing lumenfrac to diameter
+```{r}
+Dh_lumen <- lumen_fractions %>% left_join(xylem_Dh, by = "species")
+
+Dh_lumen_plot <- ggplot(Dh_lumen, aes(x=mean_Dh, y=mean_lumen_frac)) +
+  geom_point()
+
+plot(Dh_lumen_plot)
 ```
 
 
