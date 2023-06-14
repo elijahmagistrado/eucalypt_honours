@@ -10,6 +10,7 @@ Loading Eucalypt occurrences
 library(sp)
 library(dplyr)
 library(tidyr)
+library(ggplot2)
 
 euc_names <- read.csv("data/name_matched_list.csv", header=T)
 
@@ -86,22 +87,28 @@ xylem_Dh <- euc_database %>%
 ```
 
 ```{r}
-library(ggplot2)
-library(patchwork)
+Dh_regression = list()
 
-mean_MAP_Dh <- xylem_Dh %>% ggplot(aes(mean_MAP, mean_Dh, col=highly_seasonal)) + geom_point()
-min_MAP_Dh <- xylem_Dh %>% ggplot(aes(min_MAP, mean_Dh, col=highly_seasonal)) + geom_point()
-MAT_Dh <- xylem_Dh %>% ggplot(aes(MAT, mean_Dh, col=highly_seasonal)) + geom_point()
-wetq_Dh <- xylem_Dh %>% ggplot(aes(wetq, mean_Dh, col=highly_seasonal)) + geom_point()
-dryq_Dh <- xylem_Dh %>% ggplot(aes(dryq, mean_Dh, col=highly_seasonal)) + geom_point()
-seasonality_Dh <- xylem_Dh %>% ggplot(aes(seasonality, mean_Dh)) + geom_point()
+climate_vars = colnames(xylem_Dh[,3:8])
 
-plot(mean_MAP_Dh)
-plot(min_MAP_Dh)
-plot(MAT_Dh)
-plot(wetq_Dh)
-plot(dryq_Dh)
-plot(seasonality_Dh)
+for (var in climate_vars) {
+  formula <- paste("mean_Dh ~", var)
+  Dh_regression[[var]] <- lm(formula, data = xylem_Dh)
+}
+```
+
+
+```{r}
+Dh_plots = list()
+
+for (var in climate_vars) {
+  Dh_plots[[var]] <- xylem_Dh %>% 
+    ggplot(aes_string(x = var, y = "mean_Dh")) + geom_point()
+}
+
+for (plot in Dh_plots) {
+  plot(plot)
+}
 ```
 
 
@@ -120,19 +127,57 @@ xylem_lumen <- euc_database %>%
 
 ```
 
-```{r}
-mean_MAP_lumen <- xylem_lumen %>% ggplot(aes(mean_MAP, mean_lumen_frac, col=highly_seasonal)) + geom_point()
-min_MAP_lumen <- xylem_lumen %>% ggplot(aes(min_MAP, mean_lumen_frac, col=highly_seasonal)) + geom_point()
-MAT_lumen <- xylem_lumen %>% ggplot(aes(MAT, mean_lumen_frac, col=highly_seasonal)) + geom_point()
-wetq_lumen <- xylem_lumen %>% ggplot(aes(wetq, mean_lumen_frac, col=highly_seasonal)) + geom_point()
-dryq_lumen <- xylem_lumen %>% ggplot(aes(dryq, mean_lumen_frac, col=highly_seasonal)) + geom_point()
-seasonality_lumen <- xylem_lumen %>% ggplot(aes(seasonality, mean_lumen_frac)) + geom_point()
 
-plot(mean_MAP_lumen)
-plot(min_MAP_lumen)
-plot(MAT_lumen)
-plot(wetq_lumen)
-plot(dryq_lumen)
-plot(seasonality_lumen)
+```{r}
+lumen_regression = list()
+
+for (var in climate_vars) {
+  formula <- paste("mean_lumen_frac ~", var)
+  lumen_regression[[var]] <- lm(formula, data = xylem_lumen)
+}
 ```
+
+
+```{r}
+lumen_plots = list()
+
+for (var in climate_vars) {
+  lumen_plots[[var]] <- xylem_lumen %>% 
+    ggplot(aes_string(x = var, y = "mean_lumen_frac")) + geom_point()
+}
+
+for (plot in lumen_plots) {
+  plot(plot)
+}
+```
+
+
+Comparing Dh to lumen fraction
+```{r}
+species_summary <- xylem_Dh %>% 
+  left_join(xylem_lumen[,1:2], by = "current_name") 
+
+Dh_lumen_plot <- species_summary %>% 
+  ggplot(aes(x = mean_lumen_frac, y = mean_Dh, col = highly_seasonal)) + 
+  geom_point()
+
+plot(Dh_lumen_plot)
+```
+
+PCA
+```{r}
+library(vegan)
+
+species_standardised <- species_summary %>% 
+  dplyr::select(-c("current_name", "highly_seasonal")) %>% 
+  scale()
+
+xylem_PCA <- princomp(species_standardised, cor = FALSE)
+screeplot(xylem_PCA, type = "lines")
+summary(xylem_PCA)
+loadings(xylem_PCA)
+biplot(xylem_PCA)
+```
+
+
 
