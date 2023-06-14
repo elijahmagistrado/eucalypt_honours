@@ -70,6 +70,43 @@ euc_database <- image_data %>%
 ```
 
 
+Number of vessels
+```{r}
+euc_n <- euc_database %>%
+#  pivot_wider(names_from = Name, values_from = Area.µm.2) %>% 
+  group_by(current_name, other) %>% 
+  summarise(total_area = sum(Area.µm.2, na.rm=T)) %>% 
+  left_join(euc_database, by = "current_name") %>% 
+  filter(Name == "vessel") %>% 
+  group_by(current_name, other.x, total_area) %>% 
+  summarise(n=n(),
+            mean_area = mean(Area.µm.2, na.rm=T)) %>%
+  mutate(n_per_sap_area = n/total_area,
+         area_n_ratio = mean_area/n_per_sap_area) %>% 
+  #left_join(euc_climate_data, by = c("current_name" = "scientificName")) %>% 
+  drop_na()
+```
+
+```{r}
+area_n_plot <- euc_n %>% ggplot(aes(x=n_per_sap_area, y=mean_area)) +
+  geom_point()
+
+plot(area_n_plot)
+```
+
+
+```{r}
+n_plots = list()
+
+for (var in climate_vars) {
+  Dh_plots[[var]] <- euc_n %>% 
+    ggplot(aes_string(x = var, y = "n")) + geom_point() 
+}
+
+for (plot in Dh_plots) {
+  plot(plot)
+}
+```
 
 
 Calculating Hydraulically weighted diameter Dh
