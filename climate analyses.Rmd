@@ -11,10 +11,13 @@ library(sp)
 library(dplyr)
 library(tidyr)
 
-eucalypt_occ <- read.csv("data/euc_coords.csv", header=T)
-eucalypt_occ <- eucalypt_occ %>% drop_na()
+euc_names <- read.csv("data/name_matched_list.csv", header=T)
 
-coords <- cbind(eucalypt_occ$decimalLongitude, eucalypt_occ$decimalLatitude)
+euc_coords <- read.csv("data/euc_coords.csv", header=T) %>% 
+  drop_na() %>% 
+  filter(scientificName %in% euc_names$current_name)
+
+coords <- cbind(euc_coords$decimalLongitude, euc_coords$decimalLatitude)
 
 euc_sp <- SpatialPoints(coords, proj4string=CRS("+init=epsg:4326"))
 
@@ -28,64 +31,80 @@ library(raster)
 MAP <- raster("data/MAP.tif")
 MAT <- raster("data/MAT.tif")
 seasonality <- raster("data/seasonality.tif")
-wet_quarter <- raster("data/wet_quarter.tif")
-dry_quarter <- raster("data/dry_quarter.tif")
+wetq <- raster("data/wet_quarter.tif")
+dryq <- raster("data/dry_quarter.tif")
 ```
 
 
 Extracting climate data from points
 ```{r}
-eucalypt_occ$MAP <- raster::extract(MAP, euc_sp, method='simple')
-eucalypt_occ$MAT <- raster::extract(MAT, euc_sp, method='simple')
-eucalypt_occ$seasonality <- raster::extract(seasonality, euc_sp, method='simple')
-eucalypt_occ$wet_quarter <- raster::extract(wet_quarter, euc_sp, method='simple')
-eucalypt_occ$dry_quarter <- raster::extract(dry_quarter, euc_sp, method='simple')
+euc_coords$MAP <- raster::extract(MAP, euc_sp)
+euc_coords$MAT <- raster::extract(MAT, euc_sp)
+euc_coords$seasonality <- raster::extract(seasonality, euc_sp)
+euc_coords$wetq <- raster::extract(wetq, euc_sp)
+euc_coords$dryq <- raster::extract(dryq, euc_sp)
 
-eucalypt_occ <- eucalypt_occ %>% drop_na()
-
-eucalypt_sum <- eucalypt_occ %>% 
+euc_climate_data <- euc_coords %>% 
   group_by(scientificName) %>% 
-  summarise(MAP=mean(MAP, na.rm=T), 
-            MAT=mean(MAT, na.rm=T),
-            seasonality=mean(seasonality, na.rm=T),
-            wet_quarter=mean(wet_quarter, na.rm=T),
-            dry_quarter=mean(dry_quarter, na.rm=T))
+  summarise(mean_MAP=mean(MAP), 
+            min_MAP=min(MAP),
+            MAT=mean(MAT),
+            seasonality=mean(seasonality),
+            wetq=mean(wetq),
+            dryq=mean(dryq)) %>% 
+  drop_na()
 ```
 
-Filtering species in database
+Creating master spreadsheet
 ```{r}
-euc_database <- read.csv("data/name_matched_list.csv", header=T)
+image_data <- read.csv("data/xylem_areas2.csv", header=T) 
 
-
-climate_prefs <- eucalypt_sum %>% filter(scientificName %in% euc_database$current_name)
-```
-
-Importing xylem data
-```{r}
-areas <- read.csv("data/xylem_areas2.csv", header=T)
-
-xylem_only <- areas %>% filter(Name=="vessel")
-
-xylem_only <- xylem_only %>% 
+euc_database <- image_data %>% 
   separate(Image, c("family", "other"), sep = " ", extra = "merge") %>% 
-  separate(other, c("species", "other"), sep = "_", extra = "merge")
-
-xylem_database <- xylem_only %>% 
-  left_join(euc_database, by = "species") %>% 
-  left_join(climate_prefs, by = c("current_name" = "scientificName")) %>% 
-  drop_na(current_name)
-
-sample_counts <- xylem_database %>% group_by(species, other) %>% summarise(n = n())
-
-species_sum <- xylem_database %>% 
-  group_by(species) %>% 
-  summarise(mean_area=mean(Area.µm.2, na.rm=T),
-            sd=sd(Area.µm.2, na.rm=T),
-            n=n())
-
-species_sum$SE <- species_sum$sd/(sqrt(species_sum$n))
+  separate(other, c("species", "state", "other"), sep = "_", extra = "merge") %>% 
+  dplyr::select(c(species, state, other, Name, Area.µm.2)) %>% 
+  mutate(radius = sqrt(Area.µm.2/pi)) %>% 
+  left_join(euc_names, by = "species") %>% 
+  left_join(euc_climate_data, by = c("current_name" = "scientificName"))
 
 ```
+
+
+Calculating Hydraulically weighted diameter Dh
+```{r}
+xylem_Dh <- euc_database %>% 
+  filter(Name=="vessel") %>% 
+  mutate(r5 = radius^5,
+         r4 = radius^4) %>% 
+  group_by(current_name, other) %>% 
+  summarise(Dh = sum(r5)/ sum(r4)) %>% 
+  group_by(current_name) %>% 
+  summarise(mean_Dh = mean(Dh)) %>% 
+  left_join(euc_climate_data, by = c("current_name" = "scientificName")) %>% 
+  mutate(highly_seasonal = seasonality > 60) %>% 
+  drop_na()
+
+```
+
+```{r}
+library(ggplot2)
+library(patchwork)
+
+mean_MAP_Dh <- xylem_Dh %>% ggplot(aes(mean_MAP, mean_Dh, col=highly_seasonal)) + geom_point()
+min_MAP_Dh <- xylem_Dh %>% ggplot(aes(min_MAP, mean_Dh, col=highly_seasonal)) + geom_point()
+MAT_Dh <- xylem_Dh %>% ggplot(aes(MAT, mean_Dh, col=highly_seasonal)) + geom_point()
+wetq_Dh <- xylem_Dh %>% ggplot(aes(wetq, mean_Dh, col=highly_seasonal)) + geom_point()
+dryq_Dh <- xylem_Dh %>% ggplot(aes(dryq, mean_Dh, col=highly_seasonal)) + geom_point()
+seasonality_Dh <- xylem_Dh %>% ggplot(aes(seasonality, mean_Dh)) + geom_point()
+
+plot(mean_MAP_Dh)
+plot(min_MAP_Dh)
+plot(MAT_Dh)
+plot(wetq_Dh)
+plot(dryq_Dh)
+plot(seasonality_Dh)
+```
+
 
 Adding to climate pref data
 ```{r}
