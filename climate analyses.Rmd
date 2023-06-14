@@ -70,6 +70,8 @@ euc_database <- image_data %>%
 ```
 
 
+
+
 Calculating Hydraulically weighted diameter Dh
 ```{r}
 xylem_Dh <- euc_database %>% 
@@ -77,7 +79,7 @@ xylem_Dh <- euc_database %>%
   mutate(r5 = radius^5,
          r4 = radius^4) %>% 
   group_by(current_name, other) %>% 
-  summarise(Dh = sum(r5)/ sum(r4)) %>% 
+  summarise(Dh = sum(r5)/ sum(r4), na.rm=T) %>% 
   #group_by(current_name) %>% 
   #summarise(mean_Dh = mean(Dh, na.rm=T)) %>% 
   left_join(euc_climate_data, by = c("current_name" = "scientificName")) %>% 
@@ -122,7 +124,7 @@ Calculating lumen fractions
 ```{r}
 xylem_lumen <- euc_database %>% 
   group_by(current_name, other, Name) %>% 
-  summarise(total_area = sum(Area.µm.2)) %>% 
+  summarise(total_area = sum(Area.µm.2, na.rm=T)) %>% 
   pivot_wider(names_from = Name, values_from = total_area) %>% 
   mutate(lumen_frac = (part+vessel)/PathAnnotationObject) %>% 
   #group_by(current_name) %>% 
@@ -170,15 +172,15 @@ for (plot in lumen_plots) {
 Comparing Dh to lumen fraction
 ```{r}
 species_summary <- xylem_Dh %>% 
-  left_join(xylem_lumen[,1:2], by = "current_name") 
+  left_join(xylem_lumen[,c(1,6)], by = "current_name") 
 
 Dh_lumen_plot <- species_summary %>% 
-  ggplot(aes(x = mean_lumen_frac, y = mean_Dh)) + 
+  ggplot(aes(x = lumen_frac, y = Dh)) + 
   geom_point()
 
 plot(Dh_lumen_plot)
 
-Dh_lumen_lm <- lm(mean_Dh~mean_lumen_frac, data = species_summary)
+Dh_lumen_lm <- lm(Dh~lumen_frac, data = species_summary)
 summary(Dh_lumen_lm)
 plot(Dh_lumen_lm)
 hist(Dh_lumen_lm$residuals)
@@ -189,7 +191,8 @@ PCA
 library(vegan)
 
 species_standardised <- species_summary %>% 
-  dplyr::select(-c("current_name", "highly_seasonal")) %>% 
+  ungroup() %>% 
+  dplyr::select(-c(1,2,4,11)) %>% 
   scale()
 
 xylem_PCA <- princomp(species_standardised, cor = FALSE)
