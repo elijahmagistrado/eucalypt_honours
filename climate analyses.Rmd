@@ -158,10 +158,13 @@ species_summary <- xylem_Dh %>%
   left_join(xylem_lumen[,1:2], by = "current_name") 
 
 Dh_lumen_plot <- species_summary %>% 
-  ggplot(aes(x = mean_lumen_frac, y = mean_Dh, col = highly_seasonal)) + 
+  ggplot(aes(x = mean_lumen_frac, y = mean_Dh)) + 
   geom_point()
 
 plot(Dh_lumen_plot)
+
+Dh_lumen_lm <- lm(mean_Dh~mean_lumen_frac, data = species_summary)
+summary(Dh_lumen_lm)
 ```
 
 PCA
