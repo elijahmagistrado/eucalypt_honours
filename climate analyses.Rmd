@@ -46,13 +46,12 @@ euc_coords$dryq <- raster::extract(dryq, euc_sp)
 
 euc_climate_data <- euc_coords %>% 
   group_by(scientificName) %>% 
-  summarise(mean_MAP=mean(MAP), 
-            min_MAP=min(MAP),
-            MAT=mean(MAT),
-            seasonality=mean(seasonality),
-            wetq=mean(wetq),
-            dryq=mean(dryq)) %>% 
-  drop_na()
+  summarise(mean_MAP=mean(MAP, na.rm=T), 
+            min_MAP=min(MAP, na.rm=T),
+            MAT=mean(MAT, na.rm=T),
+            seasonality=mean(seasonality, na.rm=T),
+            wetq=mean(wetq, na.rm=T),
+            dryq=mean(dryq, na.rm=T))
 ```
 
 Creating master spreadsheet
@@ -79,7 +78,7 @@ xylem_Dh <- euc_database %>%
   group_by(current_name, other) %>% 
   summarise(Dh = sum(r5)/ sum(r4)) %>% 
   group_by(current_name) %>% 
-  summarise(mean_Dh = mean(Dh)) %>% 
+  summarise(mean_Dh = mean(Dh, na.rm=T)) %>% 
   left_join(euc_climate_data, by = c("current_name" = "scientificName")) %>% 
   mutate(highly_seasonal = seasonality > 60) %>% 
   drop_na()
@@ -106,150 +105,18 @@ plot(seasonality_Dh)
 ```
 
 
-Adding to climate pref data
+Calculating lumen fractions
 ```{r}
-species_climate <- species_sum %>% 
-  left_join(euc_database, by = "species") %>% 
-  left_join(climate_prefs, by = c("current_name" = "scientificName"))
-
-species_climate <- species_climate %>% 
+xylem_lumen <- euc_database %>% 
+  group_by(current_name, other, Name) %>% 
+  summarise(total_area = sum(Area.µm.2)) %>% 
+  pivot_wider(names_from = Name, values_from = total_area) %>% 
+  mutate(lumen_frac = (part+vessel)/PathAnnotationObject) %>% 
   group_by(current_name) %>% 
-  summarise(MAP=mean(MAP, na.rm=T), 
-            MAT=mean(MAT, na.rm=T),
-            seasonality=mean(seasonality, na.rm=T),
-            wet_quarter=mean(wet_quarter, na.rm=T),
-            dry_quarter=mean(dry_quarter, na.rm=T),
-            mean_area=mean(mean_area, na.rm=T)) %>% 
+  summarise(mean_lumen_frac = mean(lumen_frac, na.rm=T)) %>% 
+  left_join(euc_climate_data, by = c("current_name" = "scientificName")) %>% 
   drop_na()
 
-
 ```
 
-Plotting area to climate variables
-```{r}
-library(ggplot2)
-library(patchwork)
-
-MAP_plot <- ggplot(species_climate, aes(x=mean_area, y=MAP)) + geom_point()
-MAT_plot <- ggplot(species_climate, aes(x=mean_area, y=MAT)) + geom_point()
-seasonality_plot <- ggplot(species_climate, aes(x=mean_area, y=seasonality)) + geom_point() + scale_x_log10() + scale_y_log10()
-wetq_plot <- ggplot(species_climate, aes(x=mean_area, y=wet_quarter)) + geom_point()
-dryq_plot <- ggplot(species_climate, aes(x=mean_area, y=dry_quarter)) + geom_point()
-
-MAP_plot + MAT_plot
-wetq_plot + dryq_plot
-seasonality_plot
-```
-
-Data transform
-```{r}
-species_climate$log_area <- log(species_climate$mean_area)
-species_climate$log_MAP <- log(species_climate$MAP)
-species_climate$log_wetq <- log(species_climate$wet_quarter)
-
-ggplot(species_climate, aes(x=log_area, y=log_MAP)) + geom_point()
-logMAP_plot <- ggplot(species_climate, aes(x=log_area, y=log_MAP, label = rownames(species_climate))) + 
-  geom_point() + 
-  geom_text(check_overlap = T) +
-  geom_smooth(method = "lm", se = FALSE)
-
-logWetq_plot <- ggplot(species_climate, aes(x=log_area, y=log_wetq)) + geom_point()
-
-logMAP_plot + logWetq_plot
-
-MAP_lm <- lm(log_MAP~log_area, data = species_climate)
-summary(MAP_lm)
-plot(MAP_lm, which=1)
-
-Wetq_lm <- lm(log_wetq~log_area, data = species_climate)
-summary(Wetq_lm)
-plot(Wetq_lm, which=1)
-```
-
-Calculating hydraulically weighted diameter
-```{r}
-#areas <- areas %>% 
- # separate(Image, c("family", "other"), sep = " ", extra = "merge") %>% 
-  #separate(other, c("species", "other"), sep = "_", extra = "merge")
-
-species_diameters <- areas
-species_diameters$radius <- sqrt(species_diameters$Area.µm.2/pi)
-species_diameters$r5 <- species_diameters$radius^5
-species_diameters$r4 <- species_diameters$radius^4
-species_diameters$diameter <- species_diameters$radius*2
-
-species_diameters <- species_diameters %>% 
-  group_by(species, other, Name) %>% 
-  summarise(sum_r5 = sum(r5),
-            sum_r4 = sum(r4),
-            n = n())
-
-species_diameters$Dh <- species_diameters$sum_r5/species_diameters$sum_r4
-
-xylem_Dh <- species_diameters %>% filter(Name == "vessel")
-xylem_Dh <- xylem_Dh %>% group_by(species) %>% summarise(mean_Dh = mean(Dh)) %>% 
-  left_join(euc_database, by = "species") %>% 
-  left_join(species_climate, by = "current_name") %>% 
-  drop_na()
-
-Dh_MAP_plot <- ggplot(xylem_Dh, aes(y=mean_Dh, x=MAP)) + geom_point()
-Dh_MAT_plot <- ggplot(xylem_Dh, aes(y=mean_Dh, x=MAT)) + geom_point()
-Dh_wetq_plot <- ggplot(xylem_Dh, aes(y=mean_Dh, x=wet_quarter)) + geom_point()
-Dh_dryq_plot <- ggplot(xylem_Dh, aes(y=mean_Dh, x=dry_quarter)) + geom_point()
-Dh_seasonality <- ggplot(xylem_Dh, aes(y=mean_Dh, x=seasonality)) + geom_point()
-
-plot(Dh_MAP_plot + Dh_MAT_plot + Dh_wetq_plot + Dh_dryq_plot)
-plot(Dh_seasonality)
-#plot(Dh_wetq_plot + Dh_dryq_plot)
-```
-
-Calculating lumen fraction
-```{r}
-species_areas <- areas %>% 
-  group_by(species, other, Name) %>% 
-  summarise(total_area = sum(Area.µm.2, na.rm=T))
-
-species_areas_wider <- species_areas %>% pivot_wider(names_from = Name, values_from = total_area)
-species_areas_wider <- species_areas_wider %>% 
-  mutate(total_vessel = vessel + part,
-         lumen_fraction = total_vessel/PathAnnotationObject)
-
-lumen_fractions <- species_areas_wider %>% 
-  group_by(species) %>% 
-  summarise(mean_lumen_frac = mean(lumen_fraction))
-
-lumen_fractions <- lumen_fractions %>% 
-  left_join(euc_database, by = "species") %>% 
-  left_join(species_climate, by = "current_name") %>% 
-  drop_na()
-
-lumen_MAP_plot <- ggplot(lumen_fractions, aes(y=mean_lumen_frac, x=MAP)) + geom_point()
-lumen_MAT_plot <- ggplot(lumen_fractions, aes(y=mean_lumen_frac, x=MAT)) + geom_point()
-lumen_wetq_plot <- ggplot(lumen_fractions, aes(y=mean_lumen_frac, x=wet_quarter)) + geom_point()
-lumen_dryq_plot <- ggplot(lumen_fractions, aes(y=mean_lumen_frac, x=dry_quarter)) + geom_point()
-
-plot(lumen_MAP_plot + lumen_MAT_plot + lumen_wetq_plot + lumen_dryq_plot)
-#plot(lumen_wetq_plot + lumen_dryq_plot)
-```
-
-Comparing lumenfrac to diameter
-```{r}
-Dh_lumen <- lumen_fractions[1:2] %>% left_join(xylem_Dh[1:2], by = "species") %>% 
-  left_join(xylem_Dh[, c(1,5)], by = "species")
-
-Dh_lumen_plot <- ggplot(Dh_lumen, aes(x=mean_Dh, y=mean_lumen_frac)) +
-  geom_point()
-
-plot(Dh_lumen_plot)
-
-
-```
-
-```{r}
-library(vegan)
-
-vessel_data <- Dh_lumen[,2:4]
-vessel_mds <- metaMDS(comm = vessel_data, distance = "bray", trace = FALSE, autotransform = FALSE)
-plot(vessel_mds$points)
-```
 
