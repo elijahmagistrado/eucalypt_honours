@@ -115,8 +115,24 @@ xylem_lumen <- euc_database %>%
   group_by(current_name) %>% 
   summarise(mean_lumen_frac = mean(lumen_frac, na.rm=T)) %>% 
   left_join(euc_climate_data, by = c("current_name" = "scientificName")) %>% 
+  mutate(highly_seasonal = seasonality > 60) %>% 
   drop_na()
 
 ```
 
+```{r}
+mean_MAP_lumen <- xylem_lumen %>% ggplot(aes(mean_MAP, mean_lumen_frac, col=highly_seasonal)) + geom_point()
+min_MAP_lumen <- xylem_lumen %>% ggplot(aes(min_MAP, mean_lumen_frac, col=highly_seasonal)) + geom_point()
+MAT_lumen <- xylem_lumen %>% ggplot(aes(MAT, mean_lumen_frac, col=highly_seasonal)) + geom_point()
+wetq_lumen <- xylem_lumen %>% ggplot(aes(wetq, mean_lumen_frac, col=highly_seasonal)) + geom_point()
+dryq_lumen <- xylem_lumen %>% ggplot(aes(dryq, mean_lumen_frac, col=highly_seasonal)) + geom_point()
+seasonality_lumen <- xylem_lumen %>% ggplot(aes(seasonality, mean_lumen_frac)) + geom_point()
+
+plot(mean_MAP_lumen)
+plot(min_MAP_lumen)
+plot(MAT_lumen)
+plot(wetq_lumen)
+plot(dryq_lumen)
+plot(seasonality_lumen)
+```
 
