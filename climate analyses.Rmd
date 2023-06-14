@@ -78,8 +78,8 @@ xylem_Dh <- euc_database %>%
          r4 = radius^4) %>% 
   group_by(current_name, other) %>% 
   summarise(Dh = sum(r5)/ sum(r4)) %>% 
-  group_by(current_name) %>% 
-  summarise(mean_Dh = mean(Dh, na.rm=T)) %>% 
+  #group_by(current_name) %>% 
+  #summarise(mean_Dh = mean(Dh, na.rm=T)) %>% 
   left_join(euc_climate_data, by = c("current_name" = "scientificName")) %>% 
   mutate(highly_seasonal = seasonality > 60) %>% 
   drop_na()
@@ -89,11 +89,17 @@ xylem_Dh <- euc_database %>%
 ```{r}
 Dh_regression = list()
 
-climate_vars = colnames(xylem_Dh[,3:8])
+climate_vars = colnames(xylem_Dh[,4:9])
 
 for (var in climate_vars) {
-  formula <- paste("mean_Dh ~", var)
+  formula <- paste(sprintf("Dh~%s", var))
   Dh_regression[[var]] <- lm(formula, data = xylem_Dh)
+}
+
+for (lm in Dh_regression) {
+  print(summary(lm))
+  #plot(lm, which=1)
+  hist(lm$residuals)
 }
 ```
 
@@ -103,7 +109,7 @@ Dh_plots = list()
 
 for (var in climate_vars) {
   Dh_plots[[var]] <- xylem_Dh %>% 
-    ggplot(aes_string(x = var, y = "mean_Dh")) + geom_point()
+    ggplot(aes_string(x = var, y = "Dh")) + geom_point() 
 }
 
 for (plot in Dh_plots) {
@@ -119,8 +125,9 @@ xylem_lumen <- euc_database %>%
   summarise(total_area = sum(Area.µm.2)) %>% 
   pivot_wider(names_from = Name, values_from = total_area) %>% 
   mutate(lumen_frac = (part+vessel)/PathAnnotationObject) %>% 
-  group_by(current_name) %>% 
-  summarise(mean_lumen_frac = mean(lumen_frac, na.rm=T)) %>% 
+  #group_by(current_name) %>% 
+  #summarise(mean_lumen_frac = mean(lumen_frac, na.rm=T),
+  #         SE = sd(lumen_frac)/sqrt(n())) %>% 
   left_join(euc_climate_data, by = c("current_name" = "scientificName")) %>% 
   mutate(highly_seasonal = seasonality > 60) %>% 
   drop_na()
@@ -132,9 +139,16 @@ xylem_lumen <- euc_database %>%
 lumen_regression = list()
 
 for (var in climate_vars) {
-  formula <- paste("mean_lumen_frac ~", var)
+  formula <- paste(sprintf("sqrt(lumen_frac)~sqrt(%s)", var))
   lumen_regression[[var]] <- lm(formula, data = xylem_lumen)
 }
+
+for (lm in lumen_regression) {
+  print(summary(lm))
+  plot(lm, which=2)
+  hist(lm$residuals)
+}
+
 ```
 
 
@@ -143,7 +157,8 @@ lumen_plots = list()
 
 for (var in climate_vars) {
   lumen_plots[[var]] <- xylem_lumen %>% 
-    ggplot(aes_string(x = var, y = "mean_lumen_frac")) + geom_point()
+    ggplot(aes_string(x = var, y = "lumen_frac")) + geom_point() + scale_x_sqrt() +
+    scale_y_sqrt()
 }
 
 for (plot in lumen_plots) {
@@ -165,6 +180,8 @@ plot(Dh_lumen_plot)
 
 Dh_lumen_lm <- lm(mean_Dh~mean_lumen_frac, data = species_summary)
 summary(Dh_lumen_lm)
+plot(Dh_lumen_lm)
+hist(Dh_lumen_lm$residuals)
 ```
 
 PCA
