@@ -11,6 +11,7 @@ library(sp)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(patchwork)
 
 euc_names <- read.csv("data/name_matched_list.csv", header=T)
 
@@ -123,6 +124,32 @@ area_sd_plot <- euc_n %>%
 plot(area_sd_plot)
 ```
 
+Area climate plot
+```{r}
+area_mean_MAP <- euc_n %>% ggplot(aes(x = mean_MAP, y = mean_area)) + 
+  geom_point() + scale_x_log10() + scale_y_log10()
+
+area_min_MAP <- euc_n %>% ggplot(aes(x = min_MAP, y = mean_area)) + 
+  geom_point() + scale_x_log10() + scale_y_log10()
+
+area_wetq <- euc_n %>% ggplot(aes(x = wetq, y = mean_area)) + 
+  geom_point() + scale_x_log10() + scale_y_log10()
+
+area_dryq <- euc_n %>% ggplot(aes(x = dryq, y = mean_area)) + 
+  geom_point() + scale_x_log10() + scale_y_log10()
+
+area_MAT <- euc_n %>% ggplot(aes(x = MAT, y = mean_area)) + 
+  geom_point() #+ scale_x_log10() + scale_y_log10()
+
+area_seasonality <- euc_n %>% ggplot(aes(x = seasonality, y = mean_area)) + 
+  geom_point() #+ scale_x_log10() + scale_y_log10()
+
+area_mean_MAP + area_min_MAP
+area_wetq + area_dryq
+area_MAT + area_seasonality
+```
+
+
 
 ```{r}
 n_plots = list()
@@ -160,13 +187,13 @@ Dh_regression = list()
 climate_vars = colnames(xylem_Dh[,4:9])
 
 for (var in climate_vars) {
-  formula <- paste(sprintf("Dh~%s", var))
+  formula <- paste(sprintf("log(Dh)~log(%s)", var))
   Dh_regression[[var]] <- lm(formula, data = xylem_Dh)
 }
 
 for (lm in Dh_regression) {
   print(summary(lm))
-  #plot(lm, which=1)
+  plot(lm, which=2)
   hist(lm$residuals)
 }
 ```
@@ -177,7 +204,8 @@ Dh_plots = list()
 
 for (var in climate_vars) {
   Dh_plots[[var]] <- xylem_Dh %>% 
-    ggplot(aes_string(x = var, y = "Dh")) + geom_point() 
+    ggplot(aes_string(x = var, y = "Dh")) + geom_point() + 
+    scale_x_log10() + scale_y_log10()
 }
 
 for (plot in Dh_plots) {
