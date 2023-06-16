@@ -100,9 +100,12 @@ plot(area_n_lm)
 area_n_plot <- euc_n %>% 
   filter(other != "1_2402_x.jpg") %>% 
   ggplot(aes(x=n_per_sapwood_area, y=mean_area)) +
-  geom_point() + scale_x_log10() + scale_y_log10() + theme_classic()
+  geom_point() + scale_x_log10() + scale_y_log10() + 
+  geom_smooth(method = "lm", se = FALSE) +
+  theme_classic()
 
-plot(area_n_plot)
+area_n_plot
+ggsave("figures/area_n_plot.jpg", width=5, height=5)
 ```
 
 Plotting variance against climate variables
@@ -129,14 +132,26 @@ Area climate plot
 area_mean_MAP <- euc_n %>% ggplot(aes(x = mean_MAP, y = mean_area)) + 
   geom_point() + scale_x_log10() + scale_y_log10()
 
+area_mean_lm <- lm(log(mean_area)~log(mean_MAP), data = euc_n)
+summary(area_mean_lm)
+
 area_min_MAP <- euc_n %>% ggplot(aes(x = min_MAP, y = mean_area)) + 
   geom_point() + scale_x_log10() + scale_y_log10()
+
+area_min_lm <- lm(log(mean_area)~log(min_MAP), data = euc_n)
+summary(area_min_lm)
 
 area_wetq <- euc_n %>% ggplot(aes(x = wetq, y = mean_area)) + 
   geom_point() + scale_x_log10() + scale_y_log10()
 
+area_min_lm <- lm(log(mean_area)~log(wetq), data = euc_n)
+summary(area_min_lm)
+
 area_dryq <- euc_n %>% ggplot(aes(x = dryq, y = mean_area)) + 
   geom_point() + scale_x_log10() + scale_y_log10()
+
+area_min_lm <- lm(log(mean_area)~log(dryq), data = euc_n)
+summary(area_min_lm)
 
 area_MAT <- euc_n %>% ggplot(aes(x = MAT, y = mean_area)) + 
   geom_point() #+ scale_x_log10() + scale_y_log10()
@@ -145,8 +160,13 @@ area_seasonality <- euc_n %>% ggplot(aes(x = seasonality, y = mean_area)) +
   geom_point() #+ scale_x_log10() + scale_y_log10()
 
 area_mean_MAP + area_min_MAP
+ggsave("figures/area_MAP.jpg", width = 10, height = 5)
+
 area_wetq + area_dryq
+ggsave("figures/area_Q.jpg", width = 10, height = 5)
+
 area_MAT + area_seasonality
+ggsave("figures/area_MAT_season.jpg", width = 10, height = 5)
 ```
 
 
@@ -208,9 +228,14 @@ for (var in climate_vars) {
     scale_x_log10() + scale_y_log10()
 }
 
-for (plot in Dh_plots) {
-  plot(plot)
-}
+#for (plot in Dh_plots) {
+#  plot(plot)
+#}
+
+Dh_plots$mean_MAP + Dh_plots$min_MAP
+ggsave("figures/Dh_MAP.jpg", width = 10, height = 5)
+
+
 ```
 
 
@@ -260,13 +285,16 @@ for (var in climate_vars) {
 for (plot in lumen_plots) {
   plot(plot)
 }
+
+lumen_plots$mean_MAP + lumen_plots$min_MAP
+ggsave("figures/lumen_MAP.jpg", width = 10, height = 5)
 ```
 
 
 Comparing Dh to lumen fraction
 ```{r}
 species_summary <- xylem_Dh %>% 
-  left_join(xylem_lumen[,c(1,6)], by = "current_name") 
+  left_join(xylem_lumen[,c(2,6)], by = "other") 
 
 Dh_lumen_plot <- species_summary %>% 
   ggplot(aes(x = lumen_frac, y = Dh)) + 
@@ -276,8 +304,10 @@ plot(Dh_lumen_plot)
 
 Dh_lumen_lm <- lm(Dh~lumen_frac, data = species_summary)
 summary(Dh_lumen_lm)
-plot(Dh_lumen_lm)
 hist(Dh_lumen_lm$residuals)
+
+Dh_lumen_lm
+ggsave("figures/lumen_Dh.jpg", width = 5, height = 5)
 ```
 
 PCA
@@ -285,15 +315,18 @@ PCA
 library(vegan)
 
 species_standardised <- species_summary %>% 
+  drop_na() %>% 
   ungroup() %>% 
   dplyr::select(-c(1,2,10)) %>% 
-  scale()
+  scale() 
 
 xylem_PCA <- princomp(species_standardised, cor = FALSE)
 screeplot(xylem_PCA, type = "lines")
 summary(xylem_PCA)
 loadings(xylem_PCA)
 biplot(xylem_PCA)
+
+ggsave("figures/lumen_Dh.jpg", width = 5, height = 5)
 ```
 
 
