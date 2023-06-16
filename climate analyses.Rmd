@@ -258,7 +258,7 @@ library(vegan)
 
 species_standardised <- species_summary %>% 
   ungroup() %>% 
-  dplyr::select(-c(1,2,4,11)) %>% 
+  dplyr::select(-c(1,2,10)) %>% 
   scale()
 
 xylem_PCA <- princomp(species_standardised, cor = FALSE)
