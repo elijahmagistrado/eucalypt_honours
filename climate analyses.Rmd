@@ -64,7 +64,10 @@ euc_database <- image_data %>%
   separate(Image, c("family", "other"), sep = " ", extra = "merge") %>% 
   separate(other, c("species", "state", "other"), sep = "_", extra = "merge") %>% 
   dplyr::select(c(species, state, other, Name, Area.µm.2)) %>% 
-  mutate(radius = sqrt(Area.µm.2/pi)) %>% 
+  mutate(radius = sqrt(Area.µm.2/pi),
+         state = replace(state, state == "North QLD", "QLD"),
+         state = replace(state, state == "South QLD", "QLD")) %>% 
+  filter(state != "kb") %>% 
   left_join(euc_names, by = "species") %>% 
   left_join(euc_climate_data, by = c("current_name" = "scientificName"))
 
@@ -129,34 +132,40 @@ plot(area_sd_plot)
 
 Area climate plot
 ```{r}
-area_mean_MAP <- euc_n %>% ggplot(aes(x = mean_MAP, y = mean_area)) + 
+area_mean_MAP <- euc_n %>% 
+  ggplot(aes(x = mean_MAP, y = mean_area, col = state)) + 
   geom_point() + scale_x_log10() + scale_y_log10()
 
 area_mean_lm <- lm(log(mean_area)~log(mean_MAP), data = euc_n)
 summary(area_mean_lm)
 
-area_min_MAP <- euc_n %>% ggplot(aes(x = min_MAP, y = mean_area)) + 
+area_min_MAP <- euc_n %>% 
+  ggplot(aes(x = min_MAP, y = mean_area, col = state)) + 
   geom_point() + scale_x_log10() + scale_y_log10()
 
 area_min_lm <- lm(log(mean_area)~log(min_MAP), data = euc_n)
 summary(area_min_lm)
 
-area_wetq <- euc_n %>% ggplot(aes(x = wetq, y = mean_area)) + 
+area_wetq <- euc_n %>% 
+  ggplot(aes(x = wetq, y = mean_area, col = state)) + 
   geom_point() + scale_x_log10() + scale_y_log10()
 
 area_min_lm <- lm(log(mean_area)~log(wetq), data = euc_n)
 summary(area_min_lm)
 
-area_dryq <- euc_n %>% ggplot(aes(x = dryq, y = mean_area)) + 
+area_dryq <- euc_n %>% 
+  ggplot(aes(x = dryq, y = mean_area, col = state)) + 
   geom_point() + scale_x_log10() + scale_y_log10()
 
 area_min_lm <- lm(log(mean_area)~log(dryq), data = euc_n)
 summary(area_min_lm)
 
-area_MAT <- euc_n %>% ggplot(aes(x = MAT, y = mean_area)) + 
+area_MAT <- euc_n %>% 
+  ggplot(aes(x = MAT, y = mean_area, col = state)) + 
   geom_point() #+ scale_x_log10() + scale_y_log10()
 
-area_seasonality <- euc_n %>% ggplot(aes(x = seasonality, y = mean_area)) + 
+area_seasonality <- euc_n %>% 
+  ggplot(aes(x = seasonality, y = mean_area, col = state)) + 
   geom_point() #+ scale_x_log10() + scale_y_log10()
 
 area_mean_MAP + area_min_MAP
