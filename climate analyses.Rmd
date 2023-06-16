@@ -79,25 +79,40 @@ euc_n <- euc_database %>%
   filter(Name == "vessel") %>% 
   group_by(current_name, other) %>% 
   mutate(n=n(),
-            sd_area = sd(Area.µm.2, na.rm=T),
-            mean_area = mean(Area.µm.2, na.rm=T)) %>%
-  mutate(n_per_sap_area = n/total_area,
-         area_n_ratio = mean_area/n_per_sap_area) %>% 
+         mean_area = mean(Area.µm.2, na.rm=T),
+         log_mean_area = log(mean_area),
+         sd_area = sd(log(Area.µm.2))) %>%
+  mutate(n_per_sapwood_area = n/total_area,
+         area_n_ratio = mean_area/n_per_sapwood_area) %>% 
   distinct(other, .keep_all = TRUE) %>% 
   #left_join(euc_climate_data, by = c("current_name" = "scientificName")) %>% 
   drop_na()
 ```
 
 ```{r}
+area_n_lm <- lm(log(mean_area)~log(n_per_sapwood_area), data = euc_n %>% 
+                  filter(other != "1_2402_x.jpg"))
+summary(area_n_lm)
+hist(area_n_lm$residuals)
+plot(area_n_lm)
+
 area_n_plot <- euc_n %>% 
-  # filter(other != "1_2402_x.jpg") %>% 
-  ggplot(aes(x=n_per_sap_area, y=mean_area)) +
-  geom_point() + scale_x_log10() + scale_y_log10()
+  filter(other != "1_2402_x.jpg") %>% 
+  ggplot(aes(x=n_per_sapwood_area, y=mean_area)) +
+  geom_point() + scale_x_log10() + scale_y_log10() + theme_classic()
 
 plot(area_n_plot)
 ```
 
+Plotting variance against climate variables
+```{r}
+sd_n_plot <- euc_n %>% 
+  filter(other != "1_2402_x.jpg") %>% 
+  ggplot(aes(x=n_per_sapwood_area, y=sd_area)) +
+  geom_point() + scale_x_log10() + scale_y_log10() + theme_classic()
 
+plot(sd_n_plot)
+```
 
 
 
