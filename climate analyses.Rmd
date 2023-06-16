@@ -75,24 +75,30 @@ Number of vessels
 euc_n <- euc_database %>%
 #  pivot_wider(names_from = Name, values_from = Area.µm.2) %>% 
   group_by(current_name, other) %>% 
-  summarise(total_area = sum(Area.µm.2, na.rm=T)) %>% 
-  left_join(euc_database, by = "current_name") %>% 
+  mutate(total_area = sum(Area.µm.2, na.rm=T)) %>% 
   filter(Name == "vessel") %>% 
-  group_by(current_name, other.x, total_area) %>% 
-  summarise(n=n(),
+  group_by(current_name, other) %>% 
+  mutate(n=n(),
+            sd_area = sd(Area.µm.2, na.rm=T),
             mean_area = mean(Area.µm.2, na.rm=T)) %>%
   mutate(n_per_sap_area = n/total_area,
          area_n_ratio = mean_area/n_per_sap_area) %>% 
+  distinct(other, .keep_all = TRUE) %>% 
   #left_join(euc_climate_data, by = c("current_name" = "scientificName")) %>% 
   drop_na()
 ```
 
 ```{r}
-area_n_plot <- euc_n %>% ggplot(aes(x=n_per_sap_area, y=mean_area)) +
-  geom_point()
+area_n_plot <- euc_n %>% 
+  # filter(other != "1_2402_x.jpg") %>% 
+  ggplot(aes(x=n_per_sap_area, y=mean_area)) +
+  geom_point() + scale_x_log10() + scale_y_log10()
 
 plot(area_n_plot)
 ```
+
+
+
 
 
 ```{r}
