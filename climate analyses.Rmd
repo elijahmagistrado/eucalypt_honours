@@ -114,6 +114,14 @@ sd_n_plot <- euc_n %>%
 plot(sd_n_plot)
 ```
 
+```{r}
+area_sd_plot <- euc_n %>% 
+  filter(other != "1_2402_x.jpg") %>% 
+  ggplot(aes(x=mean_area, y=sd_area)) +
+  geom_point() + theme_classic()
+
+plot(area_sd_plot)
+```
 
 
 ```{r}
