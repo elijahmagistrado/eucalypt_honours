@@ -175,11 +175,11 @@ ggsave("figures/area_MAT_season.jpg", width = 10, height = 5)
 n_plots = list()
 
 for (var in climate_vars) {
-  Dh_plots[[var]] <- euc_n %>% 
+  n_plots[[var]] <- euc_n %>% 
     ggplot(aes_string(x = var, y = "n")) + geom_point() 
 }
 
-for (plot in Dh_plots) {
+for (plot in n_plots) {
   plot(plot)
 }
 ```
