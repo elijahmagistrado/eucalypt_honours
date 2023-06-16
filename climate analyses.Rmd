@@ -145,7 +145,7 @@ xylem_Dh <- euc_database %>%
   mutate(r5 = radius^5,
          r4 = radius^4) %>% 
   group_by(current_name, other) %>% 
-  summarise(Dh = sum(r5)/ sum(r4), na.rm=T) %>% 
+  summarise(Dh = sum(r5)/ sum(r4)) %>% 
   #group_by(current_name) %>% 
   #summarise(mean_Dh = mean(Dh, na.rm=T)) %>% 
   left_join(euc_climate_data, by = c("current_name" = "scientificName")) %>% 
