@@ -18,21 +18,20 @@ euc_coords <- read.csv("data/eucs_with_pre1970.csv", header=T) %>%
   filter(scientificName %in% euc_names$current_name) |> 
   rename(current_name = scientificName)
 
-coords <- cbind(euc_coords$decimalLongitude, euc_coords$decimalLatitude)
+euc_sp <- vect(euc_coords, geom = c("decimalLongitude", "decimalLatitude"))
 
-euc_sp <- SpatialPoints(coords, proj4string=CRS("+init=epsg:4326"))
 ```
 
 
 Loading precipitation rasters from worldclim
 ```{r}
-library(raster)
+library(terra)
 
-raster_list <- list.files("rasters/", full.names = T) |> map(raster)
+raster_list <- list.files("rasters/", full.names = T) |> map(rast)
 
 for (raster in raster_list) {
   euc_coords <- euc_coords |> 
-    mutate(!!sym(names(raster)) := raster::extract(raster, euc_sp))
+    mutate(!!sym(names(raster)) := terra::extract(raster, euc_sp))
 }
 
 euc_climate_data <- euc_coords |>  
@@ -42,8 +41,7 @@ euc_climate_data <- euc_coords |>
             MAT=mean(MAT, na.rm=T),
             seasonality=mean(seasonality, na.rm=T),
             wet_quarter=mean(wet_quarter, na.rm=T),
-            dry_quarter=mean(dry_quarter, na.rm=T)) |> 
-  mutate(data = "post_1970")
+            dry_quarter=mean(dry_quarter, na.rm=T))
 
 ```
 
