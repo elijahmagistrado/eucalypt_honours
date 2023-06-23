@@ -13,7 +13,7 @@ library(patchwork)
 
 euc_names <- read.csv("data/name_matched_list.csv", header=T)
 
-euc_coords <- read.csv("data/euc_coords.csv", header=T) %>% 
+euc_coords <- read.csv("data/eucs_with_pre1970.csv", header=T) %>% 
   drop_na() |> 
   filter(scientificName %in% euc_names$current_name) |> 
   rename(current_name = scientificName)
@@ -21,7 +21,6 @@ euc_coords <- read.csv("data/euc_coords.csv", header=T) %>%
 coords <- cbind(euc_coords$decimalLongitude, euc_coords$decimalLatitude)
 
 euc_sp <- SpatialPoints(coords, proj4string=CRS("+init=epsg:4326"))
-
 ```
 
 
@@ -43,7 +42,8 @@ euc_climate_data <- euc_coords |>
             MAT=mean(MAT, na.rm=T),
             seasonality=mean(seasonality, na.rm=T),
             wet_quarter=mean(wet_quarter, na.rm=T),
-            dry_quarter=mean(dry_quarter, na.rm=T))
+            dry_quarter=mean(dry_quarter, na.rm=T)) |> 
+  mutate(data = "post_1970")
 
 ```
 
@@ -93,7 +93,8 @@ euc_n <- euc_database %>%
 
 
 ggplot() + 
-  geom_point(data = zanne_data, aes(x = N, y = A), col = "red") +
+  geom_point(data = zanne_data, aes(x = N, y = A), col = "green") +
+  # geom_point(data = zanne_data |> filter(Family == "Myrtaceae"), aes(x = N, y = A), col = "red") +
   geom_point(data = euc_n, aes(x = n_per_sapwood_area, y = mean_area), col= "blue") + 
   scale_x_log10() + 
   scale_y_log10() +
@@ -107,11 +108,12 @@ summary(area_n_lm)
 hist(area_n_lm$residuals)
 plot(area_n_lm)
 
+performance::check_model(area_n_lm)
+
 area_n_plot <- euc_n %>% 
   filter(other != "1_2402_x.jpg") %>% 
   ggplot(aes(x=n_per_sapwood_area, y=mean_area)) +
   geom_point() + scale_x_log10() + scale_y_log10() + 
-  geom_smooth(method = "lm", se = FALSE) +
   theme_classic()
 
 area_n_plot
@@ -139,6 +141,13 @@ plot(area_sd_plot)
 
 Area climate plot
 ```{r}
+climate_vars <- names(euc_climate_data[2:7])
+
+ plot_data <- function(data) {
+   ggplot() +
+     geom_point(aes())
+ }
+
 area_mean_MAP <- euc_n %>% 
   ggplot(aes(x = mean_MAP, y = mean_area, col = state)) + 
   geom_point() + scale_x_log10() + scale_y_log10()
