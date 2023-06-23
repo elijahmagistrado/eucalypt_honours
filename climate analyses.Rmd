@@ -8,9 +8,7 @@ output: html_document
 Loading Eucalypt occurrences
 ```{r}
 library(sp)
-library(dplyr)
-library(tidyr)
-library(ggplot2)
+library(tidyverse)
 library(patchwork)
 
 euc_names <- read.csv("data/name_matched_list.csv", header=T)
@@ -30,11 +28,13 @@ Loading precipitation rasters from worldclim
 ```{r}
 library(raster)
 
-MAP <- raster("data/MAP.tif")
-MAT <- raster("data/MAT.tif")
-seasonality <- raster("data/seasonality.tif")
-wetq <- raster("data/wet_quarter.tif")
-dryq <- raster("data/dry_quarter.tif")
+raster_list <- list.files("rasters/", full.names = T) |> map(raster)
+
+for (raster in raster_list) {
+  euc_coords <- euc_coords |> 
+    mutate(!!sym(names(raster)) := raster::extract(raster, euc_sp))
+}
+
 ```
 
 
