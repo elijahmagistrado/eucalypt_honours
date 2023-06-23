@@ -14,8 +14,9 @@ library(patchwork)
 euc_names <- read.csv("data/name_matched_list.csv", header=T)
 
 euc_coords <- read.csv("data/euc_coords.csv", header=T) %>% 
-  drop_na() %>% 
-  filter(scientificName %in% euc_names$current_name)
+  drop_na() |> 
+  filter(scientificName %in% euc_names$current_name) |> 
+  rename(current_name = scientificName)
 
 coords <- cbind(euc_coords$decimalLongitude, euc_coords$decimalLatitude)
 
@@ -35,8 +36,8 @@ for (raster in raster_list) {
     mutate(!!sym(names(raster)) := raster::extract(raster, euc_sp))
 }
 
-euc_climate_data <- euc_coords %>% 
-  group_by(scientificName) %>% 
+euc_climate_data <- euc_coords |>  
+  group_by(current_name) |>  
   summarise(mean_MAP=mean(MAP, na.rm=T), 
             min_MAP=min(MAP, na.rm=T),
             MAT=mean(MAT, na.rm=T),
@@ -49,39 +50,54 @@ euc_climate_data <- euc_coords %>%
 
 Creating master spreadsheet
 ```{r}
-image_data <- read.csv("data/xylem_areas2.csv", header=T) 
-
-euc_database <- image_data %>% 
-  separate(Image, c("family", "other"), sep = " ", extra = "merge") %>% 
-  separate(other, c("species", "state", "other"), sep = "_", extra = "merge") %>% 
-  dplyr::select(c(species, state, other, Name, Area.µm.2)) %>% 
+image_data <- read.csv("data/xylem_areas2.csv", header=T) |> 
+  separate(Image, c("family", "other"), sep = " ", extra = "merge") |> 
+  separate(other, c("species", "state", "other"), sep = "_", extra = "merge") |> 
+  dplyr::select(c(species, state, other, Name, Area.µm.2)) |>  
   mutate(radius = sqrt(Area.µm.2/pi),
          state = replace(state, state == "North QLD", "QLD"),
-         state = replace(state, state == "South QLD", "QLD")) %>% 
-  filter(state != "kb") %>% 
-  left_join(euc_names, by = "species") %>% 
-  left_join(euc_climate_data, by = c("current_name" = "scientificName"))
+         state = replace(state, state == "South QLD", "QLD")) |>  
+  filter(state != "kb") 
+
+euc_database <- image_data |> 
+  left_join(euc_names, by = "species") |> 
+  left_join(euc_climate_data, by = "current_name")
 
 ```
 
 
-Number of vessels
+Comparing with Zanne et al. 
 ```{r}
+zanne_data <- read_csv("data/zanne_data.csv") |> mutate(source = "zanne ")
+
+euc_database <- euc_database |> mutate(Area.mm.2 = Area.µm.2/1000000,
+                       source = "mine")
+
 euc_n <- euc_database %>%
 #  pivot_wider(names_from = Name, values_from = Area.µm.2) %>% 
   group_by(current_name, other) %>% 
-  mutate(total_area = sum(Area.µm.2, na.rm=T)) %>% 
+  mutate(total_area = sum(Area.µm.2/1000000, na.rm=T)) %>% 
   filter(Name == "vessel") %>% 
   group_by(current_name, other) %>% 
   mutate(n=n(),
-         mean_area = mean(Area.µm.2, na.rm=T),
+         area_mm = Area.µm.2/1000000,
+         mean_area = mean(area_mm, na.rm=T),
          log_mean_area = log(mean_area),
-         sd_area = sd(log(Area.µm.2))) %>%
+         sd_area = sd(log(area_mm)),
+         source = "mine") %>%
   mutate(n_per_sapwood_area = n/total_area,
          area_n_ratio = mean_area/n_per_sapwood_area) %>% 
   distinct(other, .keep_all = TRUE) %>% 
   #left_join(euc_climate_data, by = c("current_name" = "scientificName")) %>% 
   drop_na()
+
+
+ggplot() + 
+  geom_point(data = zanne_data, aes(x = N, y = A), col = "red") +
+  geom_point(data = euc_n, aes(x = n_per_sapwood_area, y = mean_area), col= "blue") + 
+  scale_x_log10() + 
+  scale_y_log10() +
+  theme_classic()
 ```
 
 ```{r}
