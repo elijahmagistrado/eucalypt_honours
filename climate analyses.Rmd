@@ -35,26 +35,17 @@ for (raster in raster_list) {
     mutate(!!sym(names(raster)) := raster::extract(raster, euc_sp))
 }
 
-```
-
-
-Extracting climate data from points
-```{r}
-euc_coords$MAP <- raster::extract(MAP, euc_sp)
-euc_coords$MAT <- raster::extract(MAT, euc_sp)
-euc_coords$seasonality <- raster::extract(seasonality, euc_sp)
-euc_coords$wetq <- raster::extract(wetq, euc_sp)
-euc_coords$dryq <- raster::extract(dryq, euc_sp)
-
 euc_climate_data <- euc_coords %>% 
   group_by(scientificName) %>% 
   summarise(mean_MAP=mean(MAP, na.rm=T), 
             min_MAP=min(MAP, na.rm=T),
             MAT=mean(MAT, na.rm=T),
             seasonality=mean(seasonality, na.rm=T),
-            wetq=mean(wetq, na.rm=T),
-            dryq=mean(dryq, na.rm=T))
+            wet_quarter=mean(wet_quarter, na.rm=T),
+            dry_quarter=mean(dry_quarter, na.rm=T))
+
 ```
+
 
 Creating master spreadsheet
 ```{r}
