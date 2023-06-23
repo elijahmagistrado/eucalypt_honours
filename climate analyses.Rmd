@@ -31,7 +31,7 @@ raster_list <- list.files("rasters/", full.names = T) |> map(rast)
 
 for (raster in raster_list) {
   euc_coords <- euc_coords |> 
-    mutate(!!sym(names(raster)) := terra::extract(raster, euc_sp))
+    mutate(!!sym(names(raster)) := terra::extract(raster, euc_sp)[[2]])
 }
 
 euc_climate_data <- euc_coords |>  
