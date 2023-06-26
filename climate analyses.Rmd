@@ -102,7 +102,7 @@ ggplot() +
   scale_y_log10() +
   theme_classic()
 
-lm_analyse <- function(dataset, x, y, log_vars = FALSE) {
+lm_analyse <- function(dataset, x, y, log_vars = TRUE) {
   if (log_vars == FALSE) {
     data_lm <- substitute(lm(y~x, data=dataset))
   } else if (log_vars == TRUE) {
@@ -114,8 +114,8 @@ lm_analyse <- function(dataset, x, y, log_vars = FALSE) {
   print(result)
 }
 
-lm_analyse(euc_n, n_per_sapwood_area, mean_area, log_vars=TRUE)
-
+lm_analyse(euc_n, n_per_sapwood_area, mean_area)
+lm_analyse(zanne_data, N, A)
 ```
 
 ```{r}
