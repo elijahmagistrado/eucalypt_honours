@@ -111,6 +111,7 @@ lm_analyse <- function(dataset, x, y, log_vars = TRUE) {
 
   result <- eval(data_lm)
   print(performance::check_model(result))
+  print(performance::r2(result))
   print(result)
 }
 
