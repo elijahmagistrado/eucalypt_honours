@@ -10,6 +10,7 @@ Loading Eucalypt occurrences
 library(sp)
 library(tidyverse)
 library(patchwork)
+library(terra)
 
 euc_names <- read.csv("data/name_matched_list.csv", header=T)
 
@@ -25,8 +26,6 @@ euc_sp <- vect(euc_coords, geom = c("decimalLongitude", "decimalLatitude"))
 
 Loading precipitation rasters from worldclim
 ```{r}
-library(terra)
-
 raster_list <- list.files("rasters/", full.names = T) |> map(rast)
 
 for (raster in raster_list) {
@@ -38,16 +37,21 @@ euc_climate_data <- euc_coords |>
   group_by(current_name) |>  
   summarise(mean_MAP=mean(MAP, na.rm=T), 
             min_MAP=min(MAP, na.rm=T),
+            tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
             MAT=mean(MAT, na.rm=T),
             seasonality=mean(seasonality, na.rm=T),
             wet_quarter=mean(wet_quarter, na.rm=T),
             dry_quarter=mean(dry_quarter, na.rm=T))
+
+write.csv(euc_climate_data, "data/climate_data.csv", row.names = F)
 
 ```
 
 
 Creating master spreadsheet
 ```{r}
+euc_climate_data <- read_csv("data/climate_data.csv")
+
 image_data <- read.csv("data/xylem_areas2.csv", header=T) |> 
   separate(Image, c("family", "other"), sep = " ", extra = "merge") |> 
   separate(other, c("species", "state", "other"), sep = "_", extra = "merge") |> 
@@ -91,12 +95,27 @@ euc_n <- euc_database %>%
 
 
 ggplot() + 
-  geom_point(data = zanne_data, aes(x = N, y = A), col = "green") +
+  geom_point(data = zanne_data, aes(x = N, y = A), col = "red") +
   # geom_point(data = zanne_data |> filter(Family == "Myrtaceae"), aes(x = N, y = A), col = "red") +
-  geom_point(data = euc_n, aes(x = n_per_sapwood_area, y = mean_area), col= "blue") + 
+  geom_point(data = euc_n, aes(x = n_per_sapwood_area, y = mean_area), col= "blue") +
   scale_x_log10() + 
   scale_y_log10() +
   theme_classic()
+
+lm_analyse <- function(dataset, x, y, log_vars = FALSE) {
+  if (log_vars == FALSE) {
+    data_lm <- substitute(lm(y~x, data=dataset))
+  } else if (log_vars == TRUE) {
+    data_lm <- substitute(lm(log(y)~log(x), data=dataset))
+  }
+
+  result <- eval(data_lm)
+  print(performance::check_model(result))
+  print(result)
+}
+
+lm_analyse(euc_n, n_per_sapwood_area, mean_area, log_vars=TRUE)
+
 ```
 
 ```{r}
