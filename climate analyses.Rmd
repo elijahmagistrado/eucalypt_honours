@@ -5,6 +5,7 @@ date: "2023-04-26"
 output: html_document
 ---
 
+
 Loading Eucalypt occurrences
 ```{r}
 library(sp)
@@ -14,9 +15,11 @@ library(terra)
 
 euc_names <- read.csv("data/name_matched_list.csv", header=T)
 
-euc_coords <- read.csv("data/eucs_with_pre1970.csv", header=T) %>% 
+euc_coords <- read.csv("data/eucs_with_uncertainty.csv", header=T) %>% 
   drop_na() |> 
-  filter(scientificName %in% euc_names$current_name) |> 
+  filter(scientificName %in% euc_names$current_name,
+         coordinateUncertaintyInMeters <= 2000,
+         year >= 1900) |> 
   rename(current_name = scientificName)
 
 euc_sp <- vect(euc_coords, geom = c("decimalLongitude", "decimalLatitude"))
@@ -38,10 +41,12 @@ euc_climate_data <- euc_coords |>
   summarise(mean_MAP=mean(MAP, na.rm=T), 
             min_MAP=min(MAP, na.rm=T),
             tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
+            sd_MAP=sd(log(MAP), na.rm=T),
             MAT=mean(MAT, na.rm=T),
             seasonality=mean(seasonality, na.rm=T),
             wet_quarter=mean(wet_quarter, na.rm=T),
-            dry_quarter=mean(dry_quarter, na.rm=T))
+            dry_quarter=mean(dry_quarter, na.rm=T),
+            n=n())
 
 write.csv(euc_climate_data, "data/climate_data.csv", row.names = F)
 
