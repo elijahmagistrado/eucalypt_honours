@@ -18,7 +18,7 @@ euc_names <- read.csv("data/name_matched_list.csv", header=T)
 euc_coords <- read.csv("data/eucs_with_uncertainty.csv", header=T) %>% 
   drop_na() |> 
   filter(scientificName %in% euc_names$current_name,
-         coordinateUncertaintyInMeters <= 2000,
+         coordinateUncertaintyInMeters <= 10000,
          year >= 1900) |> 
   rename(current_name = scientificName)
 
@@ -29,7 +29,7 @@ euc_sp <- vect(euc_coords, geom = c("decimalLongitude", "decimalLatitude"))
 
 Loading precipitation rasters from worldclim
 ```{r}
-raster_list <- list.files("rasters/", full.names = T) |> map(rast)
+raster_list <- list.files("rasters_30s/", full.names = T) |> map(rast)
 
 for (raster in raster_list) {
   euc_coords <- euc_coords |> 
@@ -39,13 +39,13 @@ for (raster in raster_list) {
 euc_climate_data <- euc_coords |>  
   group_by(current_name) |>  
   summarise(mean_MAP=mean(MAP, na.rm=T), 
-            min_MAP=min(MAP, na.rm=T),
             tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
-            sd_MAP=sd(log(MAP), na.rm=T),
+            sd_log_MAP=sd(log(MAP), na.rm=T),
             MAT=mean(MAT, na.rm=T),
             seasonality=mean(seasonality, na.rm=T),
             wet_quarter=mean(wet_quarter, na.rm=T),
             dry_quarter=mean(dry_quarter, na.rm=T),
+            AI=mean(awi_pm_sr_yr, na.rm=T),
             n=n())
 
 write.csv(euc_climate_data, "data/climate_data.csv", row.names = F)
@@ -70,6 +70,19 @@ euc_database <- image_data |>
   left_join(euc_names, by = "species") |> 
   left_join(euc_climate_data, by = "current_name")
 
+database_by_species <- euc_database |> 
+  group_by(current_name) |> 
+  summarise(mean_area = mean(Area.µm.2, na.rm=T),
+            mean_MAP=mean(mean_MAP, na.rm=T), 
+            tenth_MAP=mean(tenth_MAP, na.rm=T)[1],
+            sd_log_MAP=mean(sd_log_MAP, na.rm=T),
+            MAT=mean(MAT, na.rm=T),
+            seasonality=mean(seasonality, na.rm=T),
+            wet_quarter=mean(wet_quarter, na.rm=T),
+            dry_quarter=mean(dry_quarter, na.rm=T),
+            AI=mean(AI, na.rm=T),
+            n=n())
+  
 ```
 
 
