@@ -207,10 +207,11 @@ xylem_Dh <- euc_database |>
          r4 = radius^4) |> 
   group_by(current_name, other) |> 
   summarise(Dh = sum(r5)/ sum(r4)) |> 
+  group_by(current_name) |> 
+  summarise(mean_Dh = mean(Dh, na.rm=T)) |> 
   #group_by(current_name) |> 
   #summarise(mean_Dh = mean(Dh, na.rm=T)) |> 
-  left_join(euc_climate_data, by = c("current_name" = "scientificName")) |> 
-  mutate(highly_seasonal = seasonality > 60) |> 
+  left_join(euc_climate_data, by = "current_name") |> 
   drop_na()
 
 ```
@@ -218,10 +219,8 @@ xylem_Dh <- euc_database |>
 ```{r}
 Dh_regression = list()
 
-climate_vars = colnames(xylem_Dh[,4:9])
-
 for (var in climate_vars) {
-  formula <- paste(sprintf("log(Dh)~log(%s)", var))
+  formula <- paste(sprintf("log(mean_Dh)~log(%s)", var))
   Dh_regression[[var]] <- lm(formula, data = xylem_Dh)
 }
 
@@ -238,7 +237,7 @@ Dh_plots = list()
 
 for (var in climate_vars) {
   Dh_plots[[var]] <- xylem_Dh |> 
-    ggplot(aes_string(x = var, y = "Dh")) + geom_point() + 
+    ggplot(aes_string(x = var, y = "mean_Dh")) + geom_point() + 
     scale_x_log10() + scale_y_log10()
 }
 
@@ -246,7 +245,7 @@ for (var in climate_vars) {
 #  plot(plot)
 #}
 
-Dh_plots$mean_MAP + Dh_plots$min_MAP
+Dh_plots$mean_MAP + Dh_plots$AI
 ggsave("figures/Dh_MAP.jpg", width = 10, height = 5)
 
 
