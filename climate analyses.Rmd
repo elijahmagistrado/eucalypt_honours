@@ -15,7 +15,7 @@ library(terra)
 
 euc_names <- read.csv("data/name_matched_list.csv", header=T)
 
-euc_coords <- read.csv("data/eucs_with_uncertainty.csv", header=T) %>% 
+euc_coords <- read.csv("data/eucs_with_uncertainty.csv", header=T) |> 
   drop_na() |> 
   filter(scientificName %in% euc_names$current_name,
          coordinateUncertaintyInMeters <= 10000,
@@ -82,7 +82,6 @@ database_by_species <- euc_database |>
             dry_quarter=mean(dry_quarter, na.rm=T),
             AI=mean(AI, na.rm=T),
             n=n())
-  
 ```
 
 
@@ -93,22 +92,22 @@ zanne_data <- read_csv("data/zanne_data.csv") |> mutate(source = "zanne ")
 euc_database <- euc_database |> mutate(Area.mm.2 = Area.µm.2/1000000,
                        source = "mine")
 
-euc_n <- euc_database %>%
-#  pivot_wider(names_from = Name, values_from = Area.µm.2) %>% 
-  group_by(current_name, other) %>% 
-  mutate(total_area = sum(Area.µm.2/1000000, na.rm=T)) %>% 
-  filter(Name == "vessel") %>% 
-  group_by(current_name, other) %>% 
-  mutate(n=n(),
-         area_mm = Area.µm.2/1000000,
+euc_n <- euc_database |> 
+#  pivot_wider(names_from = Name, values_from = Area.µm.2) |> 
+  group_by(current_name) |> 
+  mutate(total_area = sum(Area.µm.2/1000000, na.rm=T)) |> 
+  filter(Name == "vessel") |> 
+  ungroup() |> 
+  group_by(current_name) |> 
+  mutate(area_mm = Area.µm.2/1000000) |> 
+  summarise(n=n(),
          mean_area = mean(area_mm, na.rm=T),
          log_mean_area = log(mean_area),
          sd_area = sd(log(area_mm)),
-         source = "mine") %>%
-  mutate(n_per_sapwood_area = n/total_area,
-         area_n_ratio = mean_area/n_per_sapwood_area) %>% 
-  distinct(other, .keep_all = TRUE) %>% 
-  #left_join(euc_climate_data, by = c("current_name" = "scientificName")) %>% 
+         n_per_sapwood_area = n/total_area,
+         area_n_ratio = mean_area/n_per_sapwood_area) |> 
+  distinct() |> 
+  #left_join(euc_climate_data, by = c("current_name" = "scientificName")) |> 
   drop_na()
 
 
@@ -137,29 +136,9 @@ lm_analyse(euc_n, n_per_sapwood_area, mean_area)
 lm_analyse(zanne_data, N, A)
 ```
 
-```{r}
-area_n_lm <- lm(log(mean_area)~log(n_per_sapwood_area), data = euc_n %>% 
-                  filter(other != "1_2402_x.jpg"))
-summary(area_n_lm)
-hist(area_n_lm$residuals)
-plot(area_n_lm)
-
-performance::check_model(area_n_lm)
-
-area_n_plot <- euc_n %>% 
-  filter(other != "1_2402_x.jpg") %>% 
-  ggplot(aes(x=n_per_sapwood_area, y=mean_area)) +
-  geom_point() + scale_x_log10() + scale_y_log10() + 
-  theme_classic()
-
-area_n_plot
-ggsave("figures/area_n_plot.jpg", width=5, height=5)
-```
-
 Plotting variance against climate variables
 ```{r}
-sd_n_plot <- euc_n %>% 
-  filter(other != "1_2402_x.jpg") %>% 
+sd_n_plot <- euc_n |> 
   ggplot(aes(x=n_per_sapwood_area, y=sd_area)) +
   geom_point() + scale_x_log10() + scale_y_log10() + theme_classic()
 
@@ -167,10 +146,9 @@ plot(sd_n_plot)
 ```
 
 ```{r}
-area_sd_plot <- euc_n %>% 
-  filter(other != "1_2402_x.jpg") %>% 
+area_sd_plot <- euc_n |> 
   ggplot(aes(x=mean_area, y=sd_area)) +
-  geom_point() + theme_classic()
+  geom_point() + scale_x_log10() + scale_y_log10() + theme_classic()
 
 plot(area_sd_plot)
 ```
@@ -184,39 +162,39 @@ climate_vars <- names(euc_climate_data[2:7])
      geom_point(aes())
  }
 
-area_mean_MAP <- euc_n %>% 
+area_mean_MAP <- euc_n |> 
   ggplot(aes(x = mean_MAP, y = mean_area, col = state)) + 
   geom_point() + scale_x_log10() + scale_y_log10()
 
 area_mean_lm <- lm(log(mean_area)~log(mean_MAP), data = euc_n)
 summary(area_mean_lm)
 
-area_min_MAP <- euc_n %>% 
+area_min_MAP <- euc_n |> 
   ggplot(aes(x = min_MAP, y = mean_area, col = state)) + 
   geom_point() + scale_x_log10() + scale_y_log10()
 
 area_min_lm <- lm(log(mean_area)~log(min_MAP), data = euc_n)
 summary(area_min_lm)
 
-area_wetq <- euc_n %>% 
+area_wetq <- euc_n |> 
   ggplot(aes(x = wetq, y = mean_area, col = state)) + 
   geom_point() + scale_x_log10() + scale_y_log10()
 
 area_min_lm <- lm(log(mean_area)~log(wetq), data = euc_n)
 summary(area_min_lm)
 
-area_dryq <- euc_n %>% 
+area_dryq <- euc_n |> 
   ggplot(aes(x = dryq, y = mean_area, col = state)) + 
   geom_point() + scale_x_log10() + scale_y_log10()
 
 area_min_lm <- lm(log(mean_area)~log(dryq), data = euc_n)
 summary(area_min_lm)
 
-area_MAT <- euc_n %>% 
+area_MAT <- euc_n |> 
   ggplot(aes(x = MAT, y = mean_area, col = state)) + 
   geom_point() #+ scale_x_log10() + scale_y_log10()
 
-area_seasonality <- euc_n %>% 
+area_seasonality <- euc_n |> 
   ggplot(aes(x = seasonality, y = mean_area, col = state)) + 
   geom_point() #+ scale_x_log10() + scale_y_log10()
 
@@ -236,7 +214,7 @@ ggsave("figures/area_MAT_season.jpg", width = 10, height = 5)
 n_plots = list()
 
 for (var in climate_vars) {
-  n_plots[[var]] <- euc_n %>% 
+  n_plots[[var]] <- euc_n |> 
     ggplot(aes_string(x = var, y = "n")) + geom_point() 
 }
 
@@ -248,16 +226,16 @@ for (plot in n_plots) {
 
 Calculating Hydraulically weighted diameter Dh
 ```{r}
-xylem_Dh <- euc_database %>% 
-  filter(Name=="vessel") %>% 
+xylem_Dh <- euc_database |> 
+  filter(Name=="vessel") |> 
   mutate(r5 = radius^5,
-         r4 = radius^4) %>% 
-  group_by(current_name, other) %>% 
-  summarise(Dh = sum(r5)/ sum(r4)) %>% 
-  #group_by(current_name) %>% 
-  #summarise(mean_Dh = mean(Dh, na.rm=T)) %>% 
-  left_join(euc_climate_data, by = c("current_name" = "scientificName")) %>% 
-  mutate(highly_seasonal = seasonality > 60) %>% 
+         r4 = radius^4) |> 
+  group_by(current_name, other) |> 
+  summarise(Dh = sum(r5)/ sum(r4)) |> 
+  #group_by(current_name) |> 
+  #summarise(mean_Dh = mean(Dh, na.rm=T)) |> 
+  left_join(euc_climate_data, by = c("current_name" = "scientificName")) |> 
+  mutate(highly_seasonal = seasonality > 60) |> 
   drop_na()
 
 ```
@@ -284,7 +262,7 @@ for (lm in Dh_regression) {
 Dh_plots = list()
 
 for (var in climate_vars) {
-  Dh_plots[[var]] <- xylem_Dh %>% 
+  Dh_plots[[var]] <- xylem_Dh |> 
     ggplot(aes_string(x = var, y = "Dh")) + geom_point() + 
     scale_x_log10() + scale_y_log10()
 }
@@ -302,16 +280,16 @@ ggsave("figures/Dh_MAP.jpg", width = 10, height = 5)
 
 Calculating lumen fractions
 ```{r}
-xylem_lumen <- euc_database %>% 
-  group_by(current_name, other, Name) %>% 
-  summarise(total_area = sum(Area.µm.2, na.rm=T)) %>% 
-  pivot_wider(names_from = Name, values_from = total_area) %>% 
-  mutate(lumen_frac = (part+vessel)/PathAnnotationObject) %>% 
-  #group_by(current_name) %>% 
+xylem_lumen <- euc_database |> 
+  group_by(current_name, other, Name) |> 
+  summarise(total_area = sum(Area.µm.2, na.rm=T)) |> 
+  pivot_wider(names_from = Name, values_from = total_area) |> 
+  mutate(lumen_frac = (part+vessel)/PathAnnotationObject) |> 
+  #group_by(current_name) |> 
   #summarise(mean_lumen_frac = mean(lumen_frac, na.rm=T),
-  #         SE = sd(lumen_frac)/sqrt(n())) %>% 
-  left_join(euc_climate_data, by = c("current_name" = "scientificName")) %>% 
-  mutate(highly_seasonal = seasonality > 60) %>% 
+  #         SE = sd(lumen_frac)/sqrt(n())) |> 
+  left_join(euc_climate_data, by = c("current_name" = "scientificName")) |> 
+  mutate(highly_seasonal = seasonality > 60) |> 
   drop_na()
 
 ```
@@ -338,7 +316,7 @@ for (lm in lumen_regression) {
 lumen_plots = list()
 
 for (var in climate_vars) {
-  lumen_plots[[var]] <- xylem_lumen %>% 
+  lumen_plots[[var]] <- xylem_lumen |> 
     ggplot(aes_string(x = var, y = "lumen_frac")) + geom_point() + scale_x_sqrt() +
     scale_y_sqrt()
 }
@@ -354,10 +332,10 @@ ggsave("figures/lumen_MAP.jpg", width = 10, height = 5)
 
 Comparing Dh to lumen fraction
 ```{r}
-species_summary <- xylem_Dh %>% 
+species_summary <- xylem_Dh |> 
   left_join(xylem_lumen[,c(2,6)], by = "other") 
 
-Dh_lumen_plot <- species_summary %>% 
+Dh_lumen_plot <- species_summary |> 
   ggplot(aes(x = lumen_frac, y = Dh)) + 
   geom_point()
 
@@ -375,10 +353,10 @@ PCA
 ```{r}
 library(vegan)
 
-species_standardised <- species_summary %>% 
-  drop_na() %>% 
-  ungroup() %>% 
-  dplyr::select(-c(1,2,10)) %>% 
+species_standardised <- species_summary |> 
+  drop_na() |> 
+  ungroup() |> 
+  dplyr::select(-c(1,2,10)) |> 
   scale() 
 
 xylem_PCA <- princomp(species_standardised, cor = FALSE)
