@@ -45,7 +45,7 @@ euc_climate_data <- euc_coords |>
             seasonality=mean(seasonality, na.rm=T),
             wet_quarter=mean(wet_quarter, na.rm=T),
             dry_quarter=mean(dry_quarter, na.rm=T),
-            AI=mean(awi_pm_sr_yr, na.rm=T),
+            AI=mean(awi_pm_sr_yr/10000, na.rm=T),
             n=n())
 
 write.csv(euc_climate_data, "data/climate_data.csv", row.names = F)
