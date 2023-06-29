@@ -81,7 +81,8 @@ database_by_species <- euc_database |>
             wet_quarter=mean(wet_quarter, na.rm=T),
             dry_quarter=mean(dry_quarter, na.rm=T),
             AI=mean(AI, na.rm=T),
-            n=n())
+            n=n()) |> 
+  drop_na()
 ```
 
 
@@ -155,59 +156,30 @@ plot(area_sd_plot)
 
 Area climate plot
 ```{r}
-climate_vars <- names(euc_climate_data[2:7])
+climate_vars <- names(database_by_species[3:10])
 
- plot_data <- function(data) {
-   ggplot() +
-     geom_point(aes())
- }
+lm_climate <- function(var) {
+  # print(dataset)
+  plot <- ggplot() +
+    geom_point(data=database_by_species, aes_string(x=var, y="mean_area")) +
+    scale_x_log10() +
+    scale_y_log10() +
+    theme_bw()
+  
+  print(plot)
+  
+  lm_function <- paste(sprintf("log(mean_area)~log(%s)", var))
+  # print(lm_function)
+  data_lm <- lm(lm_function, data = database_by_species)
+  performance::r2(data_lm)[[1]]
+  # print(data_lm)
+}
 
-area_mean_MAP <- euc_n |> 
-  ggplot(aes(x = mean_MAP, y = mean_area, col = state)) + 
-  geom_point() + scale_x_log10() + scale_y_log10()
 
-area_mean_lm <- lm(log(mean_area)~log(mean_MAP), data = euc_n)
-summary(area_mean_lm)
+climate_vars |> map(lm_climate)
 
-area_min_MAP <- euc_n |> 
-  ggplot(aes(x = min_MAP, y = mean_area, col = state)) + 
-  geom_point() + scale_x_log10() + scale_y_log10()
 
-area_min_lm <- lm(log(mean_area)~log(min_MAP), data = euc_n)
-summary(area_min_lm)
-
-area_wetq <- euc_n |> 
-  ggplot(aes(x = wetq, y = mean_area, col = state)) + 
-  geom_point() + scale_x_log10() + scale_y_log10()
-
-area_min_lm <- lm(log(mean_area)~log(wetq), data = euc_n)
-summary(area_min_lm)
-
-area_dryq <- euc_n |> 
-  ggplot(aes(x = dryq, y = mean_area, col = state)) + 
-  geom_point() + scale_x_log10() + scale_y_log10()
-
-area_min_lm <- lm(log(mean_area)~log(dryq), data = euc_n)
-summary(area_min_lm)
-
-area_MAT <- euc_n |> 
-  ggplot(aes(x = MAT, y = mean_area, col = state)) + 
-  geom_point() #+ scale_x_log10() + scale_y_log10()
-
-area_seasonality <- euc_n |> 
-  ggplot(aes(x = seasonality, y = mean_area, col = state)) + 
-  geom_point() #+ scale_x_log10() + scale_y_log10()
-
-area_mean_MAP + area_min_MAP
-ggsave("figures/area_MAP.jpg", width = 10, height = 5)
-
-area_wetq + area_dryq
-ggsave("figures/area_Q.jpg", width = 10, height = 5)
-
-area_MAT + area_seasonality
-ggsave("figures/area_MAT_season.jpg", width = 10, height = 5)
 ```
-
 
 
 ```{r}
