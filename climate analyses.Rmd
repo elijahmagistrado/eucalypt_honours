@@ -98,11 +98,10 @@ euc_database <- euc_database |> mutate(Area.mm.2 = Area.µm.2/1000000,
 
 euc_n <- euc_database |> 
 #  pivot_wider(names_from = Name, values_from = Area.µm.2) |> 
-  group_by(current_name) |> 
+  group_by(current_name, other) |> 
   mutate(total_area = sum(Area.µm.2/1000000, na.rm=T)) |> 
   filter(Name == "vessel") |> 
-  ungroup() |> 
-  group_by(current_name) |> 
+  group_by(current_name, other) |> 
   mutate(area_mm = Area.µm.2/1000000) |> 
   summarise(n=n(),
          mean_area = mean(area_mm, na.rm=T),
@@ -110,8 +109,8 @@ euc_n <- euc_database |>
          sd_area = sd(log(area_mm)),
          n_per_sapwood_area = n/total_area,
          area_n_ratio = mean_area/n_per_sapwood_area) |> 
+  left_join(euc_climate_data, by = "current_name") |> 
   distinct() |> 
-  #left_join(euc_climate_data, by = c("current_name" = "scientificName")) |> 
   drop_na()
 
 
@@ -164,7 +163,7 @@ climate_vars <- names(database_by_species[3:10])
 lm_climate <- function(var) {
   # print(dataset)
   plot <- ggplot() +
-    geom_point(data=database_by_species, aes_string(x=var, y="mean_area")) +
+    geom_point(data=euc_n, aes_string(x=var, y="mean_area")) +
     scale_x_log10() +
     scale_y_log10() +
     theme_bw()
@@ -173,7 +172,7 @@ lm_climate <- function(var) {
   
   lm_function <- paste(sprintf("log(mean_area)~log(%s)", var))
   # print(lm_function)
-  data_lm <- lm(lm_function, data = database_by_species)
+  data_lm <- lm(lm_function, data = euc_n)
   performance::r2(data_lm)[[1]]
   # print(data_lm)
 }
