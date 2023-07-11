@@ -27,7 +27,7 @@ euc_sp <- vect(euc_coords, geom = c("decimalLongitude", "decimalLatitude"))
 ```
 
 
-Adding other familiy data
+Adding acacia
 ```{r}
 library(galah)
 library(ausflora)
@@ -103,6 +103,82 @@ acacia_by_species <- acacia_database |>
 
 
 ```
+
+
+Adding casuarina
+```{r}
+casuarina_areas <- read.csv("data/casuarina_areas.csv", header = T) |> 
+  separate(Image, c("family", "other"), sep = " ", extra = "merge") |> 
+  separate(other, c("species", "state", "other"), sep = "_", extra = "merge")
+
+casuarina_namematched <- create_taxonomic_update_lookup(casuarina_areas$species, 
+                                                     resources = resources)
+casuarina_areas <- casuarina_areas |> left_join(casuarina_namematched[,c(1,3)], by = c("species" = "original_name"))
+
+casuarina_summary <- casuarina_areas |> 
+  group_by(apc_name, other) |> 
+  mutate(total_area = sum(Area.µm.2/1000000, na.rm=T)) |> 
+  filter(Name == "vessel") |> 
+  group_by(apc_name, other) |> 
+  mutate(area_mm = Area.µm.2/1000000) |> 
+  summarise(n=n(),
+         mean_area = mean(area_mm, na.rm=T),
+         log_mean_area = log(mean_area),
+         sd_area = sd(log(area_mm)),
+         n_per_sapwood_area = n/total_area,
+         area_n_ratio = mean_area/n_per_sapwood_area) |> 
+  distinct() |> 
+  drop_na()
+
+casuarina_occs <- read.csv("data/casuarina_occurrences.csv", header = T) |> 
+  drop_na() |> 
+  rename(current_name = scientificName) |> 
+  filter(genus == "Casuarina" | genus == "Allocasuarina")
+
+casuarina_sp <- vect(casuarina_occs, geom = c("decimalLongitude", "decimalLatitude"))
+ 
+
+for (raster in raster_list) {
+  casuarina_occs <- casuarina_occs |> 
+    mutate(!!sym(names(raster)) := terra::extract(raster, casuarina_sp)[[2]])
+}
+
+casuarina_climate_data <- casuarina_occs |>  
+  group_by(current_name) |>  
+  summarise(mean_MAP=mean(MAP, na.rm=T), 
+            tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
+            sd_log_MAP=sd(log(MAP), na.rm=T),
+            MAT=mean(MAT, na.rm=T),
+            seasonality=mean(seasonality, na.rm=T),
+            wet_quarter=mean(wet_quarter, na.rm=T),
+            dry_quarter=mean(dry_quarter, na.rm=T),
+            AI=mean(awi_pm_sr_yr/10000, na.rm=T),
+            n=n()) |> 
+  filter(n > 5) |> 
+  drop_na() |> 
+  filter(current_name %in% casuarina_namematched$apc_name)
+
+
+casuarina_database <- casuarina_areas |> 
+  left_join(casuarina_climate_data, by = c("apc_name" = "current_name"))
+
+casuarina_by_species <- casuarina_database |> 
+  group_by(apc_name) |> 
+  summarise(mean_area = mean(Area.µm.2, na.rm=T),
+            mean_MAP=mean(mean_MAP, na.rm=T), 
+            tenth_MAP=mean(tenth_MAP, na.rm=T)[1],
+            sd_log_MAP=mean(sd_log_MAP, na.rm=T),
+            MAT=mean(MAT, na.rm=T),
+            seasonality=mean(seasonality, na.rm=T),
+            wet_quarter=mean(wet_quarter, na.rm=T),
+            dry_quarter=mean(dry_quarter, na.rm=T),
+            AI=mean(AI, na.rm=T),
+            n=n()) |> 
+  mutate(climate=cut(AI, breaks=c(-Inf, 0.03, 0.2, 0.5, 0.65, Inf), 
+                     labels=c("Hyper Arid", "Arid", "Semi-Arid", "Dry sub-humid", "Humid"))) |> 
+  drop_na()
+```
+
 
 ```{r}
 raster_list <- list.files("rasters_30s/", full.names = T) |> map(rast)
@@ -191,6 +267,25 @@ eucs_by_species <- euc_database |>
 ```
 
 
+```{r}
+ggplot() +
+  geom_point(data = eucs_by_species, aes(x = mean_MAP, y = mean_area), col = "red") +
+  geom_point(data = acacia_by_species, aes(x = mean_MAP, y = mean_area), col = "blue") +
+  geom_point(data = casuarina_by_species, aes(x = mean_MAP, y = mean_area), col = "green") +
+  theme_classic() + 
+  scale_x_log10() +
+  scale_y_log10()
+
+ggplot() +
+  geom_point(data = acacia_by_species, aes(x = AI, y = mean_area), col = "blue") +
+  geom_point(data = eucs_by_species, aes(x = AI, y = mean_area), col = "red") +
+  geom_point(data = casuarina_by_species, aes(x = AI, y = mean_area), col = "green") +
+  theme_classic() + 
+  scale_x_log10() +
+  scale_y_log10()
+```
+
+
 Comparing with Zanne et al. 
 ```{r}
 zanne_data <- read_csv("data/zanne_data.csv") |> mutate(source = "zanne ")
@@ -200,10 +295,10 @@ euc_database <- euc_database |> mutate(Area.mm.2 = Area.µm.2/1000000,
 
 euc_n <- euc_database |> 
 #  pivot_wider(names_from = Name, values_from = Area.µm.2) |> 
-  group_by(current_name, other) |> 
+  group_by(current_name) |> 
   mutate(total_area = sum(Area.µm.2/1000000, na.rm=T)) |> 
   filter(Name == "vessel") |> 
-  group_by(current_name, other) |> 
+  group_by(current_name) |> 
   mutate(area_mm = Area.µm.2/1000000) |> 
   summarise(n=n(),
          mean_area = mean(area_mm, na.rm=T),
@@ -217,10 +312,11 @@ euc_n <- euc_database |>
 
 
 ggplot() + 
-  geom_point(data = zanne_data, aes(x = N, y = A), col = "red") +
+  geom_point(data = zanne_data, aes(x = N, y = A), col = "grey") +
   # geom_point(data = zanne_data |> filter(Family == "Myrtaceae"), aes(x = N, y = A), col = "red") +
-  geom_point(data = euc_n, aes(x = n_per_sapwood_area, y = mean_area), col= "blue") +
-  geom_point(data = acacia_summary, aes(x = n_per_sapwood_area, y = mean_area), col= "green") +
+  geom_point(data = euc_n, aes(x = n_per_sapwood_area, y = mean_area), col= "red") +
+  geom_point(data = acacia_summary, aes(x = n_per_sapwood_area, y = mean_area), col= "blue") +
+  geom_point(data = casuarina_summary, aes(x = n_per_sapwood_area, y = mean_area), col= "green") +
   scale_x_log10() + 
   scale_y_log10() +
   theme_classic()
