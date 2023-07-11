@@ -27,6 +27,63 @@ euc_sp <- vect(euc_coords, geom = c("decimalLongitude", "decimalLatitude"))
 ```
 
 
+Adding other familiy data
+```{r}
+library(galah)
+library(ausflora)
+
+galah_config(email = "elijah.magi28@gmail.com")
+
+acacia_areas <- read.csv("data/acacia_areas.csv", header = T) |> 
+  separate(Image, c("family", "other"), sep = " ", extra = "merge") |> 
+  separate(other, c("species", "state", "other"), sep = "_", extra = "merge")
+
+resources <- load_taxonomic_resources()
+
+acacia_namematched <- create_taxonomic_update_lookup(acacia_areas$species, 
+                                                     resources = resources)
+acacia_areas <- acacia_areas |> left_join(acacia_namematched[,c(1,3)], by = c("species" = "original_name"))
+
+acacia_summary <- acacia_areas |> 
+  group_by(apc_name, other) |> 
+  mutate(total_area = sum(Area.µm.2/1000000, na.rm=T)) |> 
+  filter(Name == "vessel") |> 
+  group_by(apc_name, other) |> 
+  mutate(area_mm = Area.µm.2/1000000) |> 
+  summarise(n=n(),
+         mean_area = mean(area_mm, na.rm=T),
+         log_mean_area = log(mean_area),
+         sd_area = sd(log(area_mm)),
+         n_per_sapwood_area = n/total_area,
+         area_n_ratio = mean_area/n_per_sapwood_area) |> 
+  distinct() |> 
+  drop_na()
+```
+
+```{r}
+raster_list <- list.files("rasters_30s/", full.names = T) |> map(rast)
+
+for (raster in raster_list) {
+  other_family_occs <- other_family_occs |> 
+    mutate(!!sym(names(raster)) := terra::extract(raster, others_sp)[[2]])
+}
+
+other_climate_data <- other_family_occs |>  
+  group_by(current_name) |>  
+  summarise(mean_MAP=mean(MAP, na.rm=T), 
+            tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
+            sd_log_MAP=sd(log(MAP), na.rm=T),
+            MAT=mean(MAT, na.rm=T),
+            seasonality=mean(seasonality, na.rm=T),
+            wet_quarter=mean(wet_quarter, na.rm=T),
+            dry_quarter=mean(dry_quarter, na.rm=T),
+            AI=mean(awi_pm_sr_yr/10000, na.rm=T),
+            n=n()) |> 
+  filter(n > 5) |> 
+  drop_na()
+```
+
+
 Loading precipitation rasters from worldclim
 ```{r}
 raster_list <- list.files("rasters_30s/", full.names = T) |> map(rast)
@@ -118,6 +175,7 @@ ggplot() +
   geom_point(data = zanne_data, aes(x = N, y = A), col = "red") +
   # geom_point(data = zanne_data |> filter(Family == "Myrtaceae"), aes(x = N, y = A), col = "red") +
   geom_point(data = euc_n, aes(x = n_per_sapwood_area, y = mean_area), col= "blue") +
+  geom_point(data = acacia_summary, aes(x = n_per_sapwood_area, y = mean_area), col= "green") +
   scale_x_log10() + 
   scale_y_log10() +
   theme_classic()
