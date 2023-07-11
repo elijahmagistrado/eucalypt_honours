@@ -58,17 +58,61 @@ acacia_summary <- acacia_areas |>
          area_n_ratio = mean_area/n_per_sapwood_area) |> 
   distinct() |> 
   drop_na()
+
+acacia_occs <- read.csv("data/acacia_occurrences.csv", header = T) |> 
+  drop_na() |> 
+  rename(current_name = scientificName) |> 
+  filter(genus == "Acacia")
+
+acacia_sp <- vect(acacia_occs, geom = c("decimalLongitude", "decimalLatitude"))
+ 
+acacia_database <- acacia_areas |> 
+  left_join(acacia_climate_data, by = c("apc_name" = "current_name"))
+
+acacia_by_species <- acacia_database |> 
+  group_by(apc_name) |> 
+  summarise(mean_area = mean(Area.µm.2, na.rm=T),
+            mean_MAP=mean(mean_MAP, na.rm=T), 
+            tenth_MAP=mean(tenth_MAP, na.rm=T)[1],
+            sd_log_MAP=mean(sd_log_MAP, na.rm=T),
+            MAT=mean(MAT, na.rm=T),
+            seasonality=mean(seasonality, na.rm=T),
+            wet_quarter=mean(wet_quarter, na.rm=T),
+            dry_quarter=mean(dry_quarter, na.rm=T),
+            AI=mean(AI, na.rm=T),
+            n=n()) |> 
+  mutate(climate=cut(AI, breaks=c(-Inf, 0.03, 0.2, 0.5, 0.65, Inf), 
+                     labels=c("Hyper Arid", "Arid", "Semi-Arid", "Dry sub-humid", "Humid"))) |> 
+  drop_na()
+
+# galah_call() |> 
+#     galah_identify("Acacia melanoxylon") |> 
+#     galah_filter(year >= 2020, 
+#                  country == "Australia",
+#                  coordinateUncertaintyInMeters <= 10000) |> 
+#     galah_select(group = "basic") |> 
+#     atlas_occurrences()
+# 
+# for (species in acacia_namematched$apc_name) {
+#    galah_call() |> 
+#     galah_identify(species) |> 
+#     galah_filter(year >= 1900, country == "Australia") |> 
+#     galah_select(group = "basic") |> 
+#     atlas_occurrences()
+# }
+
+
 ```
 
 ```{r}
 raster_list <- list.files("rasters_30s/", full.names = T) |> map(rast)
 
 for (raster in raster_list) {
-  other_family_occs <- other_family_occs |> 
-    mutate(!!sym(names(raster)) := terra::extract(raster, others_sp)[[2]])
+  acacia_occs <- acacia_occs |> 
+    mutate(!!sym(names(raster)) := terra::extract(raster, acacia_sp)[[2]])
 }
 
-other_climate_data <- other_family_occs |>  
+acacia_climate_data <- acacia_occs |>  
   group_by(current_name) |>  
   summarise(mean_MAP=mean(MAP, na.rm=T), 
             tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
@@ -80,7 +124,8 @@ other_climate_data <- other_family_occs |>
             AI=mean(awi_pm_sr_yr/10000, na.rm=T),
             n=n()) |> 
   filter(n > 5) |> 
-  drop_na()
+  drop_na() |> 
+  filter(current_name %in% acacia_namematched$apc_name)
 ```
 
 
@@ -127,7 +172,7 @@ euc_database <- image_data |>
   left_join(euc_names, by = "species") |> 
   left_join(euc_climate_data, by = "current_name")
 
-database_by_species <- euc_database |> 
+eucs_by_species <- euc_database |> 
   group_by(current_name) |> 
   summarise(mean_area = mean(Area.µm.2, na.rm=T),
             mean_MAP=mean(mean_MAP, na.rm=T), 
