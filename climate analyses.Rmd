@@ -44,6 +44,10 @@ xylem_areas <- xylem_areas |> left_join(namematched[,c(1,3)], by = c("species" =
 Zanne et al. (2010) comparison
 ```{r}
 zanne_data <- read.csv("data/zanne_data.csv", header = T)
+zanne_native <- native_anywhere_in_australia(zanne_data$Binomial, 
+                                             resources = resources) |> 
+  right_join(zanne_data, by = c("species" = "Binomial")) |> 
+  filter(native_anywhere_in_aus == "TRUE" )
 
 jugo_data <- xylem_areas |> 
   group_by(species) |> 
@@ -62,6 +66,7 @@ jugo_data <- xylem_areas |>
 
 ggplot() +
   geom_point(data = zanne_data, aes(x = N, y = A), col = "light grey") +
+  # geom_point(data = zanne_native, aes(x = N, y = A), col = "black") +
   geom_point(data = jugo_data, aes(x = n_per_area, y = mean_area, col = family)) +
   scale_x_log10() +
   scale_y_log10() +
