@@ -307,8 +307,12 @@ all_spp_climate <- bind_rows(eucs_by_species, other_by_species)
 
 
 ```{r}
+library(performance)
+
 ggplot() +
-  geom_point(data = all_spp_climate |> filter(family != "CASUARINACEAE"), aes(x = mean_MAP, y = mean_area, col = family)) +
+  geom_point(data = all_spp_climate
+             |> filter(family != "CASUARINACEAE")
+             , aes(x = mean_MAP, y = mean_area, col = family)) +
   scale_color_brewer(palette = "Set1") +
   theme_classic() + 
   scale_x_log10() +
@@ -317,8 +321,10 @@ ggplot() +
 all_spp_lm <- lm(log(mean_area)~log(mean_MAP), data = all_spp_climate |> filter(family != "CASUARINACEAE"))
 lm_with_casuarina <- lm(log(mean_area)~log(mean_MAP), data = all_spp_climate)
 
-performance::r2(all_spp_lm)
-performance::r2(lm_with_casuarina)
+r2(all_spp_lm)
+check_model(all_spp_lm)
+r2(lm_with_casuarina)
+check_model(lm_with_casuarina)
 
 
 ggplot() +
