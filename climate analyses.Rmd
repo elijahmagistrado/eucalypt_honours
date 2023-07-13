@@ -314,6 +314,13 @@ ggplot() +
   scale_x_log10() +
   scale_y_log10()
 
+all_spp_lm <- lm(log(mean_area)~log(mean_MAP), data = all_spp_climate |> filter(family != "CASUARINACEAE"))
+lm_with_casuarina <- lm(log(mean_area)~log(mean_MAP), data = all_spp_climate)
+
+performance::r2(all_spp_lm)
+performance::r2(lm_with_casuarina)
+
+
 ggplot() +
   geom_point(data = acacia_by_species, aes(x = AI, y = mean_area), col = "blue") +
   geom_point(data = eucs_by_species, aes(x = AI, y = mean_area), col = "red") +
