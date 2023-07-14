@@ -75,56 +75,24 @@ ggplot() +
 ```
 
 
-
-
-Importing data 
+Creating climate preference data
 ```{r}
-
-other_areas <- read.csv("data/other_areas.csv", header = T) |> 
-  separate(Image, c("family", "other"), sep = " ", extra = "merge") |> 
-  separate(other, c("species", "state", "other"), sep = "_", extra = "merge")
-
-resources <- load_taxonomic_resources()
-
-other_namematched <- create_taxonomic_update_lookup(other_areas$species, 
-                                                     resources = resources)
-other_areas <- other_areas |> left_join(other_namematched[,c(1,3)], by = c("species" = "original_name"))
-
-other_spp_summary <- other_areas |> 
-  group_by(apc_name, other) |> 
-  mutate(total_area = sum(Area.µm.2/1000000, na.rm=T)) |> 
-  filter(Name == "vessel") |> 
-  group_by(apc_name, other) |> 
-  mutate(area_mm = Area.µm.2/1000000) |> 
-  summarise(n=n(),
-         mean_area = mean(area_mm, na.rm=T),
-         log_mean_area = log(mean_area),
-         sd_area = sd(log(area_mm)),
-         n_per_sapwood_area = n/total_area,
-         area_n_ratio = mean_area/n_per_sapwood_area) |> 
-  distinct() |> 
+occurrences <- list.files("occurrences/", full.names = T)
+occurrence_data <- occurrences |> map_df(read.csv, header = T) |> 
   drop_na() |> 
-  left_join(other_spp_database[, c(1, 10)], by = "apc_name") |> 
-  distinct()
-  # separate(apc_name, c("genus", "species"), " ", extra = "merge")
+  rename(species = scientificName)
 
+occurrence_points <- vect(occurrence_data, geom = c("decimalLongitude", "decimalLatitude"))
 
-other_spp_occs <- list.files("occurrences/", full.names = T)
-other_occs <- other_spp_occs |> map_df(read.csv, header = T) |> 
-  drop_na() |> 
-  rename(current_name = scientificName)
-
-other_spp_vect <- vect(other_occs, geom = c("decimalLongitude", "decimalLatitude"))
- 
 raster_list <- list.files("rasters_30s/", full.names = T) |> map(rast)
 
 for (raster in raster_list) {
-  other_occs <- other_occs |> 
-    mutate(!!sym(names(raster)) := terra::extract(raster, other_spp_vect)[[2]])
+  occurrence_data <- occurrence_data |> 
+    mutate(!!sym(names(raster)) := terra::extract(raster, occurrence_points)[[2]])
 }
 
-other_climate_data <- other_occs |>  
-  group_by(current_name) |>  
+climate_preferences <- occurrence_data |> 
+  group_by(species) |>  
   summarise(mean_MAP=mean(MAP, na.rm=T), 
             tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
             sd_log_MAP=sd(log(MAP), na.rm=T),
@@ -133,148 +101,16 @@ other_climate_data <- other_occs |>
             wet_quarter=mean(wet_quarter, na.rm=T),
             dry_quarter=mean(dry_quarter, na.rm=T),
             AI=mean(awi_pm_sr_yr/10000, na.rm=T),
-            n=n()) |> 
-  filter(n > 5) |> 
-  drop_na() |> 
-  filter(current_name %in% other_namematched$apc_name)
-
-
-other_spp_database <- other_areas |> 
-  left_join(other_climate_data, by = c("apc_name" = "current_name"))
-
-other_by_species <- other_spp_database |> 
-  group_by(apc_name) |> 
-  summarise(mean_area = mean(Area.µm.2, na.rm=T),
-            mean_MAP=mean(mean_MAP, na.rm=T), 
-            tenth_MAP=mean(tenth_MAP, na.rm=T)[1],
-            sd_log_MAP=mean(sd_log_MAP, na.rm=T),
-            MAT=mean(MAT, na.rm=T),
-            seasonality=mean(seasonality, na.rm=T),
-            wet_quarter=mean(wet_quarter, na.rm=T),
-            dry_quarter=mean(dry_quarter, na.rm=T),
-            AI=mean(AI, na.rm=T),
             n=n()) |> 
   mutate(climate=cut(AI, breaks=c(-Inf, 0.03, 0.2, 0.5, 0.65, Inf), 
                      labels=c("Hyper Arid", "Arid", "Semi-Arid", "Dry sub-humid", "Humid"))) |> 
-  drop_na() |> 
-  left_join(other_spp_database[, c(1, 10)], by = "apc_name") |> 
-  distinct()
-  # separate(apc_name, c("genus", "species"), " ", extra = "merge")
-
-other_by_species <- other_by_species |> 
-  left_join(other_areas, by = "apc_name")
-
-
-
-# galah_call() |> 
-#     galah_identify("Acacia melanoxylon") |> 
-#     galah_filter(year >= 2020, 
-#                  country == "Australia",
-#                  coordinateUncertaintyInMeters <= 10000) |> 
-#     galah_select(group = "basic") |> 
-#     atlas_occurrences()
-# 
-# for (species in acacia_namematched$apc_name) {
-#    galah_call() |> 
-#     galah_identify(species) |> 
-#     galah_filter(year >= 1900, country == "Australia") |> 
-#     galah_select(group = "basic") |> 
-#     atlas_occurrences()
-# }
-
-
-```
-
-
-```{r}
-raster_list <- list.files("rasters_30s/", full.names = T) |> map(rast)
-
-for (raster in raster_list) {
-  acacia_occs <- acacia_occs |> 
-    mutate(!!sym(names(raster)) := terra::extract(raster, acacia_sp)[[2]])
-}
-
-acacia_climate_data <- acacia_occs |>  
-  group_by(current_name) |>  
-  summarise(mean_MAP=mean(MAP, na.rm=T), 
-            tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
-            sd_log_MAP=sd(log(MAP), na.rm=T),
-            MAT=mean(MAT, na.rm=T),
-            seasonality=mean(seasonality, na.rm=T),
-            wet_quarter=mean(wet_quarter, na.rm=T),
-            dry_quarter=mean(dry_quarter, na.rm=T),
-            AI=mean(awi_pm_sr_yr/10000, na.rm=T),
-            n=n()) |> 
   filter(n > 5) |> 
   drop_na() |> 
-  filter(current_name %in% acacia_namematched$apc_name)
+  filter(species %in% namematched$apc_name) 
+  
+write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
 ```
 
-
-Loading precipitation rasters from worldclim
-```{r}
-raster_list <- list.files("rasters_30s/", full.names = T) |> map(rast)
-
-for (raster in raster_list) {
-  euc_coords <- euc_coords |> 
-    mutate(!!sym(names(raster)) := terra::extract(raster, euc_sp)[[2]])
-}
-
-euc_climate_data <- euc_coords |>  
-  group_by(current_name) |>  
-  summarise(mean_MAP=mean(MAP, na.rm=T), 
-            tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
-            sd_log_MAP=sd(log(MAP), na.rm=T),
-            MAT=mean(MAT, na.rm=T),
-            seasonality=mean(seasonality, na.rm=T),
-            wet_quarter=mean(wet_quarter, na.rm=T),
-            dry_quarter=mean(dry_quarter, na.rm=T),
-            AI=mean(awi_pm_sr_yr/10000, na.rm=T),
-            n=n())
-
-write.csv(euc_climate_data, "data/climate_data.csv", row.names = F)
-
-```
-
-
-Creating master spreadsheet
-```{r}
-euc_climate_data <- read_csv("data/climate_data.csv")
-
-image_data <- read.csv("data/xylem_areas2.csv", header=T) |> 
-  separate(Image, c("family", "other"), sep = " ", extra = "merge") |> 
-  separate(other, c("species", "state", "other"), sep = "_", extra = "merge") |> 
-  dplyr::select(c(species, state, other, Name, Area.µm.2)) |>  
-  mutate(radius = sqrt(Area.µm.2/pi),
-         state = replace(state, state == "North QLD", "QLD"),
-         state = replace(state, state == "South QLD", "QLD")) |>  
-  filter(state != "kb") 
-
-euc_database <- image_data |> 
-  left_join(euc_names, by = "species") |> 
-  left_join(euc_climate_data, by = "current_name")
-
-eucs_by_species <- euc_database |> 
-  group_by(current_name) |> 
-  summarise(mean_area = mean(Area.µm.2, na.rm=T),
-            mean_MAP=mean(mean_MAP, na.rm=T), 
-            tenth_MAP=mean(tenth_MAP, na.rm=T)[1],
-            sd_log_MAP=mean(sd_log_MAP, na.rm=T),
-            MAT=mean(MAT, na.rm=T),
-            seasonality=mean(seasonality, na.rm=T),
-            wet_quarter=mean(wet_quarter, na.rm=T),
-            dry_quarter=mean(dry_quarter, na.rm=T),
-            AI=mean(AI, na.rm=T),
-            n=n()) |> 
-  mutate(climate=cut(AI, breaks=c(-Inf, 0.03, 0.2, 0.5, 0.65, Inf), 
-                     labels=c("Hyper Arid", "Arid", "Semi-Arid", "Dry sub-humid", "Humid"))) |> 
-  drop_na()
-
-eucs_by_species$family <- "MYRTACEAE"
-
-
-all_spp_climate <- bind_rows(eucs_by_species, other_by_species)
-```
 
 
 ```{r}
