@@ -153,6 +153,28 @@ check_model(Dh_aov)
 r2(Dh_aov)
 ```
 
+MDS plot
+```{r}
+library(vegan)
+
+xylem_properties <- xylem_Dh[2:6] |> log()
+xylem_properties.mds <- metaMDS(comm = xylem_properties, 
+                                distance = "bray", 
+                                trace = F, 
+                                autotransform = F)
+
+MDS_xy <- data.frame(xylem_properties.mds$points)
+MDS_xy$family <- xylem_Dh$family
+
+ggplot(MDS_xy, aes(MDS1, MDS2, col = family)) +
+  geom_point() +
+  theme_classic()
+
+xylem_PCA <- princomp(xylem_properties, cor = F)
+biplot(xylem_PCA)
+loadings(xylem_PCA)
+```
+
 
 
 
