@@ -12,6 +12,7 @@ library(tidyverse)
 library(patchwork)
 library(terra)
 library(ausflora)
+library(performance)
 
 euc_names <- read.csv("data/name_matched_list.csv", header=T)
 
@@ -31,7 +32,8 @@ xylem_areas <- list.files("area_data/", full.names = T) |>
   map_df(read.csv, header = T) |> 
   separate(Image, c("family", "other"), sep = " ", extra = "merge") |> 
   separate(other, c("species", "state", "other"), sep = "_", extra = "merge") |> 
-  mutate(area_mm = Area.µm.2/1000000)
+  mutate(area_mm = Area.µm.2/1000000,
+         radius = sqrt(Area.µm.2/pi))
 
 resources <- load_taxonomic_resources()
 
@@ -66,7 +68,7 @@ jugo_data <- xylem_areas |>
 
 ggplot() +
   geom_point(data = zanne_data, aes(x = N, y = A), col = "light grey") +
-  # geom_point(data = zanne_native, aes(x = N, y = A), col = "black") +
+  geom_point(data = zanne_native, aes(x = N, y = A), col = "black") +
   geom_point(data = jugo_data, aes(x = n_per_area, y = mean_area, col = family)) +
   scale_x_log10() +
   scale_y_log10() +
@@ -82,6 +84,11 @@ occurrence_data <- occurrences |> map_df(read.csv, header = T) |>
   drop_na() |> 
   rename(species = scientificName)
 
+ala_namematch <- create_taxonomic_update_lookup(occurrence_data$species, 
+                                                 resources = resources)
+occurrence_data <- occurrence_data |> 
+  left_join(ala_namematch[,c(1,3)], by = c("species" = "original_name"))
+
 occurrence_points <- vect(occurrence_data, geom = c("decimalLongitude", "decimalLatitude"))
 
 raster_list <- list.files("rasters_30s/", full.names = T) |> map(rast)
@@ -92,7 +99,7 @@ for (raster in raster_list) {
 }
 
 climate_preferences <- occurrence_data |> 
-  group_by(species) |>  
+  group_by(apc_name) |>  
   summarise(mean_MAP=mean(MAP, na.rm=T), 
             tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
             sd_log_MAP=sd(log(MAP), na.rm=T),
@@ -105,11 +112,48 @@ climate_preferences <- occurrence_data |>
   mutate(climate=cut(AI, breaks=c(-Inf, 0.03, 0.2, 0.5, 0.65, Inf), 
                      labels=c("Hyper Arid", "Arid", "Semi-Arid", "Dry sub-humid", "Humid"))) |> 
   filter(n > 5) |> 
-  drop_na() |> 
-  filter(species %in% namematched$apc_name) 
+  filter(apc_name %in% namematched$apc_name) |>
+  # left_join(xylem_areas[c("family", "apc_name")], by = c("species" = "apc_name")) |> 
+  distinct()
   
 write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
 ```
+
+
+Hydraulically weighted diameter (Dh)
+```{r}
+climate_preferences <- read.csv("data/climate_preferences.csv", header = T)
+
+xylem_Dh <- xylem_areas |> 
+  filter(Name == "vessel") |>
+  group_by(apc_name, other) |> 
+  summarise(sample_Dh = sum(radius^5)/ sum(radius^4)) |> 
+  group_by(apc_name) |> 
+  summarise(mean_Dh = mean(sample_Dh, na.rm=T)) |> 
+  left_join(climate_preferences, by = "apc_name") |> 
+  left_join(xylem_areas[,c("family", "apc_name")], by = "apc_name") |> 
+  distinct() |> 
+  drop_na()
+
+ggplot(data = xylem_Dh, aes(x = mean_MAP, y = mean_Dh, col = family)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = F) +
+  scale_x_log10() +
+  scale_y_log10() +
+  theme_classic()
+
+Dh_lm <- lm(log(mean_Dh)~log(mean_MAP), data = xylem_Dh
+            |> filter(family != "CASUARINACEAE")
+            )
+check_model(Dh_lm)
+r2(Dh_lm)
+
+Dh_aov <- aov(log(mean_Dh)~log(mean_MAP)*family, data = xylem_Dh)
+check_model(Dh_aov)
+r2(Dh_aov)
+```
+
+
 
 
 
