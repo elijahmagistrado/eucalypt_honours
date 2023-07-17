@@ -127,7 +127,7 @@ ggplot(data = xylem_Dh, aes(x = mean_MAP, y = mean_Dh, col = family)) +
   geom_smooth(method = "lm", se = F) +
   scale_x_log10() +
   scale_y_log10() +
-  theme_classic()+
+  theme_classic() +
   scale_color_brewer(palette = "Set1")
 
 Dh_lm <- lm(log(mean_Dh)~log(mean_MAP), data = xylem_Dh
@@ -175,6 +175,7 @@ austraits <- load_austraits(version = "4.1.0", path = "data/austraits")
 summarise_austraits(austraits, "trait_name") %>% View()
 summarise_austraits(austraits, "genus") %>% View()
 
+
 woody_data <- extract_trait(austraits, "woodiness")
 woody_species <- woody_data$traits |> 
   filter(value == "woody") |> 
@@ -193,7 +194,6 @@ library(galah)
 
 galah_config(email = "elijah.magi28@gmail.com", atlas = "Australia")
 
-spp_occurrences <- data.frame()
 test_list <- c("Acacia terminalis", "Acacia dealbata")
 
 get_occs <- function(species) {
@@ -208,8 +208,6 @@ get_occs <- function(species) {
 }
 
 test_galah <- test_list |> map_df(get_occs)
-
-
 ```
 
 
