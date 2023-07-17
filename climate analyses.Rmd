@@ -59,7 +59,8 @@ ggplot() +
   scale_x_log10() +
   scale_y_log10() +
   scale_color_brewer(palette = "Set1") +
-  theme_classic()
+  theme_classic() +
+  facet_wrap(~family)
 ```
 
 
@@ -126,18 +127,20 @@ ggplot(data = xylem_Dh, aes(x = mean_MAP, y = mean_Dh, col = family)) +
   geom_smooth(method = "lm", se = F) +
   scale_x_log10() +
   scale_y_log10() +
-  theme_classic()
+  theme_classic()+
+  scale_color_brewer(palette = "Set1")
 
 Dh_lm <- lm(log(mean_Dh)~log(mean_MAP), data = xylem_Dh
             # |> filter(family != "CASUARINACEAE")
             )
-check_model(Dh_lm)
-r2(Dh_lm)
+# check_model(Dh_lm)
+summary(Dh_lm)
+# r2(Dh_lm)
 
 Dh_aov <- lm(log(mean_Dh)~log(mean_MAP)+family, data = xylem_Dh)
 summary(Dh_aov)
-check_model(Dh_aov)
-r2(Dh_aov)
+# check_model(Dh_aov)
+# r2(Dh_aov)
 ```
 
 MDS plot
@@ -160,6 +163,55 @@ ggplot(MDS_xy, aes(MDS1, MDS2, col = family)) +
 xylem_PCA <- princomp(xylem_properties, cor = F)
 biplot(xylem_PCA)
 loadings(xylem_PCA)
+```
+
+
+Adding AusTraits data
+```{r}
+library(austraits)
+
+austraits <- load_austraits(version = "4.1.0", path = "data/austraits")
+
+summarise_austraits(austraits, "trait_name") %>% View()
+summarise_austraits(austraits, "genus") %>% View()
+
+woody_data <- extract_trait(austraits, "woodiness")
+woody_species <- woody_data$traits |> 
+  filter(value == "woody") |> 
+  distinct(taxon_name) |> 
+  filter(!grepl(" sp.", taxon_name, fixed = T))
+
+write.csv(woody_species, "data/woody_species.csv", row.names = F)
+
+woody_families <- read.csv("data/austraits_woody_spp.csv", header = T)
+woody_families_n <- woody_families |> group_by(family) |> summarise(n=n())
+```
+
+```{r}
+library(galah)
+
+galah_config(email = "elijah.magi28@gmail.com", atlas = "Australia")
+
+spp_occurrences <- data.frame()
+test_list <- c("Acacia terminalis", "Acacia dealbata")
+
+get_occs <- function(species) {
+  occs <- galah_call() |> 
+    galah_identify(species) |> 
+    galah_filter(year >= 1900, country == "Australia") |> 
+    galah_down_to(species) |> 
+    atlas_occurrences()
+}
+
+test_galah <- zanne_native$species |> map_df(get_occs)
+
+test_galah <- galah_call() |> 
+  galah_identify("Acacia terminalis") |> 
+  galah_filter(year >= 1900, country == "Australia") |> 
+  atlas_occurrences()
+
+
+
 ```
 
 
