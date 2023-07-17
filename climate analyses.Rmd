@@ -190,26 +190,24 @@ woody_families_n <- woody_families |> group_by(family) |> summarise(n=n())
 ```{r}
 library(galah)
 
+
 galah_config(email = "elijah.magi28@gmail.com", atlas = "Australia")
 
 spp_occurrences <- data.frame()
 test_list <- c("Acacia terminalis", "Acacia dealbata")
 
 get_occs <- function(species) {
-  occs <- galah_call() |> 
+  galah_call() |> 
     galah_identify(species) |> 
     galah_filter(year >= 1900, country == "Australia") |> 
     galah_down_to(species) |> 
-    atlas_occurrences()
+    galah_apply_profile(AVH) |> 
+    atlas_occurrences() |> 
+    select(decimalLatitude, decimalLongitude, scientificName) |> 
+    rename(species = scientificName)
 }
 
-test_galah <- zanne_native$species |> map_df(get_occs)
-
-test_galah <- galah_call() |> 
-  galah_identify("Acacia terminalis") |> 
-  galah_filter(year >= 1900, country == "Australia") |> 
-  atlas_occurrences()
-
+test_galah <- test_list |> map_df(get_occs)
 
 
 ```
