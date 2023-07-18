@@ -188,6 +188,47 @@ woody_families <- read.csv("data/austraits_woody_spp.csv", header = T)
 woody_families_n <- woody_families |> group_by(family) |> summarise(n=n())
 
 
+```
+
+
+
+
+```{r}
+library(galah)
+
+
+galah_config(email = "elijah.magi28@gmail.com", atlas = "Australia")
+
+test_list <- c("Acacia terminalis", "Acacia dealbata")
+
+library(furrr)
+library(magrittr)
+plan(multisession, workers = 4, gc = TRUE)
+
+get_occs <- function(species) {
+  galah_config(email = "elijah.magi28@gmail.com", atlas = "Australia")
+  galah_call() |> 
+    galah_identify(species) |> 
+    galah_filter(year >= 1900, country == "Australia") |> 
+    galah_down_to(species) |> 
+    galah_apply_profile(AVH) |> 
+    # atlas_counts()
+    atlas_occurrences() |>
+    select(decimalLatitude, decimalLongitude, scientificName) |>
+    rename(species = scientificName)
+}
+
+woody_subset <- woody_families$species |> head(5)
+
+test_galah <- test_list |> future_map_dfr(get_occs)
+
+
+# austraits_counts <- woody_families$species |> map_df(get_occs)
+```
+
+
+adding height data
+```{r}
 height_data <- extract_trait(austraits, "plant_height")
 
 euc_heights <- height_data$traits |> 
@@ -199,7 +240,8 @@ euc_heights <- height_data$traits |>
 
 xylem_Dh_height <- xylem_Dh |> left_join(euc_heights, by = c("apc_name" = "taxon_name"))
 
-ggplot(data = xylem_Dh_height, aes(mean_MAP, mean_Dh/max_height)) +
+# ggplot(data = xylem_Dh_height, aes(mean_MAP, mean_Dh/max_height)) +
+  ggplot(data = xylem_Dh_height, aes(AI, max_height)) +
 # ggplot(data = xylem_Dh_height, aes(max_height, mean_Dh)) +
   geom_point() +
   scale_x_log10() +
@@ -207,30 +249,4 @@ ggplot(data = xylem_Dh_height, aes(mean_MAP, mean_Dh/max_height)) +
   theme_classic() + 
   facet_wrap(~family)
 
-Dh_height_lm <- 
-
 ```
-
-```{r}
-library(galah)
-
-
-galah_config(email = "elijah.magi28@gmail.com", atlas = "Australia")
-
-test_list <- c("Acacia terminalis", "Acacia dealbata")
-
-get_occs <- function(species) {
-  galah_call() |> 
-    galah_identify(species) |> 
-    galah_filter(year >= 1900, country == "Australia") |> 
-    galah_down_to(species) |> 
-    galah_apply_profile(AVH) |> 
-    atlas_occurrences() |> 
-    select(decimalLatitude, decimalLongitude, scientificName) |> 
-    rename(species = scientificName)
-}
-
-test_galah <- test_list |> map_df(get_occs)
-```
-
-
