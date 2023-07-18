@@ -166,15 +166,11 @@ loadings(xylem_PCA)
 ```
 
 
-Adding AusTraits data
+adding height data
 ```{r}
 library(austraits)
 
 austraits <- load_austraits(version = "4.1.0", path = "data/austraits")
-
-summarise_austraits(austraits, "trait_name") %>% View()
-summarise_austraits(austraits, "genus") %>% View()
-
 
 woody_data <- extract_trait(austraits, "woodiness")
 woody_species <- woody_data$traits |> 
@@ -187,48 +183,6 @@ write.csv(woody_species, "data/woody_species.csv", row.names = F)
 woody_families <- read.csv("data/austraits_woody_spp.csv", header = T)
 woody_families_n <- woody_families |> group_by(family) |> summarise(n=n())
 
-
-```
-
-
-
-
-```{r}
-library(galah)
-
-
-galah_config(email = "elijah.magi28@gmail.com", atlas = "Australia")
-
-test_list <- c("Acacia terminalis", "Acacia dealbata")
-
-library(furrr)
-library(magrittr)
-plan(multisession, workers = 4, gc = TRUE)
-
-get_occs <- function(species) {
-  galah_config(email = "elijah.magi28@gmail.com", atlas = "Australia")
-  galah_call() |> 
-    galah_identify(species) |> 
-    galah_filter(year >= 1900, country == "Australia") |> 
-    galah_down_to(species) |> 
-    galah_apply_profile(AVH) |> 
-    # atlas_counts()
-    atlas_occurrences() |>
-    select(decimalLatitude, decimalLongitude, scientificName) |>
-    rename(species = scientificName)
-}
-
-woody_subset <- woody_families$species |> head(5)
-
-test_galah <- test_list |> future_map_dfr(get_occs)
-
-
-# austraits_counts <- woody_families$species |> map_df(get_occs)
-```
-
-
-adding height data
-```{r}
 height_data <- extract_trait(austraits, "plant_height")
 
 euc_heights <- height_data$traits |> 
