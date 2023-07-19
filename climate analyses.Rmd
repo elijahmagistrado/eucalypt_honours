@@ -122,6 +122,8 @@ xylem_Dh <- xylem_areas |>
   distinct() |> 
   drop_na()
 
+write.csv(xylem_Dh, "data/xylem_Dh.csv", row.names = F)
+
 ggplot(data = xylem_Dh, aes(x = mean_MAP, y = mean_Dh, col = family)) +
   geom_point() +
   geom_smooth(method = "lm", se = F) +
@@ -204,3 +206,26 @@ xylem_Dh_height <- xylem_Dh |> left_join(euc_heights, by = c("apc_name" = "taxon
   facet_wrap(~family)
 
 ```
+
+
+Adding TRY vessel trait data
+```{r}
+TRY_vessel_data <- read.csv("data/TRY_vessel_data.csv", header = T)
+
+vessel_grouping <- TRY_vessel_data |> filter(TraitName == "Wood vessel grouping")
+clustered <- vessel_grouping |> filter(OrigValueStr == "clusters")
+
+species_grouping <- read.csv("data/matched_names.csv", header = T)
+xylem_Dh_grouping <- xylem_Dh |> left_join(species_grouping, by = "apc_name")
+
+ggplot(data = xylem_Dh_grouping, aes(x = mean_MAP, y = mean_Dh, col = grouping)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = F) +
+  scale_x_log10() +
+  scale_y_log10() +
+  theme_classic() +
+  scale_color_brewer(palette = "Set1")
+```
+
+
+
