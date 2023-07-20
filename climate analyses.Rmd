@@ -140,7 +140,16 @@ xylem_Dh <- xylem_areas |>
   left_join(climate_preferences, by = "apc_name") |> 
   left_join(xylem_areas[,c("family", "apc_name")], by = "apc_name") |> 
   distinct() |> 
-  drop_na()
+  drop_na() 
+
+xylem_Dh$family <- xylem_Dh$family |> str_replace("LEGUMINOSAE", "Fabaceae")
+xylem_Dh$family <- xylem_Dh$family |> str_replace("MYRTACEAE", "Myrtaceae")
+xylem_Dh$family <- xylem_Dh$family |> str_replace("RUTACEAE", "Rutaceae")
+xylem_Dh$family <- xylem_Dh$family |> str_replace("CUNONIACEAE", "Cunoniaceae")
+xylem_Dh$family <- xylem_Dh$family |> str_replace("FABACEAE", "Fabaceae")
+xylem_Dh$family <- xylem_Dh$family |> str_replace("CASUARINACEAE", "Casuarinaceae")
+
+xylem_Dh$source <- "current"
 
 write.csv(xylem_Dh, "data/xylem_Dh.csv", row.names = F)
 
@@ -194,9 +203,9 @@ library(austraits)
 
 austraits <- load_austraits(version = "4.1.0", path = "data/austraits")
 
-woody_data <- extract_trait(austraits, "woodiness")
+woody_data <- extract_trait(austraits, "plant_growth_form")
 woody_species <- woody_data$traits |> 
-  filter(value == "woody") |> 
+  filter(value == "tree") |> 
   distinct(taxon_name) |> 
   filter(!grepl(" sp.", taxon_name, fixed = T))
 
@@ -247,5 +256,134 @@ ggplot(data = xylem_Dh_grouping, aes(x = mean_MAP, y = mean_Dh, col = grouping))
   scale_color_brewer(palette = "Set1")
 ```
 
+
+```{r}
+all_image_names <- list.files("/Users/elijahmagistrado/OneDrive - UNSW/images", 
+                              pattern = "_x.jpg",
+                              recursive = T) |> 
+  as.data.frame() 
+
+names(all_image_names)[1] <- "file_name"
+  
+
+all_image_names <- all_image_names |> filter(grepl("QLD|NSW|VIC|TAS|_SA|WA|NT",
+                                                   file_name)) |> 
+  separate(file_name, c("folder", "file_name"), sep = "/") |> 
+  separate(file_name, c("family", "other"), sep = " ", extra = "merge") |> 
+  separate(other, c("species", "other"), sep = "_", extra = "merge") |> 
+  distinct(species)
+
+write.csv(all_image_names, "data/ssd_names.csv", row.names = F)
+
+ssd_namematched <- read.csv("data/gbif_namematched.csv", header = T) |> 
+  filter(rank == "SPECIES")
+```
+
+
+
+```{r}
+gbif_occs <- read.delim("data/gbif_occs.csv", header = T, sep = "\t")
+
+gbif_filtered <- gbif_occs |> 
+  select(family, scientificName, decimalLatitude, decimalLongitude)
+
+ssd_occs <- gbif_filtered |> filter(scientificName %in% ssd_namematched$scientificName) |>
+  drop_na()
+
+write.csv(ssd_occs, "data/ssd_occurrences.csv", row.names = F)
+
+austraits_trees <- read.csv("data/austraits_trees.csv", header=T)
+austraits_occs <- gbif_filtered |> filter(scientificName %in% austraits_trees$scientificName) |>
+  drop_na()
+
+austraits_points <- vect(austraits_occs, geom = c("decimalLongitude", "decimalLatitude"))
+
+for (raster in raster_list) {
+  austraits_occs <- austraits_occs |> 
+    mutate(!!sym(names(raster)) := terra::extract(raster, austraits_points)[[2]])
+}
+
+austraits_climate <- austraits_occs |> 
+  group_by(family, scientificName) |>  
+  summarise(mean_MAP=mean(MAP, na.rm=T), 
+            tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
+            sd_log_MAP=sd(log(MAP), na.rm=T),
+            MAT=mean(MAT, na.rm=T),
+            seasonality=mean(seasonality, na.rm=T),
+            wet_quarter=mean(wet_quarter, na.rm=T),
+            dry_quarter=mean(dry_quarter, na.rm=T),
+            AI=mean(awi_pm_sr_yr/10000, na.rm=T),
+            n=n(),
+            MAP_range = diff(range(MAP, na.rm=T)),
+            MAT_range = diff(range(MAT, na.rm=T))) |> 
+  mutate(source = "austraits")
+
+austraits_plot <- ggplot() +
+  geom_boxplot(data=austraits_climate, aes(reorder(family, mean_MAP, median), mean_MAP)) +
+  # geom_boxplot(data=ssd_climate, aes(family, mean_MAP), fill = "red") +
+  # geom_boxplot(data=xylem_Dh, aes(family, mean_MAP), fill = "blue") +
+  theme_classic() +
+  coord_flip()
+
+austraits_plot
+```
+
+```{r}
+ssd_occs <- read.csv("data/ssd_occurrences.csv", header = T)
+
+ssd_points <- vect(ssd_occs, geom = c("decimalLongitude", "decimalLatitude"))
+
+for (raster in raster_list) {
+  ssd_occs <- ssd_occs |> 
+    mutate(!!sym(names(raster)) := terra::extract(raster, ssd_points)[[2]])
+}
+
+ssd_climate <- ssd_occs |> 
+  group_by(family, scientificName) |>  
+  summarise(mean_MAP=mean(MAP, na.rm=T), 
+            tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
+            sd_log_MAP=sd(log(MAP), na.rm=T),
+            MAT=mean(MAT, na.rm=T),
+            seasonality=mean(seasonality, na.rm=T),
+            wet_quarter=mean(wet_quarter, na.rm=T),
+            dry_quarter=mean(dry_quarter, na.rm=T),
+            AI=mean(awi_pm_sr_yr/10000, na.rm=T),
+            n=n(),
+            MAP_range = diff(range(MAP, na.rm=T)),
+            MAT_range = diff(range(MAT, na.rm=T))) |> 
+  mutate(source = "ssd")
+
+family_climates <- ggplot(ssd_climate |> filter(n > 5), aes(reorder(family, mean_MAP, sd), mean_MAP)) +
+  geom_boxplot() +
+  coord_flip()
+
+ggplot(ssd_climate |> filter(n > 5), aes(reorder(family, MAT, sd), MAT)) +
+  geom_boxplot() +
+  coord_flip()
+
+family_climates
+
+xylem_Dh$source <- "done"
+
+
+ggplot() + 
+  geom_histogram(data = all_climates, aes(x=mean_MAP, fill=source)) +
+  theme_classic() +
+  scale_x_log10()
+
+all_climates <- bind_rows(austraits_climate, ssd_climate, xylem_Dh)
+
+library(ggridges)
+
+all_climate_plot <-
+  ggplot(austraits_climate, aes(x=reorder(family, mean_MAP, median), y=mean_MAP)) +
+  geom_boxplot() +
+  theme_classic() +
+  coord_flip()
+
+
+all_climate_plot
+
+```
 
 
