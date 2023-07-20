@@ -64,6 +64,26 @@ ggplot() +
 ```
 
 
+```{r}
+jugo_data_genus <- jugo_data |> filter(family != "CUNONIACEAE") |> 
+  left_join(xylem_areas[, c(2,18)], by = "species") |> 
+  distinct() |> 
+  separate(apc_name, c("genus" , "species"), extra = "merge") |> 
+  drop_na()
+
+ggplot() +
+  geom_point(data = zanne_data, aes(x = N, y = A), col = "light grey") +
+  # geom_point(data = zanne_native, aes(x = N, y = A), col = "black") +
+  geom_point(data = jugo_data_genus, aes(x = n_per_area, y = mean_area)) +
+  scale_x_log10() +
+  scale_y_log10() +
+  scale_color_brewer(palette = "Set1") +
+  theme_classic() +
+  facet_wrap(~genus)
+```
+
+
+
 Creating climate preference data
 ```{r}
 occurrences <- list.files("occurrences/", full.names = T)
