@@ -282,15 +282,17 @@ ssd_namematched <- read.csv("data/gbif_namematched.csv", header = T) |>
 
 
 ```{r}
-gbif_occs <- read.delim("data/gbif_occs.csv", header = T, sep = "\t")
+# gbif_occs <- read.delim("data/gbif_occs.csv", header = T, sep = "\t")
+# 
+# gbif_filtered <- gbif_occs |> 
+#   select(family, scientificName, decimalLatitude, decimalLongitude)
 
-gbif_filtered <- gbif_occs |> 
-  select(family, scientificName, decimalLatitude, decimalLongitude)
+gbif_filtered <- read.csv("data/gbif_filtered.csv", header = T)
 
 ssd_occs <- gbif_filtered |> filter(scientificName %in% ssd_namematched$scientificName) |>
   drop_na()
 
-write.csv(ssd_occs, "data/ssd_occurrences.csv", row.names = F)
+# write.csv(ssd_occs, "data/ssd_occurrences.csv", row.names = F)
 
 austraits_trees <- read.csv("data/austraits_trees.csv", header=T)
 austraits_occs <- gbif_filtered |> filter(scientificName %in% austraits_trees$scientificName) |>
@@ -313,13 +315,15 @@ austraits_climate <- austraits_occs |>
             wet_quarter=mean(wet_quarter, na.rm=T),
             dry_quarter=mean(dry_quarter, na.rm=T),
             AI=mean(awi_pm_sr_yr/10000, na.rm=T),
-            n=n(),
-            MAP_range = diff(range(MAP, na.rm=T)),
-            MAT_range = diff(range(MAT, na.rm=T))) |> 
-  mutate(source = "austraits")
+            n=n()) |> 
+  group_by(family) |> 
+  mutate(source = "austraits",
+         MAP_range = diff(range(mean_MAP)),
+         MAT_range = diff(range(MAT))) |> 
+  drop_na()
 
 austraits_plot <- ggplot() +
-  geom_boxplot(data=austraits_climate, aes(reorder(family, mean_MAP, median), mean_MAP)) +
+  geom_boxplot(data=austraits_climate, aes(reorder(family, MAP_range), mean_MAP)) +
   # geom_boxplot(data=ssd_climate, aes(family, mean_MAP), fill = "red") +
   # geom_boxplot(data=xylem_Dh, aes(family, mean_MAP), fill = "blue") +
   theme_classic() +
@@ -351,19 +355,30 @@ ssd_climate <- ssd_occs |>
             n=n(),
             MAP_range = diff(range(MAP, na.rm=T)),
             MAT_range = diff(range(MAT, na.rm=T))) |> 
-  mutate(source = "ssd")
+  mutate(source = "ssd") |> 
+  group_by(family) |> 
+  mutate(source = "ssd",
+         MAP_range = diff(range(mean_MAP)),
+         MAT_range = diff(range(MAT))) |> 
+  drop_na()
 
 family_climates <- ggplot(ssd_climate |> filter(n > 5), aes(reorder(family, mean_MAP, sd), mean_MAP)) +
   geom_boxplot() +
   coord_flip()
 
-ggplot(ssd_climate |> filter(n > 5), aes(reorder(family, MAT, sd), MAT)) +
+ggplot(ssd_climate, aes(reorder(family, MAP_range), mean_MAP)) +
   geom_boxplot() +
   coord_flip()
 
 family_climates
 
 xylem_Dh$source <- "done"
+
+xylem_Dh <- xylem_Dh |> 
+  group_by(family) |> 
+  mutate(MAP_range = diff(range(mean_MAP)),
+         MAT_range = diff(range(MAT))) |> 
+  drop_na()
 
 
 ggplot() + 
@@ -373,13 +388,13 @@ ggplot() +
 
 all_climates <- bind_rows(austraits_climate, ssd_climate, xylem_Dh)
 
-library(ggridges)
-
 all_climate_plot <-
-  ggplot(austraits_climate, aes(x=reorder(family, mean_MAP, median), y=mean_MAP)) +
+  ggplot(all_climates |> 
+           filter(source != "austraits"), aes(x=reorder(family, mean_MAP, mean), y=mean_MAP, fill=source)) +
   geom_boxplot() +
-  theme_classic() +
-  coord_flip()
+  theme_bw() +
+  coord_flip()+
+  scale_y_log10()
 
 
 all_climate_plot
