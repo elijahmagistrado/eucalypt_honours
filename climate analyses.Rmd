@@ -17,15 +17,13 @@ library(performance)
 xylem_areas <- list.files("area_data/", full.names = T) |> 
   map_df(read.csv, header = T) |> 
   separate(Image, c("family", "other"), sep = " ", extra = "merge") |> 
-  separate(other, c("species", "state", "other"), sep = "_", extra = "merge") |> 
+  separate(other, c("species_name", "state", "other"), sep = "_", extra = "merge") |> 
   mutate(area_mm = Area.µm.2/1000000,
          radius = sqrt(Area.µm.2/pi))
 
-resources <- load_taxonomic_resources()
+namematched <- read.csv("data/gbif_namematched.csv", header = T) |> filter(grepl("SPECIES|VARIETY", rank)) 
 
-namematched <- create_taxonomic_update_lookup(xylem_areas$species, 
-                                                     resources = resources)
-xylem_areas <- xylem_areas |> left_join(namematched[,c(1,3)], by = c("species" = "original_name"))
+xylem_areas <- xylem_areas |> left_join(namematched[c(2, 3, 15)], by = c("species_name" = "verbatimScientificName"))
 ```
 
 
@@ -86,15 +84,9 @@ ggplot() +
 
 Creating climate preference data
 ```{r}
-occurrences <- list.files("occurrences/", full.names = T)
-occurrence_data <- occurrences |> map_df(read.csv, header = T) |> 
-  drop_na() |> 
-  rename(species = scientificName)
+gbif_occurrences <- read.csv("occurrences/gbif_filtered.csv", header=T)
 
-ala_namematch <- create_taxonomic_update_lookup(occurrence_data$species, 
-                                                 resources = resources)
-occurrence_data <- occurrence_data |> 
-  left_join(ala_namematch[,c(1,3)], by = c("species" = "original_name"))
+occurrence_data <- gbif_occurrences |> filter(scientificName %in% xylem_areas$scientificName)
 
 occurrence_points <- vect(occurrence_data, geom = c("decimalLongitude", "decimalLatitude"))
 
