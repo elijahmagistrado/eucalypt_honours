@@ -16,14 +16,14 @@ library(performance)
 
 xylem_areas <- list.files("area_data/", full.names = T) |> 
   map_df(read.csv, header = T) |> 
-  separate(Image, c("family", "other"), sep = " ", extra = "merge") |> 
+  separate(Image, c("family_original", "other"), sep = " ", extra = "merge") |> 
   separate(other, c("species_name", "state", "other"), sep = "_", extra = "merge") |> 
   mutate(area_mm = Area.µm.2/1000000,
          radius = sqrt(Area.µm.2/pi))
 
 namematched <- read.csv("data/gbif_namematched.csv", header = T) |> filter(grepl("SPECIES|VARIETY", rank)) 
 
-xylem_areas <- xylem_areas |> left_join(namematched[c(2, 3, 15)], by = c("species_name" = "verbatimScientificName"))
+xylem_areas <- xylem_areas |> left_join(namematched[c(2, 3, 13, 15)], by = c("species_name" = "verbatimScientificName"))
 ```
 
 
@@ -84,9 +84,15 @@ ggplot() +
 
 Creating climate preference data
 ```{r}
-gbif_occurrences <- read.csv("occurrences/gbif_filtered.csv", header=T)
+# gbif_occurrences <- read.delim("occurrences/gbif_raw_occs.csv", header=T, sep="\t")
 
-occurrence_data <- gbif_occurrences |> filter(scientificName %in% xylem_areas$scientificName)
+gbif_filtered <- gbif_occurrences |> 
+  select(species, scientificName, decimalLatitude, decimalLongitude) |> 
+  drop_na()
+
+# write.csv(gbif_filtered, "occurrences/gbif_filtered.csv", row.names = F)
+
+occurrence_data <- gbif_filtered |> filter(species %in% xylem_areas$species)
 
 occurrence_points <- vect(occurrence_data, geom = c("decimalLongitude", "decimalLatitude"))
 
@@ -98,7 +104,7 @@ for (raster in raster_list) {
 }
 
 climate_preferences <- occurrence_data |> 
-  group_by(apc_name) |>  
+  group_by(species) |>  
   summarise(mean_MAP=mean(MAP, na.rm=T), 
             tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
             sd_log_MAP=sd(log(MAP), na.rm=T),
@@ -110,9 +116,8 @@ climate_preferences <- occurrence_data |>
             n=n()) |> 
   mutate(climate=cut(AI, breaks=c(-Inf, 0.03, 0.2, 0.5, 0.65, Inf), 
                      labels=c("Hyper Arid", "Arid", "Semi-Arid", "Dry sub-humid", "Humid"))) |> 
-  filter(n > 5) |> 
-  filter(apc_name %in% namematched$apc_name) |>
-  # left_join(xylem_areas[c("family", "apc_name")], by = c("species" = "apc_name")) |> 
+  # filter(n > 5) |> 
+  left_join(xylem_areas[c(18:20)], by = "species") |>
   distinct()
   
 write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
@@ -125,21 +130,14 @@ climate_preferences <- read.csv("data/climate_preferences.csv", header = T)
 
 xylem_Dh <- xylem_areas |> 
   filter(Name == "vessel") |>
-  group_by(apc_name, other) |> 
+  group_by(species, other) |> 
   summarise(sample_Dh = sum(radius^5)/ sum(radius^4)) |> 
-  group_by(apc_name) |> 
+  group_by(species) |> 
   summarise(mean_Dh = mean(sample_Dh, na.rm=T)) |> 
-  left_join(climate_preferences, by = "apc_name") |> 
-  left_join(xylem_areas[,c("family", "apc_name")], by = "apc_name") |> 
+  left_join(climate_preferences, by = "species") |> 
+  left_join(xylem_areas["species"], by = "species") |> 
   distinct() |> 
   drop_na() 
-
-xylem_Dh$family <- xylem_Dh$family |> str_replace("LEGUMINOSAE", "Fabaceae")
-xylem_Dh$family <- xylem_Dh$family |> str_replace("MYRTACEAE", "Myrtaceae")
-xylem_Dh$family <- xylem_Dh$family |> str_replace("RUTACEAE", "Rutaceae")
-xylem_Dh$family <- xylem_Dh$family |> str_replace("CUNONIACEAE", "Cunoniaceae")
-xylem_Dh$family <- xylem_Dh$family |> str_replace("FABACEAE", "Fabaceae")
-xylem_Dh$family <- xylem_Dh$family |> str_replace("CASUARINACEAE", "Casuarinaceae")
 
 xylem_Dh$source <- "current"
 
@@ -151,7 +149,8 @@ ggplot(data = xylem_Dh, aes(x = mean_MAP, y = mean_Dh, col = family)) +
   scale_x_log10() +
   scale_y_log10() +
   theme_classic() +
-  scale_color_brewer(palette = "Set1")
+  scale_color_brewer(palette = "Set1") + 
+  facet_wrap(~family)
 
 Dh_lm <- lm(log(mean_Dh)~log(mean_MAP), data = xylem_Dh
             # |> filter(family != "CASUARINACEAE")
@@ -215,7 +214,7 @@ euc_heights <- height_data$traits |>
   summarise(max_height = max(value),
             mean_height = mean(value))
 
-xylem_Dh_height <- xylem_Dh |> left_join(euc_heights, by = c("apc_name" = "taxon_name"))
+xylem_Dh_height <- xylem_Dh |> left_join(euc_heights, by = c("species"= "taxon_name"))
 
 # ggplot(data = xylem_Dh_height, aes(mean_MAP, mean_Dh/max_height)) +
   ggplot(data = xylem_Dh_height, aes(AI, max_height)) +
@@ -237,7 +236,7 @@ vessel_grouping <- TRY_vessel_data |> filter(TraitName == "Wood vessel grouping"
 clustered <- vessel_grouping |> filter(OrigValueStr == "clusters")
 
 species_grouping <- read.csv("data/matched_names.csv", header = T)
-xylem_Dh_grouping <- xylem_Dh |> left_join(species_grouping, by = "apc_name")
+xylem_Dh_grouping <- xylem_Dh |> left_join(species_grouping, by = "species")
 
 ggplot(data = xylem_Dh_grouping, aes(x = mean_MAP, y = mean_Dh, col = grouping)) +
   geom_point() +
@@ -250,7 +249,7 @@ ggplot(data = xylem_Dh_grouping, aes(x = mean_MAP, y = mean_Dh, col = grouping))
 
 
 ```{r}
-all_image_names <- list.files("/Users/elijahmagistrado/OneDrive - UNSW/images", 
+all_image_names <- list.files("/Users/elijah/Library/CloudStorage/OneDrive-UNSW/images", 
                               pattern = "_x.jpg",
                               recursive = T) |> 
   as.data.frame() 
@@ -263,7 +262,9 @@ all_image_names <- all_image_names |> filter(grepl("QLD|NSW|VIC|TAS|_SA|WA|NT",
   separate(file_name, c("folder", "file_name"), sep = "/") |> 
   separate(file_name, c("family", "other"), sep = " ", extra = "merge") |> 
   separate(other, c("species", "other"), sep = "_", extra = "merge") |> 
-  distinct(species)
+  # distinct(species)
+  group_by(family) |> 
+  summarise(n=n())
 
 write.csv(all_image_names, "data/ssd_names.csv", row.names = F)
 
