@@ -231,7 +231,6 @@ loadings(xylem_PCA)
 adding height data
 ```{r}
 library(austraits)
-library(ausflora)
 
 austraits <- readRDS("data/austraits.rds")
 
@@ -264,6 +263,20 @@ growth_form <- extract_trait(austraits, "plant_growth_form")
 
 spp_growth_form <- growth_form$traits |> 
   filter(taxon_name %in% xylem_Dh$apc_name)
+
+xylem_Dh_growth_form <- xylem_Dh |> left_join(spp_growth_form, by = c("apc_name"= "taxon_name"))
+
+ggplot(data = xylem_Dh_growth_form, aes(mean_MAP, mean_Dh, col = value)) +
+  # ggplot(data = xylem_Dh_height, aes(AI, max_height)) +
+# ggplot(data = xylem_Dh_height, aes(max_height, mean_Dh)) +
+  geom_point() +
+  scale_x_log10() +
+  scale_y_log10() +
+  scale_color_brewer(palette = "Set1") +
+  theme_classic() + 
+  facet_wrap(~family) +
+  geom_smooth(method = "lm", se = F)
+
 ```
 
 
