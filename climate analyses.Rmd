@@ -24,10 +24,12 @@ xylem_areas <- list.files("area_data/", full.names = T) |>
   mutate(area_mm = Area.µm.2/1000000,
          radius = sqrt(Area.µm.2/pi))
 
-gbif_names <- read.csv("data/gbif_namematched.csv", header = T) |> filter(grepl("SPECIES|VARIETY", rank)) 
-
 apc_names <- update_taxonomy(gbif_names$species, resources = resources) |>
   filter(grepl("accepted|synonym|variant", taxonomicStatusClean))
+
+gbif_names <- read.csv("data/gbif_namematched.csv", header = T) |> filter(grepl("SPECIES|VARIETY", rank)) 
+
+# write.csv(apc_names["canonicalName"], "data/apc_names.csv", row.names = F)
 
 namematched <- gbif_names |> select(verbatimScientificName, species) |> 
   left_join(apc_names[c("aligned_name", "canonicalName", "family")], by = c("species" = "aligned_name")) |> 
@@ -94,7 +96,7 @@ ggplot() +
 
 Creating climate preference data
 ```{r}
-# gbif_occurrences <- read.delim("occurrences/gbif_raw_occs.csv", header=T, sep="\t")
+gbif_occurrences <- read.delim("occurrences/gbif_raw_occs.csv", header=T, sep="\t")
 
 # gbif_filtered <- gbif_occurrences |> 
 #   select(species, scientificName, decimalLatitude, decimalLongitude) |> 
@@ -104,7 +106,7 @@ Creating climate preference data
 
 gbif_filtered <- read.csv("occurrences/gbif_filtered.csv", header = T)
 
-occurrence_data <- gbif_filtered |> filter(species %in% xylem_areas$gbif_name)
+occurrence_data <- gbif_filtered |> filter(species %in% namematched$gbif_name)
 
 occurrence_points <- vect(occurrence_data, geom = c("decimalLongitude", "decimalLatitude"))
 
