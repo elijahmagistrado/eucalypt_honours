@@ -258,6 +258,16 @@ ggplot(data = xylem_Dh_height, aes(mean_MAP, mean_Dh/max_height)) +
 ```
 
 
+Growth form data
+```{r}
+growth_form <- extract_trait(austraits, "plant_growth_form")
+
+spp_growth_form <- growth_form$traits |> 
+  filter(taxon_name %in% xylem_Dh$apc_name)
+```
+
+
+
 Adding TRY vessel trait data
 ```{r}
 TRY_vessel_data <- read.csv("data/TRY_vessel_data.csv", header = T)
