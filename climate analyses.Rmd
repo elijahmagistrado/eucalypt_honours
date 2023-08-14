@@ -257,14 +257,14 @@ euc_heights <- height_data$traits |>
 
 xylem_Dh_height <- xylem_Dh |> left_join(euc_heights, by = c("apc_name"= "taxon_name"))
 
-ggplot(data = xylem_Dh_height, aes(mean_MAP, mean_Dh/max_height)) +
+ggplot(data = xylem_Dh_height |> filter(n_samples > 3), aes(mean_MAP, mean_Dh/mean_height)) +
   # ggplot(data = xylem_Dh_height, aes(AI, max_height)) +
 # ggplot(data = xylem_Dh_height, aes(max_height, mean_Dh)) +
   geom_point() +
   scale_x_log10() +
   scale_y_log10() +
   theme_classic() + 
-  facet_wrap(~family)
+  facet_wrap(~genus)
 
 ```
 
