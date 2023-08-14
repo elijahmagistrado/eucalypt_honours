@@ -24,16 +24,16 @@ xylem_areas <- list.files("area_data/", full.names = T) |>
   mutate(area_mm = Area.µm.2/1000000,
          radius = sqrt(Area.µm.2/pi))
 
-apc_names <- update_taxonomy(gbif_names$species, resources = resources) |>
+apc_names <- update_taxonomy(xylem_areas$species_name, resources = resources) |>
   filter(grepl("accepted|synonym|variant", taxonomicStatusClean))
+
+write.csv(apc_names["canonicalName"], "data/apc_names.csv", row.names = F)
 
 gbif_names <- read.csv("data/gbif_namematched.csv", header = T) |> filter(grepl("SPECIES|VARIETY", rank)) 
 
-# write.csv(apc_names["canonicalName"], "data/apc_names.csv", row.names = F)
-
 namematched <- gbif_names |> select(verbatimScientificName, species) |> 
-  left_join(apc_names[c("aligned_name", "canonicalName", "family")], by = c("species" = "aligned_name")) |> 
-  rename(species_name = verbatimScientificName, gbif_name = species, apc_name = canonicalName)
+  left_join(apc_names[c("aligned_name", "canonicalName", "family")], by = c("verbatimScientificName" = "canonicalName")) |> 
+  rename(species_name = aligned_name, gbif_name = species, apc_name = verbatimScientificName)
 
 xylem_areas <- xylem_areas |> left_join(namematched, by = "species_name")
 ```
