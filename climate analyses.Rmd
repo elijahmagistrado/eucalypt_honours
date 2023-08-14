@@ -48,10 +48,11 @@ zanne_native <- native_anywhere_in_australia(zanne_data$Binomial,
   filter(native_anywhere_in_aus == "TRUE" )
 
 jugo_data <- xylem_areas |> 
-  group_by(species) |> 
-  mutate(total_area = sum(area_mm, na.rm=T)) |> 
+  group_by(apc_name) |> 
+  mutate(area_mm = Area.µm.2/1000000, 
+         total_area = sum(area_mm, na.rm=T)) |> 
   filter(Name == "vessel") |> 
-  group_by(species) |> 
+  group_by(apc_name) |> 
   summarise(n=n(),
          mean_area = mean(area_mm, na.rm=T),
          log_mean_area = log(mean_area),
@@ -59,13 +60,14 @@ jugo_data <- xylem_areas |>
          n_per_area = n/total_area,
          area_n_ratio = mean_area/n_per_area) |> 
   drop_na() |> 
-  left_join(xylem_areas[, c(1:2)], by = "species") |> 
+  left_join(namematched[c("apc_name", "family")], by = "apc_name") |>
   distinct()
 
 ggplot() +
   geom_point(data = zanne_data, aes(x = N, y = A), col = "light grey") +
   # geom_point(data = zanne_native, aes(x = N, y = A), col = "black") +
-  geom_point(data = jugo_data, aes(x = n_per_area, y = mean_area, col = family)) +
+  # geom_point(data = jugo_data, aes(x = n_per_area, y = mean_area, col = family)) +
+  geom_smooth(data = jugo_data, aes(x = n_per_area, y = mean_area, col = family), method = "lm", se = F) +
   scale_x_log10() +
   scale_y_log10() +
   scale_color_brewer(palette = "Set1") +
@@ -325,7 +327,7 @@ all_image_names <- all_image_names |> filter(grepl("QLD|NSW|VIC|TAS|_SA|WA|NT",
   separate(file_name, c("folder", "file_name"), sep = "/") |> 
   separate(file_name, c("family", "other"), sep = " ", extra = "merge") |> 
   separate(other, c("species", "other"), sep = "_", extra = "merge") |> 
-  # distinct(species)
+  distinct(family, species) |>
   group_by(family) |> 
   summarise(n=n())
 
@@ -335,7 +337,7 @@ ssd_namematched <- read.csv("data/gbif_namematched.csv", header = T) |>
   filter(rank == "SPECIES")
 
 
-data_stats <- xylem_areas |> distinct(family, species_name, other) |> 
+data_stats <- xylem_Dh |> distinct(family, apc_name) |> 
   group_by(family) |> 
   summarise(n=n())
 ```
