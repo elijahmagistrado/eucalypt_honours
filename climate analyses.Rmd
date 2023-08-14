@@ -312,7 +312,7 @@ ggplot(data = xylem_Dh_grouping, aes(x = mean_MAP, y = mean_Dh, col = grouping))
 
 
 ```{r}
-all_image_names <- list.files("/Users/elijah/Library/CloudStorage/OneDrive-UNSW/images", 
+all_image_names <- list.files("/Users/elijahmagistrado/OneDrive - UNSW/images", 
                               pattern = "_x.jpg",
                               recursive = T) |> 
   as.data.frame() 
@@ -333,6 +333,11 @@ write.csv(all_image_names, "data/ssd_names.csv", row.names = F)
 
 ssd_namematched <- read.csv("data/gbif_namematched.csv", header = T) |> 
   filter(rank == "SPECIES")
+
+
+data_stats <- xylem_areas |> distinct(family, species_name, other) |> 
+  group_by(family) |> 
+  summarise(n=n())
 ```
 
 
