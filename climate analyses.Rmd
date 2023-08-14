@@ -118,8 +118,6 @@ for (raster in raster_list) {
 }
 
 
-
-
 climate_preferences <- occurrence_data |> 
   group_by(species) |>  
   summarise(mean_MAP=mean(MAP, na.rm=T), 
@@ -134,11 +132,9 @@ climate_preferences <- occurrence_data |>
   mutate(climate=cut(AI, breaks=c(-Inf, 0.03, 0.2, 0.5, 0.65, Inf), 
                      labels=c("Hyper Arid", "Arid", "Semi-Arid", "Dry sub-humid", "Humid"))) |> 
   # filter(n > 5) |> 
-  left_join(xylem_areas[c(1, 18, 19, 20)], by = c("species" = "gbif_name")) |>
+  left_join(xylem_areas[c(1, 18, 19, 20, 21)], by = c("species" = "gbif_name")) |>
   distinct()
   
-
-
 
 # write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
 ```
@@ -173,13 +169,15 @@ Hydraulically weighted diameter (Dh)
 ```{r}
 xylem_Dh <- xylem_areas |> 
   filter(Name == "vessel") |>
-  group_by(apc_name, other) |> 
+  group_by(apc_name, genus, other) |> 
   summarise(sample_Dh = sum(radius^5)/ sum(radius^4)) |> 
   group_by(apc_name) |> 
   summarise(mean_Dh = mean(sample_Dh, na.rm=T)) |> 
   left_join(climate_preferences, by = "apc_name") |> 
   left_join(xylem_areas["apc_name"], by = "apc_name") |> 
   distinct() |> 
+  group_by(genus) |> 
+  mutate(n_samples = n()) |> 
   drop_na() 
 
 
@@ -193,6 +191,16 @@ ggplot(data = xylem_Dh, aes(x = mean_MAP, y = mean_Dh, col = family)) +
   theme_classic() +
   scale_color_brewer(palette = "Set1") +
   facet_wrap(~family)
+
+ggplot(data = xylem_Dh |> filter(family == "Myrtaceae", n_samples > 3), 
+       aes(x = mean_MAP, y = mean_Dh, col = genus)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = F) +
+  scale_x_log10() +
+  scale_y_log10() +
+  theme_classic() +
+  scale_color_brewer(palette = "Set1") +
+  facet_wrap(~genus)
 
 Dh_lm <- lm(log(mean_Dh)~log(mean_MAP), data = xylem_Dh
             # |> filter(family != "CASUARINACEAE")
