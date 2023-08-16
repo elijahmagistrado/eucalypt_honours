@@ -61,7 +61,7 @@ jugo_data <- xylem_areas |>
   group_by(apc_name) |> 
   summarise(N = mean(n_per_area, na.rm = T),
             A = mean(mean_area, na.rm = T),
-            S = mean(area_n_ratio, na.rm = T)) |> 
+            S = mean(area_n_ratio, na.rm = T)) |>
   drop_na() |> 
   left_join(namematched[c("apc_name", "family")], by = "apc_name") |>
   distinct()
@@ -69,8 +69,8 @@ jugo_data <- xylem_areas |>
 ggplot() +
   geom_point(data = zanne_data, aes(x = N, y = A), col = "light grey") +
   # geom_point(data = zanne_native, aes(x = N, y = A), col = "black") +
-  # geom_point(data = jugo_data, aes(x = N, y = A, col = family)) +
-  geom_smooth(data = jugo_data, aes(x = N, y = A, col = family), method = "lm", se = F) +
+  geom_point(data = jugo_data, aes(x = N, y = A, col = family)) +
+  # geom_smooth(data = jugo_data, aes(x = N, y = A, col = family), method = "lm", se = F) +
   scale_x_log10() +
   scale_y_log10() +
   scale_color_brewer(palette = "Set1") +
@@ -80,25 +80,46 @@ ggplot() +
 
 
 ```{r}
-jugo_data <- jugo_data |> left_join(climate_preferences, by = "apc_name")
+jugo_data <- jugo_data |> 
+  left_join(climate_preferences[c(1:14)], by = "apc_name") |>
+  group_by(genus) |> 
+  mutate(n_samples = n())
 
-ggplot(data = jugo_data, aes(x = mean_MAP, y = N, col = family.y)) +
+ggplot(data = jugo_data, aes(x = mean_MAP, y = N, col = family)) +
   geom_point() +
   geom_smooth(method = "lm", se = F) +
   scale_x_log10() +
   scale_y_log10() +
   theme_classic() +
   scale_color_brewer(palette = "Set1") +
-  facet_wrap(~family.y)
+  facet_wrap(~family)
 
-ggplot(data = jugo_data, aes(x = mean_MAP, y = S, col = family.y)) +
+ggplot(data = jugo_data |> filter(family == "Myrtaceae", n_samples > 3), aes(x = mean_MAP, y = N, col = genus)) +
   geom_point() +
   geom_smooth(method = "lm", se = F) +
   scale_x_log10() +
   scale_y_log10() +
   theme_classic() +
   scale_color_brewer(palette = "Set1") +
-  facet_wrap(~family.y)
+  facet_wrap(~genus)
+
+ggplot(data = jugo_data, aes(x = mean_MAP, y = S, col = family)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = F) +
+  scale_x_log10() +
+  scale_y_log10() +
+  theme_classic() +
+  scale_color_brewer(palette = "Set1") +
+  facet_wrap(~family)
+
+ggplot(data = jugo_data |> filter(family == "Myrtaceae", n_samples > 3), aes(x = mean_MAP, y = S, col = genus)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = F) +
+  scale_x_log10() +
+  scale_y_log10() +
+  theme_classic() +
+  scale_color_brewer(palette = "Set1") +
+  facet_wrap(~genus)
 ```
 
 
