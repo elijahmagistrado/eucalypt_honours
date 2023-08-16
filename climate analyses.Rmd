@@ -225,6 +225,15 @@ ggplot(data = xylem_lumen_frac, aes(x = mean_MAP, y = mean_lumen_frac, col = fam
   theme_classic() +
   scale_color_brewer(palette = "Set1") +
   facet_wrap(~family)
+
+ggplot(data = xylem_lumen_frac |> filter(family == "Myrtaceae", n_samples > 3), aes(x = mean_MAP, y = mean_lumen_frac, col = genus)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = F) +
+  scale_x_log10() +
+  scale_y_log10() +
+  theme_classic() +
+  scale_color_brewer(palette = "Set1") +
+  facet_wrap(~genus)
 ```
 
 
