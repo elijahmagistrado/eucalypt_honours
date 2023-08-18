@@ -213,7 +213,7 @@ xylem_Dh <- xylem_areas |>
 
 # write.csv(xylem_Dh, "data/xylem_Dh.csv", row.names = F)
 
-ggplot(data = xylem_Dh, aes(x = mean_MAP, y = mean_Dh, col = family)) +
+ggplot(data = xylem_Dh, aes(x = AI, y = mean_Dh, col = family, alpha = MAT)) +
   geom_point() +
   geom_smooth(method = "lm", se = F) +
   scale_x_log10() +
@@ -222,12 +222,12 @@ ggplot(data = xylem_Dh, aes(x = mean_MAP, y = mean_Dh, col = family)) +
   scale_color_brewer(palette = "Set1") +
   facet_wrap(~family)
 
-ggplot(data = xylem_Dh |> filter(family == "Myrtaceae", n_samples > 3), 
-       aes(x = mean_MAP, y = mean_Dh, col = genus)) +
+ggplot(data = xylem_Dh |> filter(n_samples > 5), 
+       aes(x = AI, y = mean_Dh, col = genus)) +
   geom_point() +
   geom_smooth(method = "lm", se = F) +
-  scale_x_log10() +
-  scale_y_log10() +
+  # scale_x_log10() +
+  # scale_y_log10() +
   theme_classic() +
   scale_color_brewer(palette = "Set1") +
   facet_wrap(~genus)
@@ -239,8 +239,9 @@ Dh_lm <- lm(log(mean_Dh)~log(mean_MAP), data = xylem_Dh
 summary(Dh_lm)
 # r2(Dh_lm)
 
-Dh_aov <- lm(log(mean_Dh)~log(mean_MAP)+family, data = xylem_Dh)
+Dh_aov <- lm(mean_Dh~mean_MAP+genus, data = xylem_Dh |> filter(n_samples > 5))
 summary(Dh_aov)
+check_model(Dh_aov)
 # check_model(Dh_aov)
 # r2(Dh_aov)
 ```
