@@ -31,7 +31,7 @@ write.csv(apc_names["canonicalName"], "data/apc_names.csv", row.names = F)
 
 gbif_names <- read.csv("data/gbif_namematched.csv", header = T) |> filter(grepl("SPECIES|VARIETY", rank)) 
 
-namematched <- gbif_names |> select(verbatimScientificName, species) |> 
+namematched <- gbif_names |> select(verbatimScientificName, species, genus) |> 
   left_join(apc_names[c("aligned_name", "canonicalName", "family")], by = c("verbatimScientificName" = "canonicalName")) |> 
   rename(species_name = aligned_name, gbif_name = species, apc_name = verbatimScientificName)
 
@@ -79,6 +79,52 @@ ggplot() +
 ```
 
 
+Creating climate preference data
+```{r}
+# gbif_occurrences <- read.delim("occurrences/gbif_raw_occs.csv", header=T, sep="\t")
+
+# gbif_filtered <- gbif_occurrences |> 
+#   select(species, scientificName, decimalLatitude, decimalLongitude) |> 
+#   drop_na()
+
+# write.csv(gbif_filtered, "occurrences/gbif_filtered.csv", row.names = F)
+
+gbif_filtered <- read.csv("occurrences/gbif_filtered.csv", header = T)
+
+occurrence_data <- gbif_filtered |> filter(species %in% namematched$gbif_name)
+
+occurrence_points <- vect(occurrence_data, geom = c("decimalLongitude", "decimalLatitude"))
+
+raster_list <- list.files("rasters_30s/", full.names = T) |> map(rast)
+
+for (raster in raster_list) {
+  occurrence_data <- occurrence_data |> 
+    mutate(!!sym(names(raster)) := terra::extract(raster, occurrence_points)[[2]])
+}
+
+
+climate_preferences <- occurrence_data |> 
+  group_by(species) |>  
+  summarise(mean_MAP=mean(MAP, na.rm=T), 
+            tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
+            sd_log_MAP=sd(log(MAP), na.rm=T),
+            MAT=mean(MAT, na.rm=T),
+            seasonality=mean(seasonality, na.rm=T),
+            wet_quarter=mean(wet_quarter, na.rm=T),
+            dry_quarter=mean(dry_quarter, na.rm=T),
+            AI=mean(awi_pm_sr_yr/10000, na.rm=T),
+            n_obs=n()) |> 
+  mutate(climate=cut(AI, breaks=c(-Inf, 0.03, 0.2, 0.5, 0.65, Inf), 
+                     labels=c("Hyper Arid", "Arid", "Semi-Arid", "Dry sub-humid", "Humid"))) |> 
+  # filter(n > 5) |> 
+  left_join(xylem_areas[c(1, 18, 19, 20, 21)], by = c("species" = "gbif_name")) |>
+  distinct()
+  
+
+# write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
+```
+
+
 ```{r}
 jugo_data <- jugo_data |> 
   left_join(climate_preferences[c(1:14)], by = "apc_name") |>
@@ -123,52 +169,6 @@ ggplot(data = jugo_data |> filter(family == "Myrtaceae", n_samples > 3), aes(x =
 ```
 
 
-Creating climate preference data
-```{r}
-gbif_occurrences <- read.delim("occurrences/gbif_raw_occs.csv", header=T, sep="\t")
-
-# gbif_filtered <- gbif_occurrences |> 
-#   select(species, scientificName, decimalLatitude, decimalLongitude) |> 
-#   drop_na()
-
-# write.csv(gbif_filtered, "occurrences/gbif_filtered.csv", row.names = F)
-
-gbif_filtered <- read.csv("occurrences/gbif_filtered.csv", header = T)
-
-occurrence_data <- gbif_filtered |> filter(species %in% namematched$gbif_name)
-
-occurrence_points <- vect(occurrence_data, geom = c("decimalLongitude", "decimalLatitude"))
-
-raster_list <- list.files("rasters_30s/", full.names = T) |> map(rast)
-
-for (raster in raster_list) {
-  occurrence_data <- occurrence_data |> 
-    mutate(!!sym(names(raster)) := terra::extract(raster, occurrence_points)[[2]])
-}
-
-
-climate_preferences <- occurrence_data |> 
-  group_by(species) |>  
-  summarise(mean_MAP=mean(MAP, na.rm=T), 
-            tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
-            sd_log_MAP=sd(log(MAP), na.rm=T),
-            MAT=mean(MAT, na.rm=T),
-            seasonality=mean(seasonality, na.rm=T),
-            wet_quarter=mean(wet_quarter, na.rm=T),
-            dry_quarter=mean(dry_quarter, na.rm=T),
-            AI=mean(awi_pm_sr_yr/10000, na.rm=T),
-            n_obs=n()) |> 
-  mutate(climate=cut(AI, breaks=c(-Inf, 0.03, 0.2, 0.5, 0.65, Inf), 
-                     labels=c("Hyper Arid", "Arid", "Semi-Arid", "Dry sub-humid", "Humid"))) |> 
-  # filter(n > 5) |> 
-  left_join(xylem_areas[c(1, 18, 19, 20, 21)], by = c("species" = "gbif_name")) |>
-  distinct()
-  
-
-# write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
-```
-
-
 Vessel area
 ```{r}
 climate_preferences <- read.csv("data/climate_preferences.csv", header = T)
@@ -190,6 +190,7 @@ ggplot(data = species_summary, aes(x = mean_MAP, y = mean_area, col = family)) +
   theme_classic() +
   scale_color_brewer(palette = "Set1") +
   facet_wrap(~family)
+
 ```
 
 
@@ -382,7 +383,7 @@ ggplot(data = xylem_Dh_grouping, aes(x = mean_MAP, y = mean_Dh, col = grouping))
 
 
 ```{r}
-all_image_names <- list.files("/Users/elijahmagistrado/OneDrive - UNSW/images", 
+all_image_names <- list.files("/Users/elijahmagistrado/OneDrive - UNSW/Cross sections/other Rutaceae", 
                               pattern = "_x.jpg",
                               recursive = T) |> 
   as.data.frame() 
@@ -390,14 +391,20 @@ all_image_names <- list.files("/Users/elijahmagistrado/OneDrive - UNSW/images",
 names(all_image_names)[1] <- "file_name"
   
 
-all_image_names <- all_image_names |> filter(grepl("QLD|NSW|VIC|TAS|_SA|WA|NT",
-                                                   file_name)) |> 
-  separate(file_name, c("folder", "file_name"), sep = "/") |> 
+all_image_names <- all_image_names |> 
   separate(file_name, c("family", "other"), sep = " ", extra = "merge") |> 
-  separate(other, c("species", "other"), sep = "_", extra = "merge") |> 
-  distinct(family, species) |>
-  group_by(family) |> 
-  summarise(n=n())
+  separate(other, c("species", "other"), sep = "_", extra = "merge")
+
+images_apc_names <- update_taxonomy(all_image_names$species, resources = resources)
+
+# all_image_names <- all_image_names |> 
+  # filter(grepl("QLD|NSW|VIC|TAS|_SA|WA|NT", file_name)) |> 
+  # separate(file_name, c("folder", "file_name"), sep = "/") |> 
+  # separate(file_name, c("family", "other"), sep = " ", extra = "merge") |> 
+  # separate(other, c("species", "other"), sep = "_", extra = "merge") |> 
+  # distinct(family, species) |>
+  # group_by(family) |> 
+  # summarise(n=n())
 
 write.csv(all_image_names, "data/ssd_names.csv", row.names = F)
 
