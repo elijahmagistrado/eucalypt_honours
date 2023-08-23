@@ -263,6 +263,31 @@ check_model(Dh_aov)
 ```
 
 
+```{r}
+xylem_Dh_long <- xylem_Dh |> 
+  pivot_longer(cols = mean_MAP:AI, names_to = "variable", values_to = "value")
+
+ggplot(data = xylem_Dh_long, aes(value, mean_Dh)) +
+  geom_point(data = xylem_Dh_long[,c(2, 10, 11)], aes(value, mean_Dh), col = "light grey") +
+  geom_point() +
+  scale_x_log10() +
+  scale_y_log10() +
+  geom_smooth(method = "lm") +
+  facet_grid(family~variable, scales = "free_x") +
+  theme_bw()
+
+ggplot(data = xylem_Dh_long |> filter(n_samples > 5), aes(value, mean_Dh)) +
+  geom_point(data = xylem_Dh_long[,c(2, 10, 11)], aes(value, mean_Dh), col = "light grey") +
+  geom_point() +
+  scale_x_log10() +
+  scale_y_log10() +
+  geom_smooth(method = "lm") +
+  facet_grid(genus~variable, scales = "free_x") +
+  theme_bw()
+```
+
+
+
 Lumen fraction
 ```{r}
 xylem_lumen_frac <- xylem_areas |> 
