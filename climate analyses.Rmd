@@ -204,7 +204,7 @@ ggplot() +
   scale_x_log10() +
   scale_y_log10() +
   facet_grid(family~variable, scales = "free_x") +
-  theme_bw()
+  theme_bw() 
 ```
 
 
@@ -255,11 +255,13 @@ Dh_lm <- lm(log(mean_Dh)~log(mean_MAP), data = xylem_Dh
 summary(Dh_lm)
 # r2(Dh_lm)
 
-Dh_aov <- lm(mean_Dh~mean_MAP+genus, data = xylem_Dh |> filter(n_samples > 5))
+Dh_aov <- lm(log(mean_Dh)~log(mean_MAP)+genus, data = xylem_Dh |> filter(n_samples > 5))
 summary(Dh_aov)
 check_model(Dh_aov)
 # check_model(Dh_aov)
 # r2(Dh_aov)
+
+cor(xylem_Dh[, c(2, 4:9)])
 ```
 
 
@@ -284,6 +286,11 @@ ggplot(data = xylem_Dh_long |> filter(n_samples > 5), aes(value, mean_Dh)) +
   geom_smooth(method = "lm") +
   facet_grid(genus~variable, scales = "free_x") +
   theme_bw()
+
+Dh_long_aov <- lm(log(mean_Dh)~log(value)+variable+genus, data = xylem_Dh_long |> filter(n_samples > 5))
+summary(Dh_long_aov)
+
+
 ```
 
 
