@@ -14,6 +14,7 @@ library(terra)
 library(ausflora)
 library(performance)
 library(austraits)
+library(patchwork)
 
 resources <- load_taxonomic_resources()
 
@@ -27,7 +28,7 @@ xylem_areas <- list.files("area_data/", full.names = T) |>
 apc_names <- update_taxonomy(xylem_areas$species_name, resources = resources) |>
   filter(grepl("accepted|synonym|variant", taxonomicStatusClean))
 
-write.csv(apc_names["canonicalName"], "data/apc_names.csv", row.names = F)
+# write.csv(apc_names["canonicalName"], "data/apc_names.csv", row.names = F)
 
 gbif_names <- read.csv("data/gbif_namematched.csv", header = T) |> filter(grepl("SPECIES|VARIETY", rank)) 
 
@@ -109,7 +110,6 @@ climate_preferences <- occurrence_data |>
             tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
             sd_log_MAP=sd(log(MAP), na.rm=T),
             MAT=mean(MAT, na.rm=T),
-            seasonality=mean(seasonality, na.rm=T),
             wet_quarter=mean(wet_quarter, na.rm=T),
             dry_quarter=mean(dry_quarter, na.rm=T),
             AI=mean(awi_pm_sr_yr/10000, na.rm=T),
@@ -182,17 +182,30 @@ spp_areas <- xylem_areas |>
 
 species_summary <- spp_areas |> left_join(climate_preferences, by = "apc_name")
 
-ggplot(data = species_summary, aes(x = mean_MAP, y = mean_area, col = family)) +
-  geom_point() +
+ggplot(data = species_summary, aes(x = mean_MAP, y = mean_area)) +
+  geom_point(aes(col = MAT)) +
   geom_smooth(method = "lm", se = F) +
   scale_x_log10() +
   scale_y_log10() +
   theme_classic() +
-  scale_color_brewer(palette = "Set1") +
-  facet_wrap(~family)
+  scale_colour_gradient2(low = "blue", mid = "dark grey", high = "red", midpoint = median(species_summary$MAT)) +
+  facet_wrap(~family) +
+  xlab("MAP (mm)") + 
+  ylab(bquote("Mean Vessel Area " (mm^2)))
 
 ```
 
+```{r}
+species_summary_long <- species_summary |> 
+  pivot_longer(cols = mean_MAP:AI, names_to = "variable", values_to = "value")
+
+ggplot() +
+  geom_point(data = species_summary_long, aes(value, mean_area)) +
+  scale_x_log10() +
+  scale_y_log10() +
+  facet_grid(family~variable, scales = "free_x") +
+  theme_bw()
+```
 
 
 Hydraulically weighted diameter (Dh)
@@ -213,17 +226,20 @@ xylem_Dh <- xylem_areas |>
 
 # write.csv(xylem_Dh, "data/xylem_Dh.csv", row.names = F)
 
-ggplot(data = xylem_Dh, aes(x = AI, y = mean_Dh, col = family, alpha = MAT)) +
+ggplot(data = xylem_Dh, aes(x = mean_MAP, y = mean_Dh)) +
   geom_point() +
   geom_smooth(method = "lm", se = F) +
   scale_x_log10() +
   scale_y_log10() +
   theme_classic() +
   scale_color_brewer(palette = "Set1") +
-  facet_wrap(~family)
+  facet_wrap(~family) +
+  xlab("Mean annual precipitation (mm)") + 
+  ylab(bquote("Hydraulically weighted diameter " (D[h]) ))
+  
 
 ggplot(data = xylem_Dh |> filter(n_samples > 5), 
-       aes(x = AI, y = mean_Dh, col = genus)) +
+       aes(x = AI, y = mean_Dh)) +
   geom_point() +
   geom_smooth(method = "lm", se = F) +
   # scale_x_log10() +
