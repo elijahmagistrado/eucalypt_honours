@@ -375,7 +375,7 @@ euc_heights <- height_data$traits |>
 
 xylem_Dh_height <- xylem_Dh |> left_join(euc_heights, by = c("apc_name"= "taxon_name"))
 
-ggplot(data = xylem_Dh_height |> filter(n_samples > 3), aes(mean_MAP, mean_Dh/mean_height)) +
+ggplot(data = xylem_Dh_height, aes(mean_height, mean_Dh)) +
   # ggplot(data = xylem_Dh_height, aes(AI, max_height)) +
 # ggplot(data = xylem_Dh_height, aes(max_height, mean_Dh)) +
   geom_point() +
@@ -383,6 +383,9 @@ ggplot(data = xylem_Dh_height |> filter(n_samples > 3), aes(mean_MAP, mean_Dh/me
   scale_y_log10() +
   theme_classic() + 
   facet_wrap(~genus)
+
+ggplot(data = xylem_Dh_height, aes(family, mean_height)) +
+  geom_boxplot()
 
 ```
 
@@ -588,4 +591,14 @@ all_climate_plot
 
 ```
 
+
+Choat data
+```{r}
+choat_data <- read.csv("data/choat_data.csv", header = T)
+
+ggplot() +
+  geom_point(data = choat_data |> filter(Group == "Angiosperm"), aes(MAP, ψ50, col = Growth.form)) +
+  theme_classic()
+
+```
 
