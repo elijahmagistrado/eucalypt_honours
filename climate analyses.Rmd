@@ -113,6 +113,7 @@ climate_preferences <- occurrence_data |>
             wet_quarter=mean(wet_quarter, na.rm=T),
             dry_quarter=mean(dry_quarter, na.rm=T),
             AI=mean(awi_pm_sr_yr/10000, na.rm=T),
+            seasonality=mean(seasonality, na.rm=T),
             n_obs=n()) |> 
   mutate(climate=cut(AI, breaks=c(-Inf, 0.03, 0.2, 0.5, 0.65, Inf), 
                      labels=c("Hyper Arid", "Arid", "Semi-Arid", "Dry sub-humid", "Humid"))) |> 
@@ -182,13 +183,13 @@ spp_areas <- xylem_areas |>
 
 species_summary <- spp_areas |> left_join(climate_preferences, by = "apc_name")
 
-ggplot(data = species_summary, aes(x = mean_MAP, y = mean_area)) +
-  geom_point(aes(col = MAT)) +
+ggplot(data = species_summary, aes(x = seasonality, y = mean_area)) +
+  geom_point() +
   geom_smooth(method = "lm", se = F) +
   scale_x_log10() +
   scale_y_log10() +
   theme_classic() +
-  scale_colour_gradient2(low = "blue", mid = "dark grey", high = "red", midpoint = median(species_summary$MAT)) +
+  scale_colour_gradient2(low = "blue", mid = "dark grey", high = "red", midpoint = mean(species_summary$seasonality)) +
   facet_wrap(~family) +
   xlab("MAP (mm)") + 
   ylab(bquote("Mean Vessel Area " (mm^2)))
@@ -197,7 +198,7 @@ ggplot(data = species_summary, aes(x = mean_MAP, y = mean_area)) +
 
 ```{r}
 species_summary_long <- species_summary |> 
-  pivot_longer(cols = mean_MAP:AI, names_to = "variable", values_to = "value")
+  pivot_longer(cols = mean_MAP:seasonality, names_to = "variable", values_to = "value")
 
 ggplot() +
   geom_point(data = species_summary_long, aes(value, mean_area)) +
@@ -239,7 +240,7 @@ ggplot(data = xylem_Dh, aes(x = mean_MAP, y = mean_Dh)) +
   
 
 ggplot(data = xylem_Dh |> filter(n_samples > 5), 
-       aes(x = AI, y = mean_Dh)) +
+       aes(x = mean_MAP, y = mean_Dh, col = genus)) +
   geom_point() +
   geom_smooth(method = "lm", se = F) +
   # scale_x_log10() +
@@ -418,7 +419,13 @@ Adding TRY vessel trait data
 ```{r}
 TRY_vessel_data <- read.csv("data/TRY_vessel_data.csv", header = T)
 
-vessel_grouping <- TRY_vessel_data |> filter(TraitName == "Wood vessel grouping")
+TRY_vessel_diameter <- TRY_vessel_data |> filter(TraitName == "Wood vessel diameter")
+TRY_natives <- TRY_vessel_diameter$SpeciesName |> 
+  native_anywhere_in_australia(resources = resources) |> 
+  distinct() |> 
+  filter(native_anywhere_in_aus == TRUE)
+
+vessel_grouping <- TRY_vessel_diam |> filter(TraitName == "Wood vessel grouping")
 clustered <- vessel_grouping |> filter(OrigValueStr == "clusters")
 
 species_grouping <- read.csv("data/matched_names.csv", header = T)
