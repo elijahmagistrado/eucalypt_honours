@@ -122,7 +122,7 @@ climate_preferences <- occurrence_data |>
   distinct()
   
 
-# write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
+write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
 ```
 
 
@@ -183,17 +183,19 @@ spp_areas <- xylem_areas |>
 
 species_summary <- spp_areas |> left_join(climate_preferences, by = "apc_name")
 
-ggplot(data = species_summary, aes(x = seasonality, y = mean_area)) +
+ggplot(data = species_summary, aes(x = mean_MAP, y = mean_area)) +
   geom_point() +
   geom_smooth(method = "lm", se = F) +
   scale_x_log10() +
   scale_y_log10() +
   theme_classic() +
-  scale_colour_gradient2(low = "blue", mid = "dark grey", high = "red", midpoint = mean(species_summary$seasonality)) +
-  facet_wrap(~family) +
-  xlab("MAP (mm)") + 
-  ylab(bquote("Mean Vessel Area " (mm^2)))
+  # scale_colour_gradient2(low = "blue", mid = "dark grey", high = "red", midpoint = mean(species_summary$seasonality)) +
+  # facet_wrap(~family) +
+  xlab("Mean annual precipitation (mm)") + 
+  ylab(bquote("Mean vessel area " (mm^2)))
 
+area_MAP_lm <- lm(log(mean_area)~log(mean_MAP), data = species_summary)
+summary(area_MAP_lm)
 ```
 
 ```{r}
@@ -227,14 +229,14 @@ xylem_Dh <- xylem_areas |>
 
 # write.csv(xylem_Dh, "data/xylem_Dh.csv", row.names = F)
 
-ggplot(data = xylem_Dh, aes(x = mean_MAP, y = mean_Dh)) +
+ggplot(data = xylem_Dh, aes(x = tenth_MAP, y = mean_Dh)) +
   geom_point() +
   geom_smooth(method = "lm", se = F) +
   scale_x_log10() +
   scale_y_log10() +
   theme_classic() +
   scale_color_brewer(palette = "Set1") +
-  facet_wrap(~family) +
+  # facet_wrap(~family) +
   xlab("Mean annual precipitation (mm)") + 
   ylab(bquote("Hydraulically weighted diameter " (D[h]) ))
   
@@ -442,7 +444,7 @@ ggplot(data = xylem_Dh_grouping, aes(x = mean_MAP, y = mean_Dh, col = grouping))
 
 
 ```{r}
-all_image_names <- list.files("/Users/elijahmagistrado/OneDrive - UNSW/Cross sections/other Rutaceae", 
+all_image_names <- list.files("/Users/elijahmagistrado/OneDrive - UNSW/images", 
                               pattern = "_x.jpg",
                               recursive = T) |> 
   as.data.frame() 
@@ -603,9 +605,46 @@ Choat data
 ```{r}
 choat_data <- read.csv("data/choat_data.csv", header = T)
 
+choat_native <- native_anywhere_in_australia(choat_data$Species, resources = resources) |> distinct()
+
+olson_data <- read.csv("data/olson2013data.csv", header = T)
+
+olson_data <- olson_data |> unite(binomial, genus:species, sep = " ")
+olson_native <- native_anywhere_in_australia(olson_data$binomial, resources = resources) |> distinct()
+
 ggplot() +
   geom_point(data = choat_data |> filter(Group == "Angiosperm"), aes(MAP, ψ50, col = Growth.form)) +
   theme_classic()
 
+```
+
+```{r}
+# Library
+library(networkD3)
+library(dplyr)
+ 
+# A connection data frame is a list of flows with intensity for each flow
+links <- data.frame(
+  source=c("All Images","Myrtaceae", "Lauraceae", "group_C", "group_C", "group_E"), 
+  target=c("group_C","group_D", "group_E", "group_F", "group_G", "group_H"), 
+  value=c(2,3, 2, 3, 1, 3)
+  )
+ 
+# From these flows we need to create a node data frame: it lists every entities involved in the flow
+nodes <- data.frame(
+  name=c(as.character(links$source), 
+  as.character(links$target)) %>% unique()
+)
+ 
+# With networkD3, connection must be provided using id, not using real name like in the links dataframe.. So we need to reformat it.
+links$IDsource <- match(links$source, nodes$name)-1 
+links$IDtarget <- match(links$target, nodes$name)-1
+ 
+# Make the Network
+p <- sankeyNetwork(Links = links, Nodes = nodes,
+              Source = "IDsource", Target = "IDtarget",
+              Value = "value", NodeID = "name", 
+              sinksRight=FALSE)
+p
 ```
 
