@@ -381,13 +381,13 @@ xylem_Dh_height <- xylem_Dh |> left_join(euc_heights, by = c("apc_name"= "taxon_
 ggplot(data = xylem_Dh_height, aes(mean_height, mean_Dh)) +
   # ggplot(data = xylem_Dh_height, aes(AI, max_height)) +
 # ggplot(data = xylem_Dh_height, aes(max_height, mean_Dh)) +
-  geom_point() +
-  scale_x_log10() +
-  scale_y_log10() +
-  theme_classic() + 
-  facet_wrap(~genus)
+  geom_point(aes(col = log(mean_MAP))) +
+  # scale_x_log10() +
+  # scale_y_log10() +
+  scale_colour_gradient2(low = "red", mid = "grey", high = "#0000FF", midpoint = median(log(xylem_Dh_height$mean_MAP))) +
+  theme_classic()
 
-ggplot(data = xylem_Dh_height, aes(family, mean_height)) +
+ggplot(data = xylem_Dh_height, aes(family, max_height)) +
   geom_boxplot()
 
 ```
