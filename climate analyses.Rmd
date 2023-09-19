@@ -125,6 +125,29 @@ climate_preferences <- occurrence_data |>
 write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
 ```
 
+```{r}
+aus_MAP <- rast("rasters/Australia_MAP.tif")
+aus_MAT <- rast("rasters/Australia_MAT.tif")
+
+aus_MAP_values <- values(aus_MAP, dataframe = T) |> drop_na() 
+aus_MAT_values <- values(aus_MAT, dataframe = T) |> drop_na() 
+
+hist(aus_MAP_values$Australia_MAP) 
+hist(climate_preferences$mean_MAP)
+
+hist(aus_MAT_values$Australia_MAT)
+hist(climate_preferences$MAT)
+
+ggplot() +
+  geom_density(data = aus_MAP_values, aes(Australia_MAP)) +
+  geom_density(data = climate_preferences, aes(mean_MAP), col = "red") +
+  theme_classic()
+
+ggplot() +
+  geom_density(data = aus_MAT_values, aes(Australia_MAT)) +
+  geom_density(data = climate_preferences, aes(MAT), col = "red") +
+  theme_classic()
+```
 
 ```{r}
 jugo_data <- jugo_data |> 
