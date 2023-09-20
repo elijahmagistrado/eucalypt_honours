@@ -90,7 +90,7 @@ Creating climate preference data
 
 # write.csv(gbif_filtered, "occurrences/gbif_filtered.csv", row.names = F)
 
-gbif_filtered <- read.csv("occurrences/gbif_filtered.csv", header = T)
+gbif_filtered <- read.csv("occurrences/gbif_filtered.csv", header = T) |> drop_na()
 
 occurrence_data <- gbif_filtered |> filter(species %in% namematched$gbif_name)
 
@@ -125,12 +125,37 @@ climate_preferences <- occurrence_data |>
 write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
 ```
 
+
+```{r}
+occurrence_points <- vect(gbif_filtered, geom = c("decimalLongitude", "decimalLatitude"))
+
+rast_list <- list.files("aus_rasters/", full.names = T) |> map(rast) 
+
+for (raster in rast_list) {
+  gbif_filtered <- gbif_filtered |> 
+    mutate(!!sym(names(raster)) := terra::extract(raster, occurrence_points)[[2]])
+}
+
+gbif_filtered <- gbif_filtered |> drop_na()
+
+gbif_filtered_summary <- gbif_filtered |> 
+  group_by(species) |> 
+  summarise(MAP = mean(Australia_MAP),
+            MAT = mean(Australia_MAT), 
+            n = n()) |> 
+  filter(n > 5)
+```
+
+
+
 ```{r}
 aus_MAP <- rast("rasters/Australia_MAP.tif")
 aus_MAT <- rast("rasters/Australia_MAT.tif")
 
 aus_MAP_values <- values(aus_MAP, dataframe = T) |> drop_na() 
 aus_MAT_values <- values(aus_MAT, dataframe = T) |> drop_na() 
+
+aus_values <- cbind(aus_MAP_values, aus_MAT_values)
 
 hist(aus_MAP_values$Australia_MAP) 
 hist(climate_preferences$mean_MAP)
@@ -139,13 +164,21 @@ hist(aus_MAT_values$Australia_MAT)
 hist(climate_preferences$MAT)
 
 ggplot() +
-  geom_density(data = aus_MAP_values, aes(Australia_MAP)) +
+  geom_density(data = gbif_filtered_summary, aes(MAP)) +
   geom_density(data = climate_preferences, aes(mean_MAP), col = "red") +
   theme_classic()
 
 ggplot() +
-  geom_density(data = aus_MAT_values, aes(Australia_MAT)) +
+  geom_density(data = gbif_filtered_summary, aes(MAT)) +
   geom_density(data = climate_preferences, aes(MAT), col = "red") +
+  theme_classic()
+
+
+ggplot() +
+  geom_hex(data = gbif_filtered_summary, aes(x = MAT, y = MAP)) +
+  scale_fill_gradient(low = "light grey", high = "dark green", trans = "log") +
+  # geom_density_2d(data = climate_preferences, aes(x = MAT, y =  mean_MAP), bins = 5, colour = "black") +
+  geom_point(data = climate_preferences, aes(x = MAT, y =  mean_MAP), size = 0.5) +
   theme_classic()
 ```
 
