@@ -179,7 +179,14 @@ ggplot() +
   scale_fill_gradient(low = "light grey", high = "dark green", trans = "log") +
   # geom_density_2d(data = climate_preferences, aes(x = MAT, y =  mean_MAP), bins = 5, colour = "black") +
   geom_point(data = climate_preferences, aes(x = MAT, y =  mean_MAP), size = 0.5) +
-  theme_classic()
+  theme_bw() +
+  xlim(5, 30) +
+  theme(legend.position = "none") +
+  xlab("Mean annual temperature (ºC)") +
+  ylab("Mean annual precipitation (mm)")
+
+ggsave("figures/climate_range.png", scale = 1.5, width = 7.34, height = 7.34, units = "cm")
+
 ```
 
 ```{r}
@@ -285,7 +292,7 @@ xylem_Dh <- xylem_areas |>
 
 # write.csv(xylem_Dh, "data/xylem_Dh.csv", row.names = F)
 
-ggplot(data = xylem_Dh, aes(x = tenth_MAP, y = mean_Dh)) +
+ggplot(data = xylem_Dh, aes(x = mean_MAP, y = mean_Dh)) +
   geom_point() +
   geom_smooth(method = "lm", se = F) +
   scale_x_log10() +
@@ -295,10 +302,12 @@ ggplot(data = xylem_Dh, aes(x = tenth_MAP, y = mean_Dh)) +
   # facet_wrap(~family) +
   xlab("Mean annual precipitation (mm)") + 
   ylab(bquote("Hydraulically weighted diameter " (D[h]) ))
+
+ggsave("figures/Dh_MAP.png", scale = 1.5, width = 7.34, height = 7.34, units = "cm")
   
 
 ggplot(data = xylem_Dh |> filter(n_samples > 5), 
-       aes(x = mean_MAP, y = mean_Dh, col = genus)) +
+       aes(x = mean_MAP, y = mean_Dh, col = family)) +
   geom_point() +
   geom_smooth(method = "lm", se = F) +
   # scale_x_log10() +
@@ -437,10 +446,10 @@ xylem_Dh_height <- xylem_Dh |> left_join(euc_heights, by = c("apc_name"= "taxon_
 ggplot(data = xylem_Dh_height, aes(mean_height, mean_Dh)) +
   # ggplot(data = xylem_Dh_height, aes(AI, max_height)) +
 # ggplot(data = xylem_Dh_height, aes(max_height, mean_Dh)) +
-  geom_point(aes(col = log(mean_MAP))) +
-  # scale_x_log10() +
-  # scale_y_log10() +
-  scale_colour_gradient2(low = "red", mid = "grey", high = "#0000FF", midpoint = median(log(xylem_Dh_height$mean_MAP))) +
+  geom_point(aes(col = mean_MAP)) +
+  scale_x_log10() +
+  scale_y_log10() +
+  scale_colour_gradient2(low = "red", mid = "grey", high = "#0000FF", midpoint = median(log(xylem_Dh_height$mean_MAP)), trans = "log") +
   theme_classic()
 
 ggplot(data = xylem_Dh_height, aes(family, max_height)) +
