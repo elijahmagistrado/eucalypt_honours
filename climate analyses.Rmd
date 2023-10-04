@@ -155,7 +155,7 @@ gbif_filtered_summary <- gbif_filtered |>
 ```
 
 
-
+Creating whittaker plot
 ```{r}
 aus_MAP <- rast("rasters/Australia_MAP.tif")
 aus_MAT <- rast("rasters/Australia_MAT.tif")
@@ -195,49 +195,6 @@ ggplot() +
 
 ggsave("figures/climate_range.png", scale = 1.5, width = 7.34, height = 7.34, units = "cm")
 
-```
-
-```{r}
-jugo_data <- jugo_data |> 
-  left_join(climate_preferences[c(1:14)], by = "apc_name") |>
-  group_by(genus) |> 
-  mutate(n_samples = n())
-
-ggplot(data = jugo_data, aes(x = mean_MAP, y = N, col = family)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = F) +
-  scale_x_log10() +
-  scale_y_log10() +
-  theme_classic() +
-  scale_color_brewer(palette = "Set1") +
-  facet_wrap(~family)
-
-ggplot(data = jugo_data |> filter(family == "Myrtaceae", n_samples > 3), aes(x = mean_MAP, y = N, col = genus)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = F) +
-  scale_x_log10() +
-  scale_y_log10() +
-  theme_classic() +
-  scale_color_brewer(palette = "Set1") +
-  facet_wrap(~genus)
-
-ggplot(data = jugo_data, aes(x = mean_MAP, y = S, col = family)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = F) +
-  scale_x_log10() +
-  scale_y_log10() +
-  theme_classic() +
-  scale_color_brewer(palette = "Set1") +
-  facet_wrap(~family)
-
-ggplot(data = jugo_data |> filter(family == "Myrtaceae", n_samples > 3), aes(x = mean_MAP, y = S, col = genus)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = F) +
-  scale_x_log10() +
-  scale_y_log10() +
-  theme_classic() +
-  scale_color_brewer(palette = "Set1") +
-  facet_wrap(~genus)
 ```
 
 
@@ -299,7 +256,6 @@ xylem_Dh <- xylem_areas |>
 
 # write.csv(xylem_Dh, "data/xylem_Dh.csv", row.names = F)
 
-
 Dh_MAP_plot <- ggplot(data = xylem_Dh, aes(x = mean_MAP, y = mean_Dh)) +
   geom_point(size = 1) +
   geom_smooth(method = "lm", se = F) +
@@ -332,7 +288,8 @@ ggsave("figures/Dh_MAP_genus.png", scale = 1, width = 11, height = 7.34, units =
 ggplot(data = xylem_Dh, 
        aes(x = mean_MAP, y = mean_Dh)) +
   geom_point(size = 1) +
-  geom_smooth(method = "lm", se = F) +
+  geom_smooth(data = xylem_Dh |> filter(family %in% c("Apocynaceae", "Fabaceae", "Myrtaceae", "Proteaceae", "Rutaceae")), 
+              method = "lm", se = F) +
   scale_x_log10() +
   scale_y_log10() +
   theme_classic() +
@@ -343,25 +300,40 @@ ggplot(data = xylem_Dh,
 
 ggsave("figures/Dh_MAP_family.png", scale = 1, width = 15.94, height = 15.94, units = "cm")
 
-Dh_lm <- lm(log(mean_Dh)~family*log(mean_MAP), data = xylem_Dh
+ggplot(data = xylem_Dh, 
+       aes(x = seasonality, y = MAT)) +
+  geom_point() +
+  scale_x_log10() +
+  scale_y_log10()
+
+```
+
+
+```{r}
+Dh_family_lm <- lm(log(mean_Dh)~family, data = xylem_Dh
             # |> filter(family != "CASUARINACEAE")
             )
-# check_model(Dh_lm)
-summary(Dh_lm)
-# r2(Dh_lm)
+summary(Dh_family_lm)
 
-Dh_aov =aov(log(mean_Dh)~family, data = xylem_Dh)
+Dh_family_MAP_lm <- aov(log(mean_Dh)~family*log(mean_MAP), data = xylem_Dh)
+summary(Dh_family_MAP_lm)
+
+interaction.plot()
+
+Dh_aov <- aov(log(mean_Dh)~family, data = xylem_Dh)
 summary(Dh_aov)
 Dh_Tukey <- TukeyHSD(Dh_aov)
-
+Dh_Tukey
 
 # check_model(Dh_aov)
 # check_model(Dh_aov)
 # r2(Dh_aov)
  
 cor(xylem_Dh[, 4:11])
+pairs(xylem_Dh[, 4:11])
 ```
 
+Correlation plot
 ```{r}
 library(GGally)
 
@@ -409,6 +381,7 @@ ggsave("figures/Dh_family.png", scale = 1, width = 15.94, height = 7.34, units =
 ```
 
 
+MAT analyses
 ```{r}
 Dh_MAT_plot<- ggplot(data = xylem_Dh, aes(x = MAT, y = mean_Dh)) +
   geom_point(size = 1) +
@@ -457,6 +430,7 @@ ggsave("figures/Dh_MAT_family.png", scale = 1, width = 15.94, height = 15.94, un
 ```
 
 
+Creating multivariate faceted graph
 ```{r}
 xylem_Dh_long <- xylem_Dh |> 
   pivot_longer(cols = mean_MAP:AI, names_to = "variable", values_to = "value")
@@ -535,31 +509,6 @@ ggplot(data = xylem_lumen_frac |> filter(family == "Myrtaceae", n_samples > 3), 
   facet_wrap(~genus)
 ```
 
-
-
-MDS plot
-```{r}
-library(vegan)
-
-xylem_properties <- xylem_Dh[2:6] |> log()
-xylem_properties.mds <- metaMDS(comm = xylem_properties, 
-                                distance = "bray", 
-                                trace = F, 
-                                autotransform = F)
-
-MDS_xy <- data.frame(xylem_properties.mds$points)
-MDS_xy$family <- xylem_Dh$family
-
-ggplot(MDS_xy, aes(MDS1, MDS2, col = family)) +
-  geom_point() +
-  theme_classic()
-
-xylem_PCA <- princomp(xylem_properties, cor = F)
-biplot(xylem_PCA)
-loadings(xylem_PCA)
-```
-
-
 adding height data
 ```{r}
 library(austraits)
@@ -599,30 +548,6 @@ ggplot(data = xylem_Dh_height, aes(family, max_height)) +
   geom_boxplot()
 
 ```
-
-
-Growth form data
-```{r}
-growth_form <- extract_trait(austraits, "plant_growth_form")
-
-spp_growth_form <- growth_form$traits |> 
-  filter(taxon_name %in% xylem_Dh$apc_name)
-
-xylem_Dh_growth_form <- xylem_Dh |> left_join(spp_growth_form, by = c("apc_name"= "taxon_name"))
-
-ggplot(data = xylem_Dh_growth_form, aes(mean_MAP, mean_Dh, col = value)) +
-  # ggplot(data = xylem_Dh_height, aes(AI, max_height)) +
-# ggplot(data = xylem_Dh_height, aes(max_height, mean_Dh)) +
-  geom_point() +
-  scale_x_log10() +
-  scale_y_log10() +
-  scale_color_brewer(palette = "Set1") +
-  theme_classic() + 
-  facet_wrap(~family) +
-  geom_smooth(method = "lm", se = F)
-
-```
-
 
 
 Adding TRY vessel trait data
