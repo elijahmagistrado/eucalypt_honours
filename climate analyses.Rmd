@@ -286,15 +286,16 @@ ggplot(data = xylem_Dh |> filter(family == "Myrtaceae", n_samples > 5),
 ggsave("figures/Dh_MAP_genus.png", scale = 1, width = 11, height = 7.34, units = "cm")
 
 ggplot(data = xylem_Dh, 
-       aes(x = mean_MAP, y = mean_Dh)) +
+       aes(x = mean_MAP, y = mean_Dh, color = family)) +
   geom_point(size = 1) +
-  geom_smooth(data = xylem_Dh |> filter(family %in% c("Apocynaceae", "Fabaceae", "Myrtaceae", "Proteaceae", "Rutaceae")), 
-              method = "lm", se = F) +
+  # geom_smooth(data = xylem_Dh |> filter(family %in% c("Apocynaceae", "Fabaceae", "Myrtaceae", "Proteaceae", "Rutaceae")),
+  #             method = "lm", se = F) +
+  geom_smooth(method = "lm", se = F) +
   scale_x_log10() +
   scale_y_log10() +
   theme_classic() +
   scale_color_brewer(palette = "Set1") +
-  facet_wrap(~family)+
+  # facet_wrap(~family)+
   xlab("Mean annual precipitation (mm)") + 
   ylab(D[h]~" (µm)")
 
@@ -310,15 +311,30 @@ ggplot(data = xylem_Dh,
 
 
 ```{r}
-Dh_family_lm <- lm(log(mean_Dh)~family, data = xylem_Dh
+Dh_family_lm <- lm(log(mean_Dh)~log(mean_MAP), data = xylem_Dh
             # |> filter(family != "CASUARINACEAE")
             )
 summary(Dh_family_lm)
 
-Dh_family_MAP_lm <- aov(log(mean_Dh)~family*log(mean_MAP), data = xylem_Dh)
+Dh_family_MAP_plus_lm <- lm(log(mean_Dh)~log(mean_MAP)+family, data = xylem_Dh)
+summary(Dh_family_MAP_plus_lm)
+
+Dh_family_MAP_lm <- lm(log(mean_Dh)~log(mean_MAP)*family, data = xylem_Dh)
 summary(Dh_family_MAP_lm)
 
-interaction.plot()
+library(emmeans)
+
+emtrends(Dh_family_MAP_lm, pairwise ~ family, var = "mean_MAP")
+emmip(Dh_family_MAP_lm, family ~ mean_MAP, cov.reduce = range)
+
+
+
+interaction.plot(xylem_Dh$mean_MAP, 
+                 xylem_Dh$family,
+                 xylem_Dh$mean_Dh)
+
+anova(Dh_family_lm, Dh_family_MAP_lm)
+AIC(Dh_family_lm, Dh_family_MAP_plus_lm, Dh_family_MAP_lm)
 
 Dh_aov <- aov(log(mean_Dh)~family, data = xylem_Dh)
 summary(Dh_aov)
@@ -377,6 +393,9 @@ ggplot() +
   coord_flip()
 
 ggsave("figures/Dh_family.png", scale = 1, width = 15.94, height = 7.34, units = "cm")
+
+
+library(emmeans)
 
 ```
 
