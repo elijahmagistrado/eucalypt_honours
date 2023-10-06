@@ -324,7 +324,11 @@ summary(Dh_family_MAP_lm)
 
 library(emmeans)
 
-emtrends(Dh_family_MAP_lm, pairwise ~ family, var = "mean_MAP")
+interaction_posthoc <- emtrends(Dh_family_MAP_lm, pairwise ~ family, var = "mean_MAP")
+interaction_df <- interaction_posthoc$contrasts |> data.frame()
+write.csv(interaction_df, "data/interaction_comparison.csv", row.names = F)
+
+
 emmip(Dh_family_MAP_lm, family ~ mean_MAP, cov.reduce = range)
 
 
@@ -393,9 +397,6 @@ ggplot() +
   coord_flip()
 
 ggsave("figures/Dh_family.png", scale = 1, width = 15.94, height = 7.34, units = "cm")
-
-
-library(emmeans)
 
 ```
 
