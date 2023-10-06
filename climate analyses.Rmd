@@ -286,16 +286,16 @@ ggplot(data = xylem_Dh |> filter(family == "Myrtaceae", n_samples > 5),
 ggsave("figures/Dh_MAP_genus.png", scale = 1, width = 11, height = 7.34, units = "cm")
 
 ggplot(data = xylem_Dh, 
-       aes(x = mean_MAP, y = mean_Dh, color = family)) +
+       aes(x = mean_MAP, y = mean_Dh)) +
   geom_point(size = 1) +
-  # geom_smooth(data = xylem_Dh |> filter(family %in% c("Apocynaceae", "Fabaceae", "Myrtaceae", "Proteaceae", "Rutaceae")),
-  #             method = "lm", se = F) +
-  geom_smooth(method = "lm", se = F) +
+  geom_smooth(data = xylem_Dh |> filter(family %in% c("Apocynaceae", "Fabaceae", "Myrtaceae", "Proteaceae", "Rutaceae")),
+              method = "lm", se = F) +
+  # geom_smooth(method = "lm", se = F) +
   scale_x_log10() +
   scale_y_log10() +
   theme_classic() +
   scale_color_brewer(palette = "Set1") +
-  # facet_wrap(~family)+
+  facet_wrap(~family)+
   xlab("Mean annual precipitation (mm)") + 
   ylab(D[h]~" (µm)")
 
@@ -328,8 +328,19 @@ interaction_posthoc <- emtrends(Dh_family_MAP_lm, pairwise ~ family, var = "mean
 interaction_df <- interaction_posthoc$contrasts |> data.frame()
 write.csv(interaction_df, "data/interaction_comparison.csv", row.names = F)
 
+multcomp::cld(interaction_posthoc)
+contrast(interaction_posthoc, method = "pairwise") |> data.frame()
+plot(interaction_posthoc, comparisons = T)
 
 emmip(Dh_family_MAP_lm, family ~ mean_MAP, cov.reduce = range)
+
+pwpp(interaction_posthoc, add.space = 10) +
+  theme_bw() +
+  # scale_color_brewer(palette = "Set1") +
+  ylab("Family")
+
+
+ggsave("figures/pairwise_interaction.png", scale = 1, width = 15.94, height = 7.34, units = "cm")
 
 
 
@@ -550,8 +561,8 @@ ggplot(data = xylem_Dh_height, aes(mean_height, mean_Dh)) +
   # ggplot(data = xylem_Dh_height, aes(AI, max_height)) +
 # ggplot(data = xylem_Dh_height, aes(max_height, mean_Dh)) +
   geom_point(aes(col = mean_MAP), size = 1) +
-  scale_x_log10() +
-  scale_y_log10() +
+  # scale_x_log10() +
+  # scale_y_log10() +
   scale_colour_gradient2(low = "red", mid = "grey", high = "#0000FF", midpoint = median(log(xylem_Dh_height$mean_MAP)), trans = "log") +
   theme_classic() +
   xlab("Maximum plant height (m)") + 
