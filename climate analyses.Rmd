@@ -20,8 +20,8 @@ resources <- load_taxonomic_resources()
 
 xylem_areas <- list.files("area_data/", full.names = T) |> 
   map_df(read.csv, header = T) |> 
-  separate(Image, c("family_original", "other"), sep = " ", extra = "merge") |> 
-  separate(other, c("species_name", "state", "other"), sep = "_", extra = "merge") |> 
+  separate(Image, c("family_original", "other"), sep = " ", extra = "merge") |>
+  separate(other, c("species_name", "state", "other"), sep = "_", extra = "merge") |>
   mutate(area_mm = Area.µm.2/1000000,
          radius = sqrt(Area.µm.2/pi))
 
@@ -37,6 +37,11 @@ namematched <- gbif_names |> select(verbatimScientificName, species, genus) |>
   rename(species_name = aligned_name, gbif_name = species, apc_name = verbatimScientificName)
 
 xylem_areas <- xylem_areas |> left_join(namematched, by = "species_name")
+
+# xylem_areas <- xylem_areas |> unite(family_original, species_name, state, sep = "/")
+# xylem_areas <- xylem_areas |> drop_na(apc_name)
+# 
+# n_distinct(xylem_areas$family_original)
 ```
 
 
@@ -616,30 +621,42 @@ all_image_names <- list.files("/Users/elijahmagistrado/OneDrive - UNSW/images",
 names(all_image_names)[1] <- "file_name"
   
 
-all_image_names <- all_image_names |> 
-  separate(file_name, c("family", "other"), sep = " ", extra = "merge") |> 
-  separate(other, c("species", "other"), sep = "_", extra = "merge")
+non_eucalypts <- all_image_names |>
+  separate(file_name, c("family", "other"), sep = " ", extra = "merge") |>
+  separate(other, c("species", "other"), sep = "_", extra = "merge") |> 
+  filter(!grepl("/", species))
 
-images_apc_names <- update_taxonomy(all_image_names$species, resources = resources)
+eucalypts <- all_image_names |>
+  separate(file_name, c("family", "other"), sep = " ", extra = "merge") |>
+  separate(other, c("species", "other"), sep = "_", extra = "merge") |> 
+  filter(grepl("/", species)) |> 
+  separate(species, c("other", "species"), sep = "/", extra = "merge") |> 
+  separate(species, c("family2", "species"), sep = " ", extra = "merge")
 
-# all_image_names <- all_image_names |> 
-  # filter(grepl("QLD|NSW|VIC|TAS|_SA|WA|NT", file_name)) |> 
-  # separate(file_name, c("folder", "file_name"), sep = "/") |> 
-  # separate(file_name, c("family", "other"), sep = " ", extra = "merge") |> 
-  # separate(other, c("species", "other"), sep = "_", extra = "merge") |> 
-  # distinct(family, species) |>
-  # group_by(family) |> 
-  # summarise(n=n())
+species_merged <- bind_rows(non_eucalypts, eucalypts)
 
-write.csv(all_image_names, "data/ssd_names.csv", row.names = F)
+images_apc_names <- update_taxonomy(species_merged$species, resources = resources) |>
+  filter(grepl("accepted|synonym|variant", taxonomicStatusClean)) |> distinct(canonicalName)
 
-ssd_namematched <- read.csv("data/gbif_namematched.csv", header = T) |> 
-  filter(rank == "SPECIES")
-
-
-data_stats <- xylem_Dh |> distinct(family, apc_name) |> 
-  group_by(family) |> 
+ all_image_names <- all_image_names |>
+  # filter(grepl("QLD|NSW|VIC|TAS|_SA|WA|NT", file_name)) |>
+  separate(file_name, c("folder", "file_name"), sep = "/") |>
+  separate(file_name, c("family", "other"), sep = " ", extra = "merge") |>
+  separate(other, c("species", "other"), sep = "_", extra = "merge") |>
+  distinct(family, species) |>
+  group_by(family) |>
   summarise(n=n())
+
+not_selected <- images_apc_names |> filter(!canonicalName %in% xylem_Dh$apc_name)
+# write.csv(all_image_names, "data/ssd_names.csv", row.names = F)
+# 
+# ssd_namematched <- read.csv("data/gbif_namematched.csv", header = T) |> 
+#   filter(rank == "SPECIES")
+# 
+# 
+# data_stats <- xylem_Dh |> distinct(family, apc_name) |> 
+#   group_by(family) |> 
+#   summarise(n=n())
 ```
 
 
@@ -787,9 +804,12 @@ ggplot() +
 library(networkD3)
 library(dplyr)
  
+links <- read.csv("data/sankey_links.csv", header = T)
+nodes <- read.csv("data/sankey_nodes.csv", header = T)
+
 # A connection data frame is a list of flows with intensity for each flow
 links <- data.frame(
-  source=c("All Images","Myrtaceae", "Lauraceae", "group_C", "group_C", "group_E"), 
+  source=c("group_A","group_A", "group_B", "group_C", "group_C", "group_E"), 
   target=c("group_C","group_D", "group_E", "group_F", "group_G", "group_H"), 
   value=c(2,3, 2, 3, 1, 3)
   )
@@ -808,7 +828,7 @@ links$IDtarget <- match(links$target, nodes$name)-1
 p <- sankeyNetwork(Links = links, Nodes = nodes,
               Source = "IDsource", Target = "IDtarget",
               Value = "value", NodeID = "name", 
-              sinksRight=FALSE)
+              sinksRight=FALSE, width = 1000, height = 500, fontSize = 20, fontFamily = "Arial")
 p
 ```
 
