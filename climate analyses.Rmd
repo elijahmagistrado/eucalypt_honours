@@ -648,6 +648,8 @@ images_apc_names <- update_taxonomy(species_merged$species, resources = resource
   summarise(n=n())
 
 not_selected <- images_apc_names |> filter(!canonicalName %in% xylem_Dh$apc_name)
+
+xylem_Dh |> group_by(family) |> summarise(n = n())
 # write.csv(all_image_names, "data/ssd_names.csv", row.names = F)
 # 
 # ssd_namematched <- read.csv("data/gbif_namematched.csv", header = T) |> 
@@ -805,15 +807,7 @@ library(networkD3)
 library(dplyr)
  
 links <- read.csv("data/sankey_links.csv", header = T)
-nodes <- read.csv("data/sankey_nodes.csv", header = T)
 
-# A connection data frame is a list of flows with intensity for each flow
-links <- data.frame(
-  source=c("group_A","group_A", "group_B", "group_C", "group_C", "group_E"), 
-  target=c("group_C","group_D", "group_E", "group_F", "group_G", "group_H"), 
-  value=c(2,3, 2, 3, 1, 3)
-  )
- 
 # From these flows we need to create a node data frame: it lists every entities involved in the flow
 nodes <- data.frame(
   name=c(as.character(links$source), 
