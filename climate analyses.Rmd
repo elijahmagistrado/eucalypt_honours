@@ -6,7 +6,7 @@ output: html_document
 ---
 
 
-Importing data
+Loading all required packages
 ```{r}
 library(tidyverse)
 library(patchwork)
@@ -15,7 +15,14 @@ library(ausflora)
 library(performance)
 library(austraits)
 library(patchwork)
+library(emmeans)
+library(GGally)
+library(multcompView)
+library(networkD3)
+```
 
+Combining and importing data
+```{r}
 resources <- load_taxonomic_resources()
 
 xylem_areas <- list.files("area_data/", full.names = T) |> 
@@ -139,27 +146,6 @@ write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
 ```
 
 
-```{r}
-occurrence_points <- vect(gbif_filtered, geom = c("decimalLongitude", "decimalLatitude"))
-
-rast_list <- list.files("aus_rasters/", full.names = T) |> map(rast) 
-
-for (raster in rast_list) {
-  gbif_filtered <- gbif_filtered |> 
-    mutate(!!sym(names(raster)) := terra::extract(raster, occurrence_points)[[2]])
-}
-
-gbif_filtered <- gbif_filtered |> drop_na()
-
-gbif_filtered_summary <- gbif_filtered |> 
-  group_by(species) |> 
-  summarise(MAP = mean(Australia_MAP),
-            MAT = mean(Australia_MAT), 
-            n = n()) |> 
-  filter(n > 5)
-```
-
-
 Creating whittaker plot
 ```{r}
 aus_MAP <- rast("rasters/Australia_MAP.tif")
@@ -203,7 +189,7 @@ ggsave("figures/climate_range.png", scale = 1.5, width = 7.34, height = 7.34, un
 ```
 
 
-Vessel area
+Vessel area analysis
 ```{r}
 climate_preferences <- read.csv("data/climate_preferences.csv", header = T)
 
@@ -231,20 +217,8 @@ area_MAP_lm <- lm(log(mean_area)~log(mean_MAP), data = species_summary)
 summary(area_MAP_lm)
 ```
 
-```{r}
-species_summary_long <- species_summary |> 
-  pivot_longer(cols = mean_MAP:seasonality, names_to = "variable", values_to = "value")
 
-ggplot() +
-  geom_point(data = species_summary_long, aes(value, mean_area)) +
-  scale_x_log10() +
-  scale_y_log10() +
-  facet_grid(family~variable, scales = "free_x") +
-  theme_bw() 
-```
-
-
-Hydraulically weighted diameter (Dh)
+Hydraulically weighted diameter (Dh) analyses
 ```{r}
 xylem_Dh <- xylem_areas |> 
   filter(Name == "vessel") |>
@@ -327,7 +301,7 @@ summary(Dh_family_MAP_plus_lm)
 Dh_family_MAP_lm <- lm(log(mean_Dh)~log(mean_MAP)*family, data = xylem_Dh)
 summary(Dh_family_MAP_lm)
 
-library(emmeans)
+
 
 interaction_posthoc <- emtrends(Dh_family_MAP_lm, pairwise ~ family, var = "mean_MAP")
 interaction_df <- interaction_posthoc$contrasts |> data.frame()
@@ -371,7 +345,7 @@ pairs(xylem_Dh[, 4:11])
 
 Correlation plot
 ```{r}
-library(GGally)
+
 
 climate_values <- xylem_Dh[, 4:11] |> rename(Dry_quarter = "dry_quarter",
                                              Seasonality = "seasonality",
@@ -386,7 +360,7 @@ ggsave("figures/climate_corr.png", scale = 2, width = 7.34, height = 7.34, units
 ```
 
 ```{r}
-library(multcompView)
+
 
 generate_label_df <- function(TUKEY, variable){
 
@@ -586,7 +560,7 @@ ggsave("figures/VLF_pairwise.png", scale = 1, width = 15.94, height = 7.34, unit
 
 adding height data
 ```{r}
-library(austraits)
+
 
 austraits <- readRDS("data/austraits.rds")
 
@@ -701,149 +675,10 @@ xylem_Dh |> group_by(family) |> summarise(n = n())
 ```
 
 
-
-```{r}
-# gbif_occs <- read.delim("data/gbif_occs.csv", header = T, sep = "\t")
-# 
-# gbif_filtered <- gbif_occs |> 
-#   select(family, scientificName, decimalLatitude, decimalLongitude)
-
-gbif_filtered <- read.csv("data/gbif_filtered.csv", header = T)
-
-ssd_occs <- gbif_filtered |> filter(scientificName %in% ssd_namematched$scientificName) |>
-  drop_na()
-
-# write.csv(ssd_occs, "data/ssd_occurrences.csv", row.names = F)
-
-austraits_trees <- read.csv("data/austraits_trees.csv", header=T)
-austraits_occs <- gbif_filtered |> filter(scientificName %in% austraits_trees$scientificName) |>
-  drop_na()
-
-austraits_points <- vect(austraits_occs, geom = c("decimalLongitude", "decimalLatitude"))
-
-for (raster in raster_list) {
-  austraits_occs <- austraits_occs |> 
-    mutate(!!sym(names(raster)) := terra::extract(raster, austraits_points)[[2]])
-}
-
-austraits_climate <- austraits_occs |> 
-  group_by(family, scientificName) |>  
-  summarise(mean_MAP=mean(MAP, na.rm=T), 
-            tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
-            sd_log_MAP=sd(log(MAP), na.rm=T),
-            MAT=mean(MAT, na.rm=T),
-            seasonality=mean(seasonality, na.rm=T),
-            wet_quarter=mean(wet_quarter, na.rm=T),
-            dry_quarter=mean(dry_quarter, na.rm=T),
-            AI=mean(awi_pm_sr_yr/10000, na.rm=T),
-            n=n()) |> 
-  group_by(family) |> 
-  mutate(source = "austraits",
-         MAP_range = diff(range(mean_MAP)),
-         MAT_range = diff(range(MAT))) |> 
-  drop_na()
-
-austraits_plot <- ggplot() +
-  geom_boxplot(data=austraits_climate, aes(reorder(family, MAP_range), mean_MAP)) +
-  # geom_boxplot(data=ssd_climate, aes(family, mean_MAP), fill = "red") +
-  # geom_boxplot(data=xylem_Dh, aes(family, mean_MAP), fill = "blue") +
-  theme_classic() +
-  coord_flip()
-
-austraits_plot
-```
-
-```{r}
-ssd_occs <- read.csv("data/ssd_occurrences.csv", header = T)
-
-ssd_points <- vect(ssd_occs, geom = c("decimalLongitude", "decimalLatitude"))
-
-for (raster in raster_list) {
-  ssd_occs <- ssd_occs |> 
-    mutate(!!sym(names(raster)) := terra::extract(raster, ssd_points)[[2]])
-}
-
-ssd_climate <- ssd_occs |> 
-  group_by(family, scientificName) |>  
-  summarise(mean_MAP=mean(MAP, na.rm=T), 
-            tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
-            sd_log_MAP=sd(log(MAP), na.rm=T),
-            MAT=mean(MAT, na.rm=T),
-            seasonality=mean(seasonality, na.rm=T),
-            wet_quarter=mean(wet_quarter, na.rm=T),
-            dry_quarter=mean(dry_quarter, na.rm=T),
-            AI=mean(awi_pm_sr_yr/10000, na.rm=T),
-            n=n(),
-            MAP_range = diff(range(MAP, na.rm=T)),
-            MAT_range = diff(range(MAT, na.rm=T))) |> 
-  mutate(source = "ssd") |> 
-  group_by(family) |> 
-  mutate(source = "ssd",
-         MAP_range = diff(range(mean_MAP)),
-         MAT_range = diff(range(MAT))) |> 
-  drop_na()
-
-family_climates <- ggplot(ssd_climate |> filter(n > 5), aes(reorder(family, mean_MAP, sd), mean_MAP)) +
-  geom_boxplot() +
-  coord_flip()
-
-ggplot(ssd_climate, aes(reorder(family, MAP_range), mean_MAP)) +
-  geom_boxplot() +
-  coord_flip()
-
-family_climates
-
-xylem_Dh$source <- "done"
-
-xylem_Dh <- xylem_Dh |> 
-  group_by(family) |> 
-  mutate(MAP_range = diff(range(mean_MAP)),
-         MAT_range = diff(range(MAT))) |> 
-  drop_na()
-
-
-ggplot() + 
-  geom_histogram(data = all_climates, aes(x=mean_MAP, fill=source)) +
-  theme_classic() +
-  scale_x_log10()
-
-all_climates <- bind_rows(austraits_climate, ssd_climate, xylem_Dh)
-
-all_climate_plot <-
-  ggplot(all_climates |> 
-           filter(source != "austraits"), aes(x=reorder(family, mean_MAP, mean), y=mean_MAP, fill=source)) +
-  geom_boxplot() +
-  theme_bw() +
-  coord_flip()+
-  scale_y_log10()
-
-
-all_climate_plot
-
-```
-
-
-Choat data
-```{r}
-choat_data <- read.csv("data/choat_data.csv", header = T)
-
-choat_native <- native_anywhere_in_australia(choat_data$Species, resources = resources) |> distinct()
-
-olson_data <- read.csv("data/olson2013data.csv", header = T)
-
-olson_data <- olson_data |> unite(binomial, genus:species, sep = " ")
-olson_native <- native_anywhere_in_australia(olson_data$binomial, resources = resources) |> distinct()
-
-ggplot() +
-  geom_point(data = choat_data |> filter(Group == "Angiosperm"), aes(MAP, ψ50, col = Growth.form)) +
-  theme_classic()
-
-```
-
 ```{r}
 # Library
-library(networkD3)
-library(dplyr)
+
+
  
 links <- read.csv("data/sankey_links.csv", header = T)
 
