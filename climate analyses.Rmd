@@ -510,7 +510,7 @@ summary(Dh_long_aov)
 
 Lumen fraction
 ```{r}
-xylem_lumen_frac <- xylem_areas |> 
+xylem_VLF <- xylem_areas |> 
   group_by(apc_name, other) |> 
   mutate(sample_lumen_area = max(Area.µm.2)) |> 
   filter(Name %in% c("vessel", "part")) |> 
@@ -519,7 +519,7 @@ xylem_lumen_frac <- xylem_areas |>
             sample_lumen_frac = vessel_area/sample_lumen_area) |> 
   distinct() |>
   group_by(apc_name) |> 
-  summarise(mean_lumen_frac = mean(sample_lumen_frac, na.rm=T)) |> 
+  summarise(mean_VLF = mean(sample_lumen_frac, na.rm=T)) |> 
   left_join(climate_preferences, by = "apc_name") |> 
   left_join(xylem_areas["apc_name"], by = "apc_name") |> 
   distinct() |> 
@@ -527,22 +527,61 @@ xylem_lumen_frac <- xylem_areas |>
   mutate(n_samples = n()) |> 
   drop_na() 
 
-ggplot(data = xylem_lumen_frac, aes(x = mean_MAP, y = mean_lumen_frac)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = F) +
-  scale_x_log10() +
-  scale_y_log10() +
-  theme_classic() +
-  facet_wrap(~family)
+VLF_aov <- aov(log(mean_VLF)~family, data = xylem_VLF)
+VLF_Tukey <- TukeyHSD(VLF_aov)
 
-ggplot(data = xylem_lumen_frac |> filter(family == "Myrtaceae", n_samples > 3), aes(x = mean_MAP, y = mean_lumen_frac, col = genus)) +
+# Phylogenetic differences
+VLF_LABELS <- generate_label_df(VLF_Tukey, "family")
+
+xylem_VLF <- xylem_VLF |> left_join(VLF_LABELS, by = c("family" = "treatment"))
+
+ggplot() +
+  geom_boxplot(data = xylem_VLF, aes(family, mean_VLF)) +
+  theme_bw() +
+  geom_text(data = xylem_VLF |> group_by(family, Letters) |> summarise(max_VLF = max(mean_VLF)),
+            aes(family, y = max_VLF + 0.5, label = Letters)) +
+  scale_y_log10() +
+  xlab("Family") +
+  ylab("VLF") +
+  coord_flip()
+
+ggsave("figures/VLF_family.png", scale = 1, width = 15.94, height = 7.34, units = "cm")
+  
+
+ggplot(data = xylem_VLF, aes(x = mean_MAP, y = mean_VLF)) +
   geom_point() +
-  geom_smooth(method = "lm", se = F) +
+  geom_smooth(data = xylem_VLF |> filter(family == "Cunoniaceae"),
+                                         method = "lm", se = F) +
   scale_x_log10() +
   scale_y_log10() +
   theme_classic() +
+  facet_wrap(~family) +
+  xlab("Mean annual precipitation (mm)") +
+  ylab("VLF")
+
+ggsave("figures/VLF_MAP_facet.png", scale = 1, width = 15.94, height = 15.94, units = "cm")
+
+
+VLF_lm <- lm(log(mean_VLF)~log(mean_MAP), data = xylem_VLF)
+summary(VLF_lm)
+
+VLF_family_lm <- lm(log(mean_VLF)~log(mean_MAP)+family, data = xylem_VLF)
+summary(VLF_family_lm)
+
+VLF_interaction_lm <- lm(log(mean_VLF)~log(mean_MAP)*family, data = xylem_VLF)
+
+AIC(VLF_lm, VLF_family_lm, VLF_interaction_lm)
+VLF_posthoc <- emtrends(VLF_interaction_lm, pairwise ~ family, var = "mean_MAP")
+
+pwpp(VLF_posthoc, add.space = 30) +
+  theme_bw() +
   scale_color_brewer(palette = "Set1") +
-  facet_wrap(~genus)
+  ylab("Family") +
+  xlim(0, 1)
+
+ggsave("figures/VLF_pairwise.png", scale = 1, width = 15.94, height = 7.34, units = "cm")
+
+
 ```
 
 adding height data
