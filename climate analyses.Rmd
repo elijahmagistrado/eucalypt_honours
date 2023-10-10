@@ -151,38 +151,38 @@ Creating climate preference data
 # write.csv(gbif_filtered, "occurrences/gbif_filtered.csv", row.names = F)
 
  
-# Creating point vector for each occurrence 
-gbif_filtered <- read.csv("occurrences/gbif_filtered.csv", header = T) |> drop_na()
-occurrence_points <- vect(gbif_filtered, geom = c("decimalLongitude", "decimalLatitude"))
-
-
-# Extracting climate values from each point
-raster_list <- list.files("rasters_30s/", full.names = T) |> map(rast)
-
-for (raster in raster_list) {
-  gbif_filtered <- gbif_filtered |> 
-    mutate(!!sym(names(raster)) := terra::extract(raster, occurrence_points)[[2]])
-}
-
-occurrence_data <- gbif_filtered |> filter(species %in% namematched$gbif_name)
-
-climate_preferences <- occurrence_data |> 
-  group_by(species) |>  
-  summarise(mean_MAP=mean(MAP, na.rm=T), 
-            tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
-            sd_log_MAP=sd(log(MAP), na.rm=T),
-            MAT=mean(MAT, na.rm=T),
-            wet_quarter=mean(wet_quarter, na.rm=T),
-            dry_quarter=mean(dry_quarter, na.rm=T),
-            AI=mean(awi_pm_sr_yr/10000, na.rm=T),
-            seasonality=mean(seasonality, na.rm=T),
-            n_obs=n()) |> 
-  mutate(climate=cut(AI, breaks=c(-Inf, 0.03, 0.2, 0.5, 0.65, Inf), 
-                     labels=c("Hyper Arid", "Arid", "Semi-Arid", "Dry sub-humid", "Humid"))) |>
-  left_join(xylem_areas[c(1, 18, 19, 20, 21)], by = c("species" = "gbif_name")) |>
-  distinct()
-  
-write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
+# # Creating point vector for each occurrence 
+# gbif_filtered <- read.csv("occurrences/gbif_filtered.csv", header = T) |> drop_na()
+# occurrence_points <- vect(gbif_filtered, geom = c("decimalLongitude", "decimalLatitude"))
+# 
+# 
+# # Extracting climate values from each point
+# raster_list <- list.files("rasters_30s/", full.names = T) |> map(rast)
+# 
+# for (raster in raster_list) {
+#   gbif_filtered <- gbif_filtered |> 
+#     mutate(!!sym(names(raster)) := terra::extract(raster, occurrence_points)[[2]])
+# }
+# 
+# occurrence_data <- gbif_filtered |> filter(species %in% namematched$gbif_name)
+# 
+# climate_preferences <- occurrence_data |> 
+#   group_by(species) |>  
+#   summarise(mean_MAP=mean(MAP, na.rm=T), 
+#             tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
+#             sd_log_MAP=sd(log(MAP), na.rm=T),
+#             MAT=mean(MAT, na.rm=T),
+#             wet_quarter=mean(wet_quarter, na.rm=T),
+#             dry_quarter=mean(dry_quarter, na.rm=T),
+#             AI=mean(awi_pm_sr_yr/10000, na.rm=T),
+#             seasonality=mean(seasonality, na.rm=T),
+#             n_obs=n()) |> 
+#   mutate(climate=cut(AI, breaks=c(-Inf, 0.03, 0.2, 0.5, 0.65, Inf), 
+#                      labels=c("Hyper Arid", "Arid", "Semi-Arid", "Dry sub-humid", "Humid"))) |>
+#   left_join(xylem_areas[c(1, 18, 19, 20, 21)], by = c("species" = "gbif_name")) |>
+#   distinct()
+#   
+# write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
 ```
 
 
@@ -195,6 +195,7 @@ Creating whittaker plot
 # 
 # write.csv(gbif_filtered_summary, "data/angiosperm_climate.csv", row.names = F)
 
+climate_preferences <- read.csv("data/climate_preferences.csv", header = T)
 gbif_filtered_summary <- read.csv("data/angiosperm_climate.csv", header = T)
 
 ggplot() +
@@ -327,6 +328,8 @@ ggcorr(climate_values, label = T, hjust = 0.75)
 ggsave("figures/climate_corr.png", scale = 2, width = 7.34, height = 7.34, units = "cm" )
 ```
 
+
+Creating family comparison plot for Dh
 ```{r}
 generate_label_df <- function(TUKEY, variable){
 
@@ -365,7 +368,7 @@ climate_labs <- c("AI", "Dry quarter", "MAT", "MAP", "MAP range", "Tenth pct MAP
 names(climate_labs) <- c("AI", "dry_quarter", "MAT", "mean_MAP", "sd_log_MAP", "seasonality", "tenth_MAP", "wet_quarter")
 
 ggplot(data = xylem_Dh_long, aes(value, mean_Dh)) +
-  geom_hex(data = xylem_Dh_long[,c(2, 10, 11)], aes(value, mean_Dh), bins = 10) +
+  geom_hex(data = xylem_Dh_long[,c(2, 12, 13)], aes(value, mean_Dh), bins = 10) +
   scale_fill_gradient(low = "light grey", high = "dark green", trans = "log") +
   # geom_point(data = xylem_Dh_long[,c(2, 10, 11)], aes(value, mean_Dh), col = "light grey") +
   geom_point() +
@@ -380,20 +383,7 @@ ggplot(data = xylem_Dh_long, aes(value, mean_Dh)) +
   theme(legend.position = "none")
 
 ggsave("figures/Dh_variables.png", scale = 1.5, width = 15.94, height = 15.94, units = "cm")
-
-ggplot(data = xylem_Dh_long |> filter(n_samples > 5), aes(value, mean_Dh)) +
-  geom_point(data = xylem_Dh_long[,c(2, 10, 11)], aes(value, mean_Dh), col = "light grey") +
-  geom_point() +
-  scale_x_log10() +
-  scale_y_log10() +
-  geom_smooth(method = "lm") +
-  facet_grid(genus~variable, scales = "free_x") +
-  theme_bw()
-
-Dh_long_aov <- lm(log(mean_Dh)~log(value)+variable+genus, data = xylem_Dh_long |> filter(n_samples > 5))
-summary(Dh_long_aov)
 ```
-
 
 
 Lumen fraction
@@ -424,7 +414,7 @@ VLF_LABELS <- generate_label_df(VLF_Tukey, "family")
 xylem_VLF <- xylem_VLF |> left_join(VLF_LABELS, by = c("family" = "treatment"))
 
 ggplot() +
-  geom_boxplot(data = xylem_VLF, aes(family, mean_VLF)) +
+  geom_boxplot(data = xylem_VLF, aes(fct_reorder(family, mean_VLF, median), mean_VLF)) +
   theme_bw() +
   geom_text(data = xylem_VLF |> group_by(family, Letters) |> summarise(max_VLF = max(mean_VLF)),
             aes(family, y = max_VLF + 0.5, label = Letters)) +
@@ -436,7 +426,7 @@ ggplot() +
 ggsave("figures/VLF_family.png", scale = 1, width = 15.94, height = 7.34, units = "cm")
   
 
-ggplot(data = xylem_VLF, aes(x = mean_MAP, y = mean_VLF)) +
+ggplot(data = xylem_VLF, aes(x = (mean_MAP), y = mean_VLF)) +
   geom_point() +
   geom_smooth(data = xylem_VLF |> filter(family == "Cunoniaceae"),
                                          method = "lm", se = F) +
@@ -474,8 +464,6 @@ ggsave("figures/VLF_pairwise.png", scale = 1, width = 15.94, height = 7.34, unit
 
 adding height data
 ```{r}
-
-
 austraits <- readRDS("data/austraits.rds")
 
 height_data <- extract_trait(austraits, "plant_height")
@@ -490,79 +478,39 @@ euc_heights <- height_data$traits |>
 xylem_Dh_height <- xylem_Dh |> left_join(euc_heights, by = c("apc_name"= "taxon_name"))
 
 ggplot(data = xylem_Dh_height, aes(mean_height, mean_Dh)) +
-  # ggplot(data = xylem_Dh_height, aes(AI, max_height)) +
-# ggplot(data = xylem_Dh_height, aes(max_height, mean_Dh)) +
   geom_point(aes(col = mean_MAP), size = 1) +
-  # scale_x_log10() +
-  # scale_y_log10() +
+  scale_x_log10() +
+  scale_y_log10() +
   scale_colour_gradient2(low = "red", mid = "grey", high = "#0000FF", midpoint = median(log(xylem_Dh_height$mean_MAP)), trans = "log") +
   theme_classic() +
   xlab("Maximum plant height (m)") + 
   ylab(D[h]~" (µm)") +
   labs(colour = "MAP (mm)")
   
-
 ggsave("figures/Dh_height_MAP.png", scale = 1, width = 11, height = 7.34, units = "cm")
 
 Dh_height_lm <- lm(log(mean_Dh)~log(mean_height), data = xylem_Dh_height)
 summary(Dh_height_lm)
-
-ggplot(data = xylem_Dh_height, aes(family, max_height)) +
-  geom_boxplot()
-
 ```
 
 
-Adding TRY vessel trait data
+Sankey diagram for distribution of species in dataset
 ```{r}
-TRY_vessel_data <- read.csv("data/TRY_vessel_data.csv", header = T)
-
-TRY_vessel_diameter <- TRY_vessel_data |> filter(TraitName == "Wood vessel diameter")
-TRY_natives <- TRY_vessel_diameter$SpeciesName |> 
-  native_anywhere_in_australia(resources = resources) |> 
-  distinct() |> 
-  filter(native_anywhere_in_aus == TRUE)
-
-vessel_grouping <- TRY_vessel_diam |> filter(TraitName == "Wood vessel grouping")
-clustered <- vessel_grouping |> filter(OrigValueStr == "clusters")
-
-species_grouping <- read.csv("data/matched_names.csv", header = T)
-xylem_Dh_grouping <- xylem_Dh |> left_join(species_grouping, by = "species")
-
-ggplot(data = xylem_Dh_grouping, aes(x = mean_MAP, y = mean_Dh, col = grouping)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = F) +
-  scale_x_log10() +
-  scale_y_log10() +
-  theme_classic() +
-  scale_color_brewer(palette = "Set1")
-```
-
-
-
-
-```{r}
-# Library
-
-
- 
 links <- read.csv("data/sankey_links.csv", header = T)
 
-# From these flows we need to create a node data frame: it lists every entities involved in the flow
 nodes <- data.frame(
   name=c(as.character(links$source), 
   as.character(links$target)) %>% unique()
 )
- 
-# With networkD3, connection must be provided using id, not using real name like in the links dataframe.. So we need to reformat it.
+
 links$IDsource <- match(links$source, nodes$name)-1 
 links$IDtarget <- match(links$target, nodes$name)-1
  
-# Make the Network
 p <- sankeyNetwork(Links = links, Nodes = nodes,
               Source = "IDsource", Target = "IDtarget",
               Value = "value", NodeID = "name", 
               sinksRight=FALSE, width = 1000, height = 500, fontSize = 20, fontFamily = "Arial")
+
 p
 ```
 
