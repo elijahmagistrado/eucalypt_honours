@@ -509,8 +509,12 @@ links$IDtarget <- match(links$target, nodes$name)-1
 p <- sankeyNetwork(Links = links, Nodes = nodes,
               Source = "IDsource", Target = "IDtarget",
               Value = "value", NodeID = "name", 
-              sinksRight=FALSE, width = 1000, height = 500, fontSize = 20, fontFamily = "Arial")
+              sinksRight=FALSE, width = 600, height = 600, fontSize = 20, fontFamily = "Arial")
 
 p
+
+library(cowplot)
+
+plot_grid(p, whittaker)
 ```
 
