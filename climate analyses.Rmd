@@ -228,14 +228,14 @@ xylem_Dh <- xylem_areas |>
   drop_na() 
 
 # Overall relationship
-ggplot(data = xylem_Dh, aes(x = mean_MAP, y = mean_Dh)) +
+Dh_MAP_plot <- ggplot(data = xylem_Dh, aes(x = mean_MAP, y = mean_Dh)) +
   geom_point(size = 1) +
   geom_smooth(method = "lm", se = F) +
   scale_x_log10() +
   scale_y_log10() +
   theme_classic() +
   scale_color_brewer(palette = "Set1") +
-  # facet_wrap(~family) +
+  facet_wrap(~family) +
   xlab("Mean annual precipitation (mm)") + 
   ylab(D[h]~" (µm)")
 
@@ -244,22 +244,28 @@ ggsave("figures/Dh_MAP.png", scale = 1.5, width = 7.34, height = 7.34, units = "
 # Divided by family
 ggplot(data = xylem_Dh, 
        aes(x = mean_MAP, y = mean_Dh)) +
+  geom_smooth(data = xylem_Dh |> filter(family %in% c("Apocynaceae", "Fabaceae", "Myrtaceae", "Proteaceae", "Rutaceae")), method = "lm", se = F, col = "dark grey") +
   geom_point(size = 1) +
-  geom_smooth(data = xylem_Dh |> filter(family %in% c("Apocynaceae", "Fabaceae", "Myrtaceae", "Proteaceae", "Rutaceae")),
-              method = "lm", se = F) +
   # geom_smooth(method = "lm", se = F) +
+  # geom_line(data = pred_data, aes(mean_MAP, mean_Dh)) +
+  geom_point(data = xylem_Dh |> filter(family == "Myrtaceae", n_samples > 10), 
+       aes(x = mean_MAP, y = mean_Dh, col = genus), size = 1) +
+  geom_smooth(data = xylem_Dh |> filter(family == "Myrtaceae", n_samples > 10), 
+       aes(x = mean_MAP, y = mean_Dh, col = genus), method = "lm", se = F) +
   scale_x_log10() +
   scale_y_log10() +
   theme_classic() +
   scale_color_brewer(palette = "Set1") +
   facet_wrap(~family)+
   xlab("Mean annual precipitation (mm)") + 
-  ylab(D[h]~" (µm)")
+  ylab(D[h]~" (µm)") +
+  theme(legend.position = c(0.5, 0.15), legend.background = element_rect(fill = NULL)) +
+  labs(colour = "Genus")
 
 ggsave("figures/Dh_MAP_family.png", scale = 1, width = 15.94, height = 15.94, units = "cm")
 
 # Myrtaceae divided by genus
-ggplot(data = xylem_Dh |> filter(family == "Myrtaceae", n_samples > 5), 
+ggplot(data = xylem_Dh |> filter(family == "Myrtaceae", n_samples > 10), 
        aes(x = mean_MAP, y = mean_Dh)) +
   geom_point(size = 1) +
   geom_smooth(method = "lm", se = F) +
@@ -345,7 +351,7 @@ LABELS <- generate_label_df(Dh_Tukey , "family")
 
 xylem_Dh <- xylem_Dh |> left_join(LABELS, by = c("family" = "treatment"))
 
-ggplot() +
+Dh_family_plot <- ggplot() +
   geom_boxplot(data = xylem_Dh, aes(fct_reorder(family, mean_Dh, median), mean_Dh)) +
   theme_bw() +
   geom_text(data = xylem_Dh |> group_by(family, Letters) |> summarise(max_Dh = max(mean_Dh)), 
@@ -357,6 +363,26 @@ ggplot() +
 
 ggsave("figures/Dh_family.png", scale = 1, width = 15.94, height = 7.34, units = "cm")
 ```
+
+
+
+```{r}
+Dh_model_df <- expand_grid(mean_MAP = seq(min(xylem_Dh$mean_MAP, na.rm = T), max(xylem_Dh$mean_MAP, na.rm = T), length.out = 100), mean_Dh = c(quantile(xylem_Dh$mean_Dh, 0.25, na.rm = T), quantile(xylem_Dh$mean_Dh, 0.75, na.rm = T)), family = xylem_Dh$family)
+
+model_p <- predict.lm(Dh_family_interaction, xylem_Dh[, c(2, 4, 16)], se.fit = T)
+
+pred_data <- bind_cols(xylem_Dh[, c(2, 4, 16)], model_p)
+
+ggplot(data = xylem_Dh, aes(log(mean_MAP), log(mean_Dh))) +
+  geom_point(size = 1) +
+  geom_line(data = pred_data, aes(log(mean_MAP), fit)) +
+  geom_smooth(method = "lm", se = F) +
+  facet_wrap(~family)
+
+
+
+```
+
 
 
 Comparison of climate values on Dh
@@ -413,7 +439,7 @@ VLF_LABELS <- generate_label_df(VLF_Tukey, "family")
 
 xylem_VLF <- xylem_VLF |> left_join(VLF_LABELS, by = c("family" = "treatment"))
 
-ggplot() +
+VLF_family_plot <- ggplot() +
   geom_boxplot(data = xylem_VLF, aes(fct_reorder(family, mean_VLF, median), mean_VLF)) +
   theme_bw() +
   geom_text(data = xylem_VLF |> group_by(family, Letters) |> summarise(max_VLF = max(mean_VLF)),
@@ -423,21 +449,25 @@ ggplot() +
   ylab("VLF") +
   coord_flip()
 
-ggsave("figures/VLF_family.png", scale = 1, width = 15.94, height = 7.34, units = "cm")
+Dh_family_plot / VLF_family_plot
+
+ggsave("figures/Dh_VLF_family.png", scale = 1, width = 15.94, height = 15.94, units = "cm")
   
 
-ggplot(data = xylem_VLF, aes(x = (mean_MAP), y = mean_VLF)) +
+VLF_MAP_plot <- ggplot(data = xylem_VLF, aes(x = (mean_MAP), y = mean_VLF)) +
   geom_point() +
-  geom_smooth(data = xylem_VLF |> filter(family == "Cunoniaceae"),
-                                         method = "lm", se = F) +
+  # geom_smooth(data = xylem_VLF |> filter(family == "Cunoniaceae"),
+                                         # method = "lm", se = F) +
   scale_x_log10() +
   scale_y_log10() +
   theme_classic() +
-  facet_wrap(~family) +
+  # facet_wrap(~family) +
   xlab("Mean annual precipitation (mm)") +
   ylab("VLF")
 
-ggsave("figures/VLF_MAP_facet.png", scale = 1, width = 15.94, height = 15.94, units = "cm")
+Dh_MAP_plot + VLF_MAP_plot
+
+ggsave("figures/Dh_VLF_MAP.png", scale = 1, width = 15.94, height = 7.34, units = "cm")
 
 
 VLF_lm <- lm(log(mean_VLF)~log(mean_MAP), data = xylem_VLF)
@@ -517,4 +547,5 @@ library(cowplot)
 
 plot_grid(p, whittaker)
 ```
+
 
