@@ -352,7 +352,7 @@ plot_interaction <- function(model, data) {
   return(pred_data)
 }
 
-lm(log(mean_Dh)~log(mean_MAP), data = xylem_Dh |> filter(genus == "Melaleuca")) |> summary()
+lm(log(mean_Dh)~log(mean_MAP), data = xylem_Dh |> filter(family == "Myrtaceae")) |> summary()
 
 Dh_pred <- plot_interaction(Dh_family_interaction, xylem_Dh[, c(2, 4, 16)])
 
@@ -378,10 +378,42 @@ ggplot() +
 
 ggsave("figures/Dh_MAP_family.png", scale = 1, width = 15.94, height = 15.94, units = "cm")
 
-VLF_pred <- 
-
 ```
 
+
+Phylogenetic differences in VLF response to rainfall
+```{r}
+VLF_family_lm <- lm(log(mean_VLF)~log(mean_MAP)+family, data = xylem_VLF)
+summary(VLF_family_lm)
+
+VLF_interaction_lm <- lm(log(mean_VLF)~log(mean_MAP)*family, data = xylem_VLF)
+summary(VLF_interaction_lm)
+
+VLF_myrtaceae_lm <- lm(log(mean_VLF)~log(mean_MAP)*genus, data = xylem_VLF |> filter(family == "Myrtaceae", n_samples > 5))
+summary(VLF_myrtaceae_lm)
+
+lm(log(mean_VLF)~log(mean_MAP), data = xylem_VLF |> filter(genus == "Melaleuca")) |> summary()
+
+VLF_pred <- plot_interaction(VLF_interaction_lm, xylem_VLF[, c(2, 4, 16)])
+VLF_genus_pred <- plot_interaction(VLF_myrtaceae_lm, xylem_VLF |> filter(family == "Myrtaceae", n_samples > 5) |> select(mean_VLF, mean_MAP, genus, family))
+
+ggplot() +
+  geom_line(data = VLF_pred |> filter(family == "Myrtaceae"), aes(mean_MAP, exp(fit)), col = "dark grey", linewidth = 1) +
+  geom_line(data = VLF_genus_pred |> filter(genus == "Melaleuca"), aes(mean_MAP, exp(fit), col = genus), linewidth = 1) +
+  geom_point(data = xylem_VLF, aes(mean_MAP, mean_VLF), size = 1) +
+  geom_point(data = xylem_VLF |> filter(family == "Myrtaceae", n_samples > 5), aes(mean_MAP, mean_VLF, col = genus), size = 1) +
+  facet_wrap(~family) +
+  xlab("Mean annual precipitation (mm)") +
+  ylab("VLF") +
+  theme_classic() +
+  scale_x_log10() +
+  scale_y_log10() +
+  scale_color_brewer(palette = "Set1") +
+  theme(legend.position = c(0.5, 0.15), legend.background = element_rect(fill = NULL)) +
+  labs(colour = "Genus")
+
+ggsave("figures/VLF_MAP_family.png", scale = 1, width = 15.94, height = 15.94, units = "cm")
+```
 
 
 Hydraulically weighted diameter (Dh) figures
@@ -546,10 +578,7 @@ Lumen fraction
 
 
 
-VLF_family_lm <- lm(log(mean_VLF)~log(mean_MAP)+family, data = xylem_VLF)
-summary(VLF_family_lm)
 
-VLF_interaction_lm <- lm(log(mean_VLF)~log(mean_MAP)*family, data = xylem_VLF)
 
 AIC(VLF_lm, VLF_family_lm, VLF_interaction_lm)
 VLF_posthoc <- emtrends(VLF_interaction_lm, pairwise ~ family, var = "mean_MAP")
@@ -567,7 +596,7 @@ ggsave("figures/VLF_pairwise.png", scale = 1, width = 15.94, height = 7.34, unit
 
 adding height data
 ```{r}
-austraits <- readRDS("data/austraits.rds")
+austraits <- readRDS("data/austraits-4.2.0.rds")
 
 height_data <- extract_trait(austraits, "plant_height")
 
@@ -580,11 +609,15 @@ euc_heights <- height_data$traits |>
 
 xylem_Dh_height <- xylem_Dh |> left_join(euc_heights, by = c("apc_name"= "taxon_name"))
 
+xylem_Dh_height
+
 ggplot(data = xylem_Dh_height, aes(mean_height, mean_Dh)) +
-  geom_point(aes(col = mean_MAP), size = 1) +
+  geom_smooth(method = "lm", se = F, col = "black") +
+  geom_point(aes(col = climate), size = 1) +
   scale_x_log10() +
   scale_y_log10() +
-  scale_colour_gradient2(low = "red", mid = "grey", high = "#0000FF", midpoint = median(log(xylem_Dh_height$mean_MAP)), trans = "log") +
+  scale_color_brewer(palette = "Spectral") +
+  # scale_colour_gradient2(low = "red", mid = "dark grey", high = "blue", midpoint = median(log(xylem_Dh_height$mean_MAP)), trans = "log") +
   theme_classic() +
   xlab("Maximum plant height (m)") + 
   ylab(D[h]~" (µm)") +
