@@ -144,43 +144,44 @@ Creating climate preference data
 
 # gbif_occurrences <- read.delim("occurrences/gbif_raw_occs.csv", header=T, sep="\t")
 
-# gbif_filtered <- gbif_occurrences |> 
-#   select(species, scientificName, decimalLatitude, decimalLongitude) |> 
+# gbif_filtered <- gbif_occurrences |>
+#   select(species, scientificName, decimalLatitude, decimalLongitude) |>
 #   drop_na()
 
 # write.csv(gbif_filtered, "occurrences/gbif_filtered.csv", row.names = F)
 
- 
-# # Creating point vector for each occurrence 
-# gbif_filtered <- read.csv("occurrences/gbif_filtered.csv", header = T) |> drop_na()
-# occurrence_points <- vect(gbif_filtered, geom = c("decimalLongitude", "decimalLatitude"))
-# 
-# 
-# # Extracting climate values from each point
-# raster_list <- list.files("rasters_30s/", full.names = T) |> map(rast)
-# 
-# for (raster in raster_list) {
-#   gbif_filtered <- gbif_filtered |> 
-#     mutate(!!sym(names(raster)) := terra::extract(raster, occurrence_points)[[2]])
-# }
-# 
-# occurrence_data <- gbif_filtered |> filter(species %in% namematched$gbif_name)
-# 
-# climate_preferences <- occurrence_data |> 
-#   group_by(species) |>  
-#   summarise(mean_MAP=mean(MAP, na.rm=T), 
-#             tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
-#             sd_log_MAP=sd(log(MAP), na.rm=T),
-#             MAT=mean(MAT, na.rm=T),
-#             wet_quarter=mean(wet_quarter, na.rm=T),
-#             dry_quarter=mean(dry_quarter, na.rm=T),
-#             AI=mean(awi_pm_sr_yr/10000, na.rm=T),
-#             seasonality=mean(seasonality, na.rm=T),
-#             n_obs=n()) |> 
-#   mutate(climate=cut(AI, breaks=c(-Inf, 0.03, 0.2, 0.5, 0.65, Inf), 
-#                      labels=c("Hyper Arid", "Arid", "Semi-Arid", "Dry sub-humid", "Humid"))) |>
-#   left_join(xylem_areas[c(1, 18, 19, 20, 21)], by = c("species" = "gbif_name")) |>
-#   distinct()
+
+# Creating point vector for each occurrence
+gbif_filtered <- read.csv("occurrences/gbif_filtered.csv", header = T) |> drop_na()
+occurrence_points <- vect(gbif_filtered, geom = c("decimalLongitude", "decimalLatitude"))
+
+
+# Extracting climate values from each point
+raster_list <- list.files("rasters_30s/", full.names = T) |> map(rast)
+
+for (raster in raster_list) {
+  gbif_filtered <- gbif_filtered |>
+    mutate(!!sym(names(raster)) := terra::extract(raster, occurrence_points)[[2]])
+}
+
+occurrence_data <- gbif_filtered |> filter(species %in% namematched$gbif_name)
+
+climate_preferences <- occurrence_data |>
+  group_by(species) |>
+  summarise(mean_MAP=mean(MAP, na.rm=T),
+            tenth_MAP=quantile(MAP, c(0.1, 0.9), na.rm=T)[1],
+            sd_log_MAP=sd(log(MAP), na.rm=T),
+            MAT=mean(MAT, na.rm=T),
+            wet_quarter=mean(wet_quarter, na.rm=T),
+            dry_quarter=mean(dry_quarter, na.rm=T),
+            AI=mean(awi_pm_sr_yr/10000, na.rm=T),
+            seasonality=mean(seasonality, na.rm=T),
+            min_temp=quantile(min_temp, c(0.1, 0.9), na.rm=T)[1],
+            n_obs=n()) |>
+  mutate(climate=cut(AI, breaks=c(-Inf, 0.03, 0.2, 0.5, 0.65, Inf),
+                     labels=c("Hyper Arid", "Arid", "Semi-Arid", "Dry sub-humid", "Humid"))) |>
+  left_join(xylem_areas[c(1, 18, 19, 20, 21)], by = c("species" = "gbif_name")) |>
+  distinct()
 #   
 # write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
 ```
@@ -214,6 +215,19 @@ ggsave("figures/climate_range.png", scale = 1.5, width = 7.34, height = 7.34, un
 
 Calculating Dh and VLF
 ```{r}
+xylem_D <- xylem_areas |> 
+  filter(Name == "vessel") |>
+  group_by(apc_name, genus, other) |> 
+  summarise(sample_D = radius*2) |> 
+  group_by(apc_name) |> 
+  summarise(mean_D = mean(sample_D, na.rm=T)) |> 
+  left_join(climate_preferences, by = "apc_name") |> 
+  left_join(xylem_areas["apc_name"], by = "apc_name") |> 
+  distinct() |> 
+  group_by(genus) |> 
+  mutate(n_samples = n()) |> 
+  drop_na() 
+
 xylem_Dh <- xylem_areas |> 
   filter(Name == "vessel") |>
   group_by(apc_name, genus, other) |> 
@@ -352,7 +366,7 @@ plot_interaction <- function(model, data) {
   return(pred_data)
 }
 
-lm(log(mean_Dh)~log(mean_MAP), data = xylem_Dh |> filter(family == "Myrtaceae")) |> summary()
+lm(log(mean_Dh)~log(mean_MAP), data = xylem_Dh |> filter(family == "Apocynaceae")) |> summary()
 
 Dh_pred <- plot_interaction(Dh_family_interaction, xylem_Dh[, c(2, 4, 16)])
 
