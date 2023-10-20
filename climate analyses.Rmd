@@ -249,7 +249,7 @@ xylem_VLF <- xylem_areas |>
 Overall relationship with rainfall
 ```{r}
 Dh_MAP_plot <- ggplot(data = xylem_Dh, aes(x = mean_MAP, y = mean_Dh)) +
-  geom_smooth(method = "lm", se = F, col = "dark grey") +
+  geom_smooth(method = "lm", se = F, col = "dark grey", linewidth = 1) +
   geom_point(size = 1) +
   scale_x_log10() +
   scale_y_log10() +
@@ -260,7 +260,7 @@ Dh_MAP_plot <- ggplot(data = xylem_Dh, aes(x = mean_MAP, y = mean_Dh)) +
   ylab(D[h]~" (µm)")
 
 VLF_MAP_plot <- ggplot(data = xylem_VLF, aes(x = (mean_MAP), y = mean_VLF)) +
-  geom_smooth(method = "lm", se = F, col = "dark grey") +
+  geom_smooth(method = "lm", se = F, col = "dark grey", linewidth = 1) +
   geom_point(size = 1) +
   scale_x_log10() +
   scale_y_log10() +
@@ -363,9 +363,9 @@ Dh_genus_pred <- plot_interaction(Dh_myrtaceae_lm, xylem_Dh |> filter(family == 
 
 ggplot() +
   geom_line(data = Dh_pred |> filter(family %in% c("Fabaceae", "Myrtaceae", "Proteaceae")), aes(mean_MAP, exp(fit)), col = "dark grey", linewidth = 1) +
-  geom_line(data = Dh_genus_pred |> filter(genus != "Corymbia"), aes(mean_MAP, exp(fit), col = genus), linewidth = 1) +
   geom_point(data = xylem_Dh, aes(mean_MAP, mean_Dh), size = 1) +
-  geom_point(data = xylem_Dh |> filter(family == "Myrtaceae", n_samples > 5), aes(mean_MAP, mean_Dh, col = genus), size = 1) +
+  geom_point(data = xylem_Dh |> filter(family == "Myrtaceae", n_samples > 5), aes(mean_MAP, mean_Dh, col = genus), size = 0.5) +
+  geom_line(data = Dh_genus_pred |> filter(genus != "Corymbia"), aes(mean_MAP, exp(fit), col = genus), linewidth = 0.5) +
   facet_wrap(~family) +
   xlab("Mean annual precipitation (mm)") +
   ylab(D[h]~"(µm)") +
@@ -379,6 +379,17 @@ ggplot() +
 ggsave("figures/Dh_MAP_family.png", scale = 1, width = 15.94, height = 15.94, units = "cm")
 
 ```
+
+```{r}
+library(smatr)
+
+Dh_sma <- sma(log(mean_Dh)~log(mean_MAP)*family, xylem_Dh, method = "OLS")
+print(Dh_sma, coefbygroup = T)
+
+VLF_sma <- sma(log(mean_VLF)~log(mean_MAP)*family, xylem_VLF, method = "OLS")
+print(VLF_sma, coefbygroup = T)
+```
+
 
 
 Phylogenetic differences in VLF response to rainfall
@@ -399,9 +410,9 @@ VLF_genus_pred <- plot_interaction(VLF_myrtaceae_lm, xylem_VLF |> filter(family 
 
 ggplot() +
   geom_line(data = VLF_pred |> filter(family == "Myrtaceae"), aes(mean_MAP, exp(fit)), col = "dark grey", linewidth = 1) +
-  geom_line(data = VLF_genus_pred |> filter(genus == "Melaleuca"), aes(mean_MAP, exp(fit), col = genus), linewidth = 1) +
   geom_point(data = xylem_VLF, aes(mean_MAP, mean_VLF), size = 1) +
-  geom_point(data = xylem_VLF |> filter(family == "Myrtaceae", n_samples > 5), aes(mean_MAP, mean_VLF, col = genus), size = 1) +
+  geom_point(data = xylem_VLF |> filter(family == "Myrtaceae", n_samples > 5), aes(mean_MAP, mean_VLF, col = genus), size = 0.5) +
+  geom_line(data = VLF_genus_pred |> filter(genus == "Melaleuca"), aes(mean_MAP, exp(fit), col = genus), linewidth = 0.5) +
   facet_wrap(~family) +
   xlab("Mean annual precipitation (mm)") +
   ylab("VLF") +
@@ -433,7 +444,7 @@ ggplot(data = xylem_Dh,
   # geom_smooth(method = "lm", se = F) +
   # geom_line(data = pred_data, aes(mean_MAP, mean_Dh)) +
   geom_point(data = xylem_Dh |> filter(family == "Myrtaceae", n_samples > 10), 
-       aes(x = mean_MAP, y = mean_Dh, col = genus), size = 1) +
+       aes(x = mean_MAP, y = mean_Dh, col = genus), size = 0.25) +
   geom_smooth(data = xylem_Dh |> filter(family == "Myrtaceae", n_samples > 10), 
        aes(x = mean_MAP, y = mean_Dh, col = genus), method = "lm", se = F) +
   scale_x_log10() +
@@ -609,15 +620,15 @@ euc_heights <- height_data$traits |>
 
 xylem_Dh_height <- xylem_Dh |> left_join(euc_heights, by = c("apc_name"= "taxon_name"))
 
-xylem_Dh_height
+# xylem_Dh_height$climate <- factor(xylem_Dh_height$climate, levels = c("Arid", "Semi-Arid", "Dry sub-humid", "Humid"))
 
 ggplot(data = xylem_Dh_height, aes(mean_height, mean_Dh)) +
   geom_smooth(method = "lm", se = F, col = "black") +
-  geom_point(aes(col = climate), size = 1) +
+  geom_point(aes(col = mean_MAP), size = 1) +
   scale_x_log10() +
   scale_y_log10() +
-  scale_color_brewer(palette = "Spectral") +
-  # scale_colour_gradient2(low = "red", mid = "dark grey", high = "blue", midpoint = median(log(xylem_Dh_height$mean_MAP)), trans = "log") +
+  # scale_color_brewer(palette = "RdBu") +
+  scale_colour_gradient2(low = "red", mid = "dark grey", high = "blue", midpoint = median(log(xylem_Dh_height$mean_MAP)), trans = "log") +
   theme_classic() +
   xlab("Maximum plant height (m)") + 
   ylab(D[h]~" (µm)") +
