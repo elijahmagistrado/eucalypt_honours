@@ -680,3 +680,19 @@ plot_grid(p, whittaker)
 ```
 
 
+AIC model comparison
+```{r}
+Dh_MAP_family_VLF <- lm(log(mean_Dh)~log(mean_MAP)+family+log(xylem_VLF$mean_VLF), data = xylem_Dh)
+
+Dh_MAP_family_VLF_height <- lm(log(mean_Dh)~log(mean_MAP)+family+log(xylem_VLF$mean_VLF)+log(xylem_Dh_height$mean_height), data = xylem_Dh)
+
+Dh_MAP_height <- lm(log(mean_Dh)~log(mean_MAP)+log(xylem_Dh_height$mean_height), data = xylem_Dh)
+
+Dh_MAP_VLF <- lm(log(mean_Dh)~log(mean_MAP)+log(xylem_VLF$mean_VLF), data = xylem_Dh)
+
+BIC(Dh_MAP_lm, Dh_MAP_family_lm, Dh_MAP_family_VLF, Dh_MAP_family_VLF_height, Dh_MAP_height, Dh_MAP_VLF)
+
+summary(Dh_MAP_family_VLF_height)
+```
+
+
