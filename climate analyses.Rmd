@@ -96,11 +96,14 @@ xylem_areas |> distinct(family, apc_name) |> group_by(family) |> summarise(n = n
 
 Zanne et al. (2010) comparison
 ```{r}
-zanne_data <- read.csv("data/zanne_data.csv", header = T)
+zanne_data <- read.csv("data/zanne_data.csv", header = T) |> 
+  filter(Family %in% c("Apocynaceae", "Casuarinaceae", "Cunoniaceae", "Fabaceae", "Myrtaceae", "Proteaceae", "Rutaceae")) |> 
+  rename("family" = "Family")
 zanne_native <- native_anywhere_in_australia(zanne_data$Binomial, 
                                              resources = resources) |> 
   right_join(zanne_data, by = c("species" = "Binomial")) |> 
   filter(native_anywhere_in_aus == "TRUE" )
+
 
 
 # Calculating same variables on our data
@@ -122,6 +125,18 @@ comparison_data <- xylem_areas |>
   left_join(namematched[c("apc_name", "family")], by = "apc_name") |>
   distinct()
 
+
+ggplot() +
+  geom_hex(data = zanne_data, aes(x = N, y = A), bins = 15) +
+  scale_fill_gradient(low = "light grey", high = "dark green") +
+  geom_point(data = comparison_data, aes(x = N, y = A), size = 1) +
+  scale_x_log10() +
+  scale_y_log10() +
+  theme_classic() +
+  facet_wrap(~family) +
+  xlab("Vessel density"~ (mm^-2)) +
+  ylab("Mean vessel area"~ (mm^2)) +
+  theme(legend.position = "none")
 
 ggplot() +
   geom_hex(data = zanne_data, aes(x = N, y = A), bins = 15) +
