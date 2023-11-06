@@ -356,7 +356,7 @@ Dh_MAP_family_lm <- lm(log(mean_Dh)~log(mean_MAP)+family, data = xylem_Dh)
 summary(Dh_MAP_family_lm)
 anova(Dh_MAP_family_lm)
 
-Dh_family_interaction <- lm(log(mean_Dh)~log(mean_MAP)*family, data = xylem_Dh)
+Dh_family_interaction <- lm(log(mean_Dh)~log(mean_MAP)*genus, data = xylem_Dh |> filter(genus %in% common_genera))
 summary(Dh_family_interaction)
 
 plot_interaction <- function(model, data) {
@@ -475,7 +475,7 @@ ggplot(data = xylem_Dh,
 ggsave("figures/Dh_MAP_family.png", scale = 1, width = 15.94, height = 15.94, units = "cm")
 
 # Myrtaceae divided by genus
-ggplot(data = xylem_Dh |> filter(family == "Myrtaceae", n_samples > 10), 
+ggplot(data = xylem_Dh |> filter(genus %in% common_genera), 
        aes(x = mean_MAP, y = mean_Dh)) +
   geom_point(size = 1) +
   geom_smooth(method = "lm", se = F) +
@@ -487,6 +487,9 @@ ggplot(data = xylem_Dh |> filter(family == "Myrtaceae", n_samples > 10),
   xlab("Mean annual precipitation (mm)") + 
   ylab(D[h]~" (µm)")+
   labs(colour = "Genus")
+
+common_genera <- xylem_Dh |> group_by(family, genus) |> summarise(n = n()) |> filter(n > 5) |> pull("genus")
+
 
 ggsave("figures/Dh_MAP_genus.png", scale = 1, width = 11, height = 7.34, units = "cm")
 ```
