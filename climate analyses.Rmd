@@ -19,6 +19,7 @@ library(emmeans)
 library(GGally)
 library(multcompView)
 library(networkD3)
+library(MASS)
 ```
 
 
@@ -690,9 +691,27 @@ Dh_MAP_height <- lm(log(mean_Dh)~log(mean_MAP)+log(xylem_Dh_height$mean_height),
 
 Dh_MAP_VLF <- lm(log(mean_Dh)~log(mean_MAP)+log(xylem_VLF$mean_VLF), data = xylem_Dh)
 
-BIC(Dh_MAP_lm, Dh_MAP_family_lm, Dh_MAP_family_VLF, Dh_MAP_family_VLF_height, Dh_MAP_height, Dh_MAP_VLF)
+Dh_MAP_family_VLF_height_MAT <- lm(log(mean_Dh)~log(mean_MAP)+family+log(xylem_VLF$mean_VLF)+log(xylem_Dh_height$mean_height)+log(MAT), data = xylem_Dh)
+
+Dh_MAP_family_height <- lm(log(mean_Dh)~log(mean_MAP)+family+log(xylem_Dh_height$mean_height), data = xylem_Dh)
+
+BIC(Dh_MAP_lm, Dh_MAP_family_lm, Dh_MAP_family_VLF, Dh_MAP_family_VLF_height, Dh_MAP_height, Dh_MAP_VLF, Dh_MAP_family_VLF_height_MAT, Dh_MAP_family_height)
 
 summary(Dh_MAP_family_VLF_height)
+```
+
+
+```{r}
+BIC_data <- xylem_Dh_height |> 
+  ungroup() |> 
+  dplyr::select(apc_name, mean_Dh, mean_height, mean_MAP, MAT, family) |> 
+  left_join(xylem_VLF[, 1:2], by = "apc_name") |> 
+  dplyr::select(mean_Dh, mean_MAP, family, mean_VLF, mean_height, MAT) |> 
+  mutate_if(is.numeric, log)
+
+BIC_lm = lm(mean_Dh ~ ., data = BIC_data)
+
+stepAIC(BIC_lm, direction = "both", k = log(nrow(BIC_data)))
 ```
 
 
