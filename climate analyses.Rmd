@@ -253,7 +253,7 @@ xylem_VLF <- xylem_areas |>
             sample_lumen_frac = vessel_area/sample_lumen_area) |> 
   distinct() |>
   group_by(apc_name) |> 
-  summarise(mean_VLF = mean(sample_lumen_frac, na.rm=T)) |> 
+  summarise(mean_VLF = mean(sample_lumen_frac, na.rm=T)*100) |> 
   left_join(climate_preferences, by = "apc_name") |> 
   left_join(xylem_areas["apc_name"], by = "apc_name") |> 
   distinct() |> 
@@ -284,7 +284,7 @@ VLF_MAP_plot <- ggplot(data = xylem_VLF, aes(x = (mean_MAP), y = mean_VLF)) +
   theme_classic() +
   # facet_wrap(~family) +
   xlab("Mean annual precipitation (mm)") +
-  ylab("VLF")
+  ylab("VLF (%)")
 
 Dh_MAP_plot + VLF_MAP_plot + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & 
   theme(plot.tag = element_text(size = 10))
@@ -341,27 +341,30 @@ VLF_family_plot <- ggplot() +
   geom_boxplot(data = xylem_VLF, aes(fct_reorder(family, mean_VLF, median), mean_VLF)) +
   theme_bw() +
   geom_text(data = xylem_VLF |> group_by(family, Letters) |> summarise(max_VLF = max(mean_VLF)),
-            aes(family, y = max_VLF + 0.5, label = Letters)) +
+            aes(family, y = max_VLF + 10, label = Letters)) +
   scale_y_log10() +
   xlab("Family") +
-  ylab("VLF") +
+  ylab("VLF (%)") +
   coord_flip()
 
 Dh_family_plot / VLF_family_plot + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & 
   theme(plot.tag = element_text(size = 10))
 
-ggsave("figures/Dh_VLF_family.png", scale = 1, width = 15.94, height = 15.94, units = "cm")
+ggsave("figures/Dh_VLF_family.png", scale = 1, width = 15.92, height = 15.94, units = "cm")
 ```
 
 
 Phylogenetic differences in vessel size response to rainfall
 ```{r}
+common_genera <- xylem_Dh |> group_by(family, genus) |> summarise(n = n()) |> filter(n > 5) |> pull("genus")
+
 Dh_MAP_family_lm <- lm(log(mean_Dh)~log(mean_MAP)+family, data = xylem_Dh)
 summary(Dh_MAP_family_lm)
 anova(Dh_MAP_family_lm)
 
 Dh_family_interaction <- lm(log(mean_Dh)~log(mean_MAP)*genus, data = xylem_Dh |> filter(genus %in% common_genera))
 summary(Dh_family_interaction)
+anova(Dh_family_interaction)
 
 plot_interaction <- function(model, data) {
   model_p <- predict.lm(model, data, se.fit = T)
@@ -418,6 +421,7 @@ summary(VLF_interaction_lm)
 
 VLF_myrtaceae_lm <- lm(log(mean_VLF)~log(mean_MAP)*genus, data = xylem_VLF |> filter(n_samples > 5))
 summary(VLF_myrtaceae_lm)
+anova(VLF_myrtaceae_lm)
 
 lm(log(mean_VLF)~log(mean_MAP), data = xylem_VLF |> filter(genus == "Melaleuca")) |> summary()
 
@@ -429,7 +433,7 @@ ggplot() +
   geom_point(data = xylem_VLF |> filter(n_samples > 5), aes(mean_MAP, mean_VLF), size = 1) +
   facet_wrap(~genus) +
   xlab("Mean annual precipitation (mm)") +
-  ylab("VLF") +
+  ylab("VLF (%)") +
   theme_classic() +
   scale_x_log10() +
   scale_y_log10() +
@@ -485,7 +489,7 @@ ggplot(data = xylem_Dh |> filter(genus %in% common_genera),
   ylab(D[h]~" (µm)")+
   labs(colour = "Genus")
 
-common_genera <- xylem_Dh |> group_by(family, genus) |> summarise(n = n()) |> filter(n > 5) |> pull("genus")
+
 
 
 ggsave("figures/Dh_MAP_genus.png", scale = 1, width = 11, height = 7.34, units = "cm")
@@ -654,19 +658,39 @@ height_unlogged <- ggplot(data = xylem_Dh_height, aes(mean_height, mean_Dh)) +
   geom_point(aes(col = mean_MAP), size = 1) +
   # scale_x_log10() +
   # scale_y_log10() +
-  scale_colour_gradient2(low = "red", mid = "dark grey", high = "blue", midpoint = mean(log(xylem_Dh_height$mean_MAP)), trans = "log", breaks = c(220, 1064, 3368)) +
+  scale_colour_gradient2(low = "red", mid = "dark grey", high = "blue", midpoint = mean(log(xylem_Dh_height$mean_MAP)), trans = "log", breaks = c(220, 1037, 3368)) +
   theme_classic() +
   xlab("Maximum plant height (m)") + 
   ylab(D[h]~" (µm)") +
   labs(colour = "MAP (mm)")
+
   
 height_logged + height_unlogged + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & 
   theme(plot.tag = element_text(size = 10))
 
 ggsave("figures/Dh_height_MAP_unlogged.png", scale = 1, width = 15.94, height = 7.34, units = "cm")
 
-Dh_height_lm <- lm(log(mean_Dh)~log(mean_height), data = xylem_Dh_height)
+ggplot(data = xylem_Dh_height, aes(mean_MAP, mean_Dh)) +
+  # geom_smooth(method = "lm", se = F, col = "black", linewidth = 1) +
+  geom_point(aes(col = mean_height), size = 1) +
+  scale_x_log10() +
+  scale_y_log10() +
+  scale_colour_gradient(low = "black", high = "green", trans = "log") +
+  # scale_colour_steps(n.breaks = 5, trans = "log") +
+  theme_classic() +
+  xlab("Mean annual precipitation (mm)") + 
+  ylab(D[h]~" (µm)") +
+  labs(colour = "Maximum plant height (m)")
+
+ggsave("figures/Dh_MAP_height.png", scale = 1, width = 11, height = 7.34, units = "cm")
+
+Dh_height_lm <- lm(sqrt(mean_Dh)~log(mean_MAP)*sqrt(mean_height), data = xylem_Dh_height)
 summary(Dh_height_lm)
+anova(Dh_height_lm)
+
+plot(Dh_height_lm, which = 2)
+hist(Dh_height_lm$residuals)
+check_model(Dh_height_lm)
 ```
 
 
