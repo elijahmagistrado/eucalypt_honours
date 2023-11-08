@@ -46,6 +46,10 @@ namematched <- gbif_names |> select(verbatimScientificName, species, genus) |>
   rename(species_name = aligned_name, gbif_name = species, apc_name = verbatimScientificName)
 
 xylem_areas <- xylem_areas |> left_join(namematched, by = "species_name")
+
+
+
+changed_taxonomy <- namematched |> filter(apc_name != species_name)
 ```
 
 
@@ -90,6 +94,7 @@ nrow(apc_names |> distinct(canonicalName))
 
 # Number of species in selected families
 xylem_areas |> distinct(family, apc_name) |> group_by(family) |> summarise(n = n())
+xylem_areas |> distinct(apc_name, species_name) |> filter(apc_name != species_name) |> nrow()
 
 ```
 
@@ -268,8 +273,8 @@ Overall relationship with rainfall
 Dh_MAP_plot <- ggplot(data = xylem_Dh, aes(x = mean_MAP, y = mean_Dh)) +
   geom_smooth(method = "lm", se = F, col = "red", linewidth = 1) +
   geom_point(size = 1) +
-  scale_x_log10() +
-  scale_y_log10() +
+  scale_x_sqrt() +
+  # scale_y_log10() +
   theme_classic() +
   scale_color_brewer(palette = "Set1") +
   # facet_wrap(~family) +
@@ -291,6 +296,7 @@ Dh_MAP_plot + VLF_MAP_plot + plot_annotation(tag_levels = "a", tag_prefix = "(",
 
 ggsave("figures/Dh_VLF_MAP.png", scale = 1, width = 15.92, height = 7.34, units = "cm")
 
+  
 Dh_MAP_lm <- lm(log(mean_Dh)~log(mean_MAP), data = xylem_Dh)
 summary(Dh_MAP_lm)
 
@@ -318,11 +324,16 @@ LABELS <- generate_label_df(Dh_Tukey , "family")
 
 xylem_Dh <- xylem_Dh |> left_join(LABELS, by = c("family" = "treatment"))
 
-Dh_family_plot <- ggplot() +
+family_n_labels <- xylem_Dh |> group_by(family) |> summarise(n = n())
+family_n_labels$n <- paste("n =", family_n_labels$n)
+
+Dh_family_plot <-
+  ggplot() +
   geom_boxplot(data = xylem_Dh, aes(fct_reorder(family, mean_Dh, median), mean_Dh)) +
-  theme_bw() +
+  theme_classic() +
   geom_text(data = xylem_Dh |> group_by(family, Letters) |> summarise(max_Dh = max(mean_Dh)), 
             aes(family, y = max_Dh + 20, label = Letters)) +
+  geom_text(data = family_n_labels, aes(family, min(xylem_Dh$mean_Dh) - 4, label = n), size = 3, hjust = 0) +
   scale_y_log10() +
   xlab("Family") +
   ylab(D[h]~" (µm)") +
@@ -337,11 +348,13 @@ VLF_LABELS <- generate_label_df(VLF_Tukey, "family")
 
 xylem_VLF <- xylem_VLF |> left_join(VLF_LABELS, by = c("family" = "treatment"))
 
-VLF_family_plot <- ggplot() +
+VLF_family_plot <-
+  ggplot() +
   geom_boxplot(data = xylem_VLF, aes(fct_reorder(family, mean_VLF, median), mean_VLF)) +
-  theme_bw() +
+  theme_classic() +
   geom_text(data = xylem_VLF |> group_by(family, Letters) |> summarise(max_VLF = max(mean_VLF)),
             aes(family, y = max_VLF + 10, label = Letters)) +
+  geom_text(data = family_n_labels, aes(family, min(xylem_VLF$mean_VLF) - 1, label = n), size = 3, hjust = 0) +
   scale_y_log10() +
   xlab("Family") +
   ylab("VLF (%)") +
@@ -349,6 +362,7 @@ VLF_family_plot <- ggplot() +
 
 Dh_family_plot / VLF_family_plot + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & 
   theme(plot.tag = element_text(size = 10))
+
 
 ggsave("figures/Dh_VLF_family.png", scale = 1, width = 15.92, height = 15.94, units = "cm")
 ```
@@ -383,6 +397,8 @@ summary(Dh_myrtaceae_lm)
 
 Dh_genus_pred <- plot_interaction(Dh_myrtaceae_lm, xylem_Dh |> filter(n_samples > 5) |> dplyr::select(mean_Dh, mean_MAP, genus, family))
 
+genus_facet_labels <- xylem_Dh |> filter(n_samples > 5) |> distinct(genus, apc_name) |> group_by(genus) |> summarise(n = n())
+genus_facet_labels$n <- paste("n =", genus_facet_labels$n)
 
 ggplot() +
   geom_line(data = Dh_genus_pred, aes(mean_MAP, exp(fit)), col = "red", linewidth = 1) +
@@ -393,7 +409,10 @@ ggplot() +
   theme_classic() +
   scale_x_log10() +
   scale_y_log10() +
-  scale_color_brewer(palette = "Set1")
+  scale_color_brewer(palette = "Set1") +
+  geom_text(aes(280, 100, label = n), data = genus_facet_labels, size = 3)
+
+
 
 ggsave("figures/Dh_MAP_genus.png", scale = 1, width = 15.94, height = 15.94, units = "cm")
 
@@ -437,7 +456,8 @@ ggplot() +
   theme_classic() +
   scale_x_log10() +
   scale_y_log10() +
-  scale_color_brewer(palette = "Set1") 
+  scale_color_brewer(palette = "Set1") +
+  geom_text(aes(280, 50, label = n), data = genus_facet_labels, size = 3)
 
 ggsave("figures/VLF_MAP_genus.png", scale = 1, width = 15.94, height = 15.94, units = "cm")
 ```
@@ -638,7 +658,6 @@ euc_heights <- height_data$traits |>
             mean_height = mean(value))
 
 xylem_Dh_height <- xylem_Dh |> left_join(euc_heights, by = c("apc_name"= "taxon_name"))
-xylem_Dh_height$mean_MAP <- round(xylem_Dh_height$mean_MAP)
 
 # xylem_Dh_height$climate <- factor(xylem_Dh_height$climate, levels = c("Arid", "Semi-Arid", "Dry sub-humid", "Humid"))
 
@@ -684,13 +703,16 @@ ggplot(data = xylem_Dh_height, aes(mean_MAP, mean_Dh)) +
 
 ggsave("figures/Dh_MAP_height.png", scale = 1, width = 11, height = 7.34, units = "cm")
 
-Dh_height_lm <- lm(sqrt(mean_Dh)~log(mean_MAP)*sqrt(mean_height), data = xylem_Dh_height)
+Dh_height_lm <- lm(sqrt(mean_Dh)~sqrt(mean_MAP)*sqrt(mean_height), data = xylem_Dh_height)
 summary(Dh_height_lm)
 anova(Dh_height_lm)
 
 plot(Dh_height_lm, which = 2)
 hist(Dh_height_lm$residuals)
+
 check_model(Dh_height_lm)
+
+hist(xylem_Dh_height$mean_MAP |> sqrt())
 ```
 
 
@@ -751,5 +773,6 @@ BIC_lm = lm(mean_Dh ~ ., data = BIC_data)
 
 stepAIC(BIC_lm, direction = "both", k = log(nrow(BIC_data)))
 ```
+
 
 
