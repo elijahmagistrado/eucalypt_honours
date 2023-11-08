@@ -438,7 +438,7 @@ summary(VLF_family_lm)
 VLF_interaction_lm <- lm(log(mean_VLF)~log(mean_MAP)*family, data = xylem_VLF)
 summary(VLF_interaction_lm)
 
-VLF_myrtaceae_lm <- lm(log(mean_VLF)~log(mean_MAP)*genus, data = xylem_VLF |> filter(n_samples > 5))
+VLF_myrtaceae_lm <- lm(log(mean_VLF)~log(mean_MAP)+genus, data = xylem_VLF |> filter(n_samples > 5))
 summary(VLF_myrtaceae_lm)
 anova(VLF_myrtaceae_lm)
 
@@ -703,17 +703,20 @@ ggplot(data = xylem_Dh_height, aes(mean_MAP, mean_Dh)) +
 
 ggsave("figures/Dh_MAP_height.png", scale = 1, width = 11, height = 7.34, units = "cm")
 
-Dh_height_lm <- lm(sqrt(mean_Dh)~sqrt(mean_MAP)*sqrt(mean_height), data = xylem_Dh_height)
+Dh_height_lm <- lm(log(mean_Dh)~log(mean_MAP)*log(mean_height), data = xylem_Dh_height)
 summary(Dh_height_lm)
 anova(Dh_height_lm)
 
-plot(Dh_height_lm, which = 2)
-hist(Dh_height_lm$residuals)
-
-check_model(Dh_height_lm)
-
 hist(xylem_Dh_height$mean_MAP |> sqrt())
 ```
+
+
+```{r}
+plot(xylem_Dh$mean_Dh |> log(), xylem_VLF$mean_VLF |> log())
+
+lm(xylem_Dh$mean_Dh |> log()~xylem_VLF$mean_VLF ) |> summary()
+```
+
 
 
 Sankey diagram for distribution of species in dataset
