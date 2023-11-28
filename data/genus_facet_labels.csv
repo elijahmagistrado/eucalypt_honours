@@ -1,0 +1,9 @@
+﻿genus,n,r_sq
+Acacia,n == 37,R^2 == 0.53
+Allocasuarina,n == 7,R^2 == 0.25
+Banksia,n == 13,R^2 == 0.52
+Corymbia,n == 17,R^2 == 0.02
+Eucalyptus,n == 127,R^2 == 0.49
+Flindersia,n == 13,R^2 == 0.80
+Melaleuca,n == 11,R^2 == 0.78
+Syzygium,n == 15,R^2 == 0.36
