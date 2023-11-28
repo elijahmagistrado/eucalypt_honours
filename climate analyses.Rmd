@@ -49,96 +49,6 @@ changed_taxonomy <- namematched |> filter(apc_name != species_name)
 ```
 
 
-## Dataset statistics
-```{r}
-data_dir <- "/Users/elijahmagistrado/OneDrive - UNSW/images"
-
-all_image_names <- list.files(data_dir, pattern = "_x.jpg", recursive = T) |> 
-  as.data.frame() 
-
-names(all_image_names)[1] <- "file_name"
-
-# Correcting for strange formatting of image folders
-non_eucalypts <- all_image_names |>
-  separate(file_name, c("family", "other"), sep = " ", extra = "merge") |>
-  separate(other, c("species", "other"), sep = "_", extra = "merge") |> 
-  filter(!grepl("/", species)) |> 
-  distinct(family, species)
-
-eucalypts <- all_image_names |>
-  separate(file_name, c("family", "other"), sep = " ", extra = "merge") |>
-  separate(other, c("species", "other"), sep = "_", extra = "merge") |> 
-  filter(grepl("/", species)) |> 
-  separate(species, c("other", "species"), sep = "/", extra = "merge") |> 
-  separate(species, c("family2", "species"), sep = " ", extra = "merge") |> 
-  distinct(family, species)
-
-species_merged <- bind_rows(non_eucalypts, eucalypts)
-
-images_apc_names <- update_taxonomy(species_merged$species, resources = resources) |>
-  filter(grepl("accepted|synonym|variant", taxonomicStatusClean)) |> distinct(canonicalName)
-
-# Species names with typos
-apc_names |> filter(!canonicalName %in% images_apc_names$canonicalName)
-
-# Total number of species
-nrow(species_merged)
-
-# Number of native species
-nrow(apc_names |> distinct(canonicalName))
-
-# Number of species in selected families
-xylem_areas |> distinct(family, apc_name) |> group_by(family) |> summarise(n = n())
-xylem_areas |> distinct(apc_name, species_name) |> filter(apc_name != species_name) |> nrow()
-
-```
-
-
-## Zanne et al. (2010) comparison
-```{r}
-zanne_data <- read.csv("data/zanne_data.csv", header = T)
-zanne_native <- native_anywhere_in_australia(zanne_data$Binomial, 
-                                             resources = resources) |> 
-  right_join(zanne_data, by = c("species" = "Binomial")) |> 
-  filter(native_anywhere_in_aus == "TRUE" )
-
-
-
-# Calculating same variables on our data
-comparison_data <- xylem_areas |> 
-  group_by(apc_name, other) |> 
-  mutate(area_mm = Area.µm.2/1000000, 
-         total_area = max(area_mm)) |> 
-  filter(Name == "vessel") |> 
-  group_by(apc_name, other) |> 
-  summarise(n=n(),
-         mean_area = mean(area_mm, na.rm=T),
-         n_per_area = n/total_area,
-         area_n_ratio = mean_area/n_per_area) |> 
-  distinct() |> 
-  group_by(apc_name) |> 
-  summarise(N = mean(n_per_area, na.rm = T),         # Vessel density
-            A = mean(mean_area, na.rm = T)) |>       # Mean area 
-  drop_na() |> 
-  left_join(namematched[c("apc_name", "family")], by = "apc_name") |>
-  distinct()
-
-
-ggplot() +
-  geom_hex(data = zanne_data, aes(x = N, y = A), bins = 15) +
-  scale_fill_gradient(low = "light grey", high = "dark green") +
-  geom_point(data = comparison_data, aes(x = N, y = A), size = 1, shape = 3) +
-  scale_x_log10() +
-  scale_y_log10() +
-  theme_classic() +
-  facet_wrap(~family) +
-  xlab("Vessel density"~ (mm^-2)) +
-  ylab("Total vessel area"~ (mm^2)) +
-  theme(legend.position = "none")
-
-
-ggsave("figures/zanne_plot.png", scale = 1, width = 15.94, height = 15.94, units = "cm")
-```
 
 
 ## Creating climate preference data
@@ -419,13 +329,6 @@ ggplot() +
 ggsave("figures/Dh_MAP_genus.png", scale = 1, width = 29.21, height = 12.09, units = "cm")
 ```
 
-```{r}
-
-
-
-```
-
-
 
 ## Phylogenetic differences in VLF response to rainfall
 ```{r}
@@ -476,191 +379,8 @@ ggsave("figures/VLF_MAP_genus_demo.png", scale = 0.75, width = 15.94, height = 1
 ```
 
 
-Hydraulically weighted diameter (Dh) figures
-```{r}
-
-
-# Overall relationship
-
-
-ggsave("figures/Dh_MAP.png", scale = 1.5, width = 7.34, height = 7.34, units = "cm")
-  
-# Divided by family
-ggplot(data = xylem_Dh, 
-       aes(x = MAP, y = mean_Dh)) +
-  geom_smooth(data = xylem_Dh |> filter(family %in% c("Apocynaceae", "Fabaceae", "Myrtaceae", "Proteaceae", "Rutaceae")), method = "lm", se = F, col = "dark grey") +
-  geom_point(size = 1) +
-  # geom_smooth(method = "lm", se = F) +
-  # geom_line(data = pred_data, aes(MAP, mean_Dh)) +
-  geom_point(data = xylem_Dh |> filter(family == "Myrtaceae", n_samples > 10), 
-       aes(x = MAP, y = mean_Dh, col = genus), size = 0.25) +
-  geom_smooth(data = xylem_Dh |> filter(family == "Myrtaceae", n_samples > 10), 
-       aes(x = MAP, y = mean_Dh, col = genus), method = "lm", se = F) +
-  scale_x_log10() +
-  scale_y_log10() +
-  theme_classic() +
-  scale_color_brewer(palette = "Set1") +
-  facet_wrap(~family)+
-  xlab("Mean annual precipitation (mm)") + 
-  ylab(D[h]~" (µm)") +
-  theme(legend.position = c(0.5, 0.15), legend.background = element_rect(fill = NULL)) +
-  labs(colour = "Genus")
-
-ggsave("figures/Dh_MAP_family.png", scale = 1, width = 15.94, height = 15.94, units = "cm")
-
-# Myrtaceae divided by genus
-ggplot(data = xylem_Dh |> filter(genus %in% common_genera), 
-       aes(x = MAP, y = mean_Dh)) +
-  geom_point(size = 1) +
-  geom_smooth(method = "lm", se = F) +
-  scale_x_log10() +
-  scale_y_log10() +
-  theme_classic() +
-  scale_color_brewer(palette = "Set1") +
-  facet_wrap(~genus)+
-  xlab("Mean annual precipitation (mm)") + 
-  ylab(D[h]~" (µm)")+
-  labs(colour = "Genus")
-
-
-
-
-ggsave("figures/Dh_MAP_genus.png", scale = 1, width = 11, height = 7.34, units = "cm")
-```
-
-
-Dh analyses
-```{r}
-
-
-
-
-interaction_posthoc <- emtrends(Dh_family_interaction, pairwise ~ family, var = "MAP")
-
-plot(interaction_posthoc, comparisons = T)
-
-emmip(Dh_family_interaction, family ~ MAP, cov.reduce = range)
-
-pwpp(interaction_posthoc, add.space = 10) +
-  theme_bw() +
-  # scale_color_brewer(palette = "Set1") +
-  ylab("Family")
-
-
-ggsave("figures/pairwise_interaction.png", scale = 1, width = 15.94, height = 7.34, units = "cm")
-
-interaction.plot(xylem_Dh$MAP, 
-                 xylem_Dh$family,
-                 xylem_Dh$mean_Dh)
-
-anova(Dh_MAP_lm, Dh_family_interaction)
-AIC(Dh_MAP_lm, Dh_MAP_family_lm, Dh_family_interaction)
-
-
-Dh_Tukey
-```
-
-Correlation plot
-```{r}
-climate_values <- xylem_Dh[, 4:11] |> rename(Dry_quarter = "dry_quarter",
-                                             Seasonality = "seasonality",
-                                             Wet_quarter = "wet_quarter",
-                                             Tenth_pct_MAP = "tenth_MAP",
-                                             MAP_variance = "sd_log_MAP",
-                                             MAP = "MAP")
-
-ggcorr(climate_values, label = T, hjust = 0.75)
-
-ggsave("figures/climate_corr.png", scale = 2, width = 7.34, height = 7.34, units = "cm" )
-```
-
-
-Creating family comparison plot for Dh
-```{r}
-
-
-ggsave("figures/Dh_family.png", scale = 1, width = 15.94, height = 7.34, units = "cm")
-```
-
-
-
-```{r}
-Dh_model_df <- expand_grid(MAP = seq(min(xylem_Dh$MAP, na.rm = T), max(xylem_Dh$MAP, na.rm = T), length.out = 100), mean_Dh = c(quantile(xylem_Dh$mean_Dh, 0.25, na.rm = T), quantile(xylem_Dh$mean_Dh, 0.75, na.rm = T)), family = xylem_Dh$family)
-
-model_p <- predict.lm(Dh_family_interaction, xylem_Dh[, c(2, 4, 16)], se.fit = T)
-
-pred_data <- bind_cols(xylem_Dh[, c(2, 4, 16)], model_p)
-
-ggplot(data = xylem_Dh, aes(log(MAP), log(mean_Dh))) +
-  geom_point(size = 1) +
-  geom_line(data = pred_data, aes(log(MAP), fit)) +
-  facet_wrap(~family)
-
-
-
-```
-
-
-
-Comparison of climate values on Dh
-```{r}
-xylem_Dh_long <- xylem_Dh |> 
-  pivot_longer(cols = MAP:AI, names_to = "variable", values_to = "value")
-
-climate_labs <- c("AI", "Dry quarter", "MAT", "MAP", "MAP range", "Tenth pct MAP","Seasonality", "Wet quarter")
-names(climate_labs) <- c("AI", "dry_quarter", "MAT", "MAP", "sd_log_MAP", "seasonality", "tenth_MAP", "wet_quarter")
-
-ggplot(data = xylem_Dh_long, aes(value, mean_Dh)) +
-  geom_hex(data = xylem_Dh_long[,c(2, 12, 13)], aes(value, mean_Dh), bins = 10) +
-  scale_fill_gradient(low = "light grey", high = "dark green", trans = "log") +
-  # geom_point(data = xylem_Dh_long[,c(2, 10, 11)], aes(value, mean_Dh), col = "light grey") +
-  geom_point() +
-  scale_x_log10() +
-  scale_y_log10() +
-  # geom_smooth(method = "lm") +
-  facet_grid(family~variable, scales = "free_x",
-             labeller = labeller(variable = climate_labs)) +
-  theme_bw() +
-  xlab("Value") +
-  ylab(D[h]~" (µm)") +
-  theme(legend.position = "none")
-
-ggsave("figures/Dh_variables.png", scale = 1.5, width = 15.94, height = 15.94, units = "cm")
-```
-
-
-Lumen fraction
-```{r}
-
-
-
-  
-
-
-
-
-
-
-
-
-AIC(VLF_lm, VLF_family_lm, VLF_interaction_lm)
-VLF_posthoc <- emtrends(VLF_interaction_lm, pairwise ~ family, var = "MAP")
-
-pwpp(VLF_posthoc, add.space = 30) +
-  theme_bw() +
-  scale_color_brewer(palette = "Set1") +
-  ylab("Family") +
-  xlim(0, 1)
-
-ggsave("figures/VLF_pairwise.png", scale = 1, width = 15.94, height = 7.34, units = "cm")
-
-
-```
-
 adding height data
 ```{r}
-austraits <- readRDS("data/austraits-4.2.0.rds")
-
 height_data <- extract_trait(austraits, "plant_height")
 
 euc_heights <- height_data$traits |> 
@@ -671,8 +391,6 @@ euc_heights <- height_data$traits |>
             mean_height = mean(value))
 
 xylem_Dh_height <- xylem_Dh |> left_join(euc_heights, by = c("apc_name"= "taxon_name"))
-
-# xylem_Dh_height$climate <- factor(xylem_Dh_height$climate, levels = c("Arid", "Semi-Arid", "Dry sub-humid", "Humid"))
 
 height_logged <- ggplot(data = xylem_Dh_height, aes(mean_height, mean_Dh)) +
   geom_smooth(method = "lm", se = F, col = "black", linewidth = 1) +
@@ -696,9 +414,7 @@ height_unlogged <- ggplot(data = xylem_Dh_height, aes(mean_height, mean_Dh)) +
   ylab(D[h]~" (µm)") +
   labs(colour = "MAP (mm)")
 
-  
-height_logged + height_unlogged + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & 
-  theme(plot.tag = element_text(size = 10))
+height_logged + height_unlogged + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & theme(plot.tag = element_text(size = 10))
 
 ggsave("figures/Dh_height_MAP_unlogged.png", scale = 1, width = 15.94, height = 7.34, units = "cm")
 
@@ -724,31 +440,7 @@ hist(xylem_Dh_height$MAP |> sqrt())
 ```
 
 
-```{r}
-ggplot(data = xylem_Dh_height, aes(mean_height, mean_Dh)) +
-  # geom_smooth(method = "lm", se = F, col = "black", linewidth = 1) +
-  geom_point(size = 1) +
-  # scale_x_log10() +
-  # scale_y_log10() +
-  # scale_colour_gradient2(low = "red", mid = "dark grey", high = "blue", midpoint = mean(log(xylem_Dh_height$MAP)), trans = "log", breaks = c(220, 1037, 3368)) +
-  theme_classic() +
-  xlab("Maximum plant height (m)") + 
-  ylab(D[h]~" (µm)") +
-  labs(colour = "MAP (mm)")
-
-
-```
-
-
-```{r}
-plot(xylem_Dh$mean_Dh |> log(), xylem_VLF$mean_VLF |> log())
-
-lm(xylem_Dh$mean_Dh |> log()~xylem_VLF$mean_VLF ) |> summary()
-```
-
-
-
-Sankey diagram for distribution of species in dataset
+## Sankey diagram for distribution of species in dataset
 ```{r}
 links <- read.csv("data/sankey_links.csv", header = T)
 
@@ -772,38 +464,95 @@ library(cowplot)
 plot_grid(p, whittaker)
 ```
 
-
-AIC model comparison
+## Dataset statistics
 ```{r}
-Dh_MAP_family_VLF <- lm(log(mean_Dh)~log(MAP)+family+log(xylem_VLF$mean_VLF), data = xylem_Dh)
+data_dir <- "/Users/elijahmagistrado/OneDrive - UNSW/images"
 
-Dh_MAP_family_VLF_height <- lm(log(mean_Dh)~log(MAP)+family+log(xylem_VLF$mean_VLF)+log(xylem_Dh_height$mean_height), data = xylem_Dh)
+all_image_names <- list.files(data_dir, pattern = "_x.jpg", recursive = T) |> 
+  as.data.frame() 
 
-Dh_MAP_height <- lm(log(mean_Dh)~log(MAP)+log(xylem_Dh_height$mean_height), data = xylem_Dh)
+names(all_image_names)[1] <- "file_name"
 
-Dh_MAP_VLF <- lm(log(mean_Dh)~log(MAP)+log(xylem_VLF$mean_VLF), data = xylem_Dh)
+# Correcting for strange formatting of image folders
+non_eucalypts <- all_image_names |>
+  separate(file_name, c("family", "other"), sep = " ", extra = "merge") |>
+  separate(other, c("species", "other"), sep = "_", extra = "merge") |> 
+  filter(!grepl("/", species)) |> 
+  distinct(family, species)
 
-Dh_MAP_family_VLF_height_MAT <- lm(log(mean_Dh)~log(MAP)+family+log(xylem_VLF$mean_VLF)+log(xylem_Dh_height$mean_height)+log(MAT), data = xylem_Dh)
+eucalypts <- all_image_names |>
+  separate(file_name, c("family", "other"), sep = " ", extra = "merge") |>
+  separate(other, c("species", "other"), sep = "_", extra = "merge") |> 
+  filter(grepl("/", species)) |> 
+  separate(species, c("other", "species"), sep = "/", extra = "merge") |> 
+  separate(species, c("family2", "species"), sep = " ", extra = "merge") |> 
+  distinct(family, species)
 
-Dh_MAP_family_height <- lm(log(mean_Dh)~log(MAP)+family+log(xylem_Dh_height$mean_height), data = xylem_Dh)
+species_merged <- bind_rows(non_eucalypts, eucalypts)
 
-BIC(Dh_MAP_lm, Dh_MAP_family_lm, Dh_MAP_family_VLF, Dh_MAP_family_VLF_height, Dh_MAP_height, Dh_MAP_VLF, Dh_MAP_family_VLF_height_MAT, Dh_MAP_family_height)
+images_apc_names <- update_taxonomy(species_merged$species, resources = resources) |>
+  filter(grepl("accepted|synonym|variant", taxonomicStatusClean)) |> distinct(canonicalName)
 
-summary(Dh_MAP_family_VLF_height)
+# Species names with typos
+apc_names |> filter(!canonicalName %in% images_apc_names$canonicalName)
+
+# Total number of species
+nrow(species_merged)
+
+# Number of native species
+nrow(apc_names |> distinct(canonicalName))
+
+# Number of species in selected families
+xylem_areas |> distinct(family, apc_name) |> group_by(family) |> summarise(n = n())
+xylem_areas |> distinct(apc_name, species_name) |> filter(apc_name != species_name) |> nrow()
+
 ```
 
 
+## Zanne et al. (2010) comparison
 ```{r}
-BIC_data <- xylem_Dh_height |> 
-  ungroup() |> 
-  dplyr::select(apc_name, mean_Dh, mean_height, MAP, MAT, family) |> 
-  left_join(xylem_VLF[, 1:2], by = "apc_name") |> 
-  dplyr::select(mean_Dh, MAP, family, mean_VLF, mean_height, MAT) |> 
-  mutate_if(is.numeric, log)
+zanne_data <- read.csv("data/zanne_data.csv", header = T)
+zanne_native <- native_anywhere_in_australia(zanne_data$Binomial, 
+                                             resources = resources) |> 
+  right_join(zanne_data, by = c("species" = "Binomial")) |> 
+  filter(native_anywhere_in_aus == "TRUE" )
 
-BIC_lm = lm(mean_Dh ~ ., data = BIC_data)
 
-stepAIC(BIC_lm, direction = "both", k = log(nrow(BIC_data)))
+
+# Calculating same variables on our data
+comparison_data <- xylem_areas |> 
+  group_by(apc_name, other) |> 
+  mutate(area_mm = Area.µm.2/1000000, 
+         total_area = max(area_mm)) |> 
+  filter(Name == "vessel") |> 
+  group_by(apc_name, other) |> 
+  summarise(n=n(),
+         mean_area = mean(area_mm, na.rm=T),
+         n_per_area = n/total_area,
+         area_n_ratio = mean_area/n_per_area) |> 
+  distinct() |> 
+  group_by(apc_name) |> 
+  summarise(N = mean(n_per_area, na.rm = T),         # Vessel density
+            A = mean(mean_area, na.rm = T)) |>       # Mean area 
+  drop_na() |> 
+  left_join(namematched[c("apc_name", "family")], by = "apc_name") |>
+  distinct()
+
+
+ggplot() +
+  geom_hex(data = zanne_data, aes(x = N, y = A), bins = 15) +
+  scale_fill_gradient(low = "light grey", high = "dark green") +
+  geom_point(data = comparison_data, aes(x = N, y = A), size = 1, shape = 3) +
+  scale_x_log10() +
+  scale_y_log10() +
+  theme_classic() +
+  facet_wrap(~family) +
+  xlab("Vessel density"~ (mm^-2)) +
+  ylab("Total vessel area"~ (mm^2)) +
+  theme(legend.position = "none")
+
+
+ggsave("figures/zanne_plot.png", scale = 1, width = 15.94, height = 15.94, units = "cm")
 ```
 
 
