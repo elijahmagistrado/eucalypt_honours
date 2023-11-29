@@ -49,56 +49,55 @@ changed_taxonomy <- namematched |> filter(apc_name != species_name)
 ```
 
 
-
-
 ## Creating climate preference data
 ```{r}
 # Filtering columns from GBIF occurrences for RAM and processing time consideration
 
 # gbif_occurrences <- read.delim("data/gbif_raw_occs.csv", header=T, sep="\t")
 
-gbif_filtered <- gbif_occurrences |>
-  dplyr::select(species, scientificName, decimalLatitude, decimalLongitude) |>
-  drop_na()
-
-write.csv(gbif_filtered, "data/gbif_filtered.csv", row.names = F)
+# gbif_filtered <- gbif_occurrences |>
+#   dplyr::select(species, scientificName, decimalLatitude, decimalLongitude) |>
+#   drop_na()
+# 
+# write.csv(gbif_filtered, "data/gbif_filtered.csv", row.names = F)
 
 # Creating point vector for each occurrence
-gbif_filtered <- read.csv("data/gbif_filtered.csv", header = T) |> drop_na()
-occurrence_points <- vect(gbif_filtered, geom = c("decimalLongitude", "decimalLatitude"))
-
-# Extracting climate values from each point
-raster_list <- list.files("rasters_30s/", full.names = T) |> map(rast)
-
-for (raster in raster_list) {
-  gbif_filtered <- gbif_filtered |>
-    mutate(!!sym(names(raster)) := terra::extract(raster, occurrence_points)[[2]])
-}
-
-occurrence_data <- gbif_filtered |> filter(species %in% namematched$gbif_name)
-
-climate_preferences <- occurrence_data |>
-  group_by(species) |>
-  summarise(MAP=mean(MAP, na.rm=T),
-            MAT=mean(MAT, na.rm=T)) |>
-  rename(gbif_name = species) |> 
-  left_join(namematched[c("gbif_name", "apc_name", "genus", "family")], by = "gbif_name") |> 
-  distinct()
-
-write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
+# gbif_filtered <- read.csv("data/gbif_filtered.csv", header = T) |> drop_na()
+# occurrence_points <- vect(gbif_filtered, geom = c("decimalLongitude", "decimalLatitude"))
+# 
+# # Extracting climate values from each point
+# raster_list <- list.files("rasters_30s/", full.names = T) |> map(rast)
+# 
+# for (raster in raster_list) {
+#   gbif_filtered <- gbif_filtered |>
+#     mutate(!!sym(names(raster)) := terra::extract(raster, occurrence_points)[[2]])
+# }
+# 
+# occurrence_data <- gbif_filtered |> filter(species %in% namematched$gbif_name)
+# 
+# climate_preferences <- occurrence_data |>
+#   group_by(species) |>
+#   summarise(MAP=mean(MAP, na.rm=T),
+#             MAT=mean(MAT, na.rm=T)) |>
+#   rename(gbif_name = species) |> 
+#   left_join(namematched[c("gbif_name", "apc_name", "genus", "family")], by = "gbif_name") |> 
+#   distinct()
+# 
+# write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
 ```
 
 
-Creating whittaker plot
+## Creating whittaker plot
 ```{r}
-gbif_filtered_summary <- gbif_filtered |>
-  group_by(scientificName) |>
-  summarise(MAP = mean(MAP, na.rm = T),
-            MAT = mean(MAT, na.rm = T))
-
-write.csv(gbif_filtered_summary, "data/angiosperm_climate.csv", row.names = F)
+# gbif_filtered_summary <- gbif_filtered |>
+#   group_by(scientificName) |>
+#   summarise(MAP = mean(MAP, na.rm = T),
+#             MAT = mean(MAT, na.rm = T))
+# 
+# write.csv(gbif_filtered_summary, "data/angiosperm_climate.csv", row.names = F)
 
 gbif_filtered_summary <- read.csv("data/angiosperm_climate.csv", header = T)
+climate_preferences <- read.csv("data/climate_preferences.csv", header = T)
 
 ggplot() +
   geom_hex(data = gbif_filtered_summary, aes(x = MAT, y = MAP), bins = 15) +
@@ -162,26 +161,26 @@ Dh_MAP_plot <-
   geom_point(size = 1) +
   scale_x_log10() +
   scale_y_log10() +
-  theme_classic() +
+  theme_bw() +
   scale_color_brewer(palette = "Set1") +
   xlab("Mean annual precipitation (mm)") + 
-  ylab(D[h]~" (µm)")
-
-ggsave("figures/Dh_MAP.png", scale = 1, width = 16, height = 12.07, units = "cm")
+  ylab(D[h]~" (µm)") +
+  theme(axis.title = element_text(size = 14))
 
 VLF_MAP_plot <- ggplot(data = xylem_VLF, aes(x = (MAP), y = mean_VLF)) +
   geom_smooth(method = "lm", se = F, col = "red", linewidth = 1) +
   geom_point(size = 1) +
   scale_x_log10() +
   scale_y_log10() +
-  theme_classic() +
+  theme_bw() +
   xlab("Mean annual precipitation (mm)") +
-  ylab("VLF (%)")
+  ylab("VLF (%)") +
+  theme(axis.title = element_text(size = 14))
 
 Dh_MAP_plot + VLF_MAP_plot + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & 
-  theme(plot.tag = element_text(size = 10))
+  theme(plot.tag = element_text(size = 14))
 
-ggsave("figures/Dh_VLF_MAP.png", scale = 1, width = 15.92, height = 7.34, units = "cm")
+ggsave("figures/Dh_VLF_MAP.png", scale = 1.5, width = 15.92, height = 7.34, units = "cm")
 
 
 Dh_MAP_lm <- lm(log(mean_Dh)~log(MAP), data = xylem_Dh)
@@ -219,12 +218,13 @@ Dh_family_plot <-
   geom_boxplot(data = xylem_Dh, aes(fct_reorder(family, mean_Dh, median), mean_Dh)) +
   theme_classic() +
   geom_text(data = xylem_Dh |> group_by(family, Letters) |> summarise(max_Dh = max(mean_Dh)), 
-            aes(family, y = max_Dh + 20, label = Letters)) +
-  geom_text(data = family_n_labels, aes(family, min(xylem_Dh$mean_Dh) - 4, label = n), size = 3, hjust = 0) +
+            aes(family, y = max_Dh + 20, label = Letters), size = 4) +
+  geom_text(data = family_n_labels, aes(family, min(xylem_Dh$mean_Dh) - 4, label = n), size = 4, hjust = 0) +
   scale_y_log10() +
   xlab("Family") +
   ylab(D[h]~" (µm)") +
-  coord_flip()
+  coord_flip() +
+  theme(axis.title = element_text(size = 14))
 
 VLF_aov <- aov(log(mean_VLF)~family, data = xylem_VLF)
 summary(VLF_aov)
@@ -240,22 +240,23 @@ VLF_family_plot <-
   geom_boxplot(data = xylem_VLF, aes(fct_reorder(family, mean_VLF, median), mean_VLF)) +
   theme_classic() +
   geom_text(data = xylem_VLF |> group_by(family, Letters) |> summarise(max_VLF = max(mean_VLF)),
-            aes(family, y = max_VLF + 10, label = Letters)) +
-  geom_text(data = family_n_labels, aes(family, min(xylem_VLF$mean_VLF) - 1, label = n), size = 3, hjust = 0) +
+            aes(family, y = max_VLF + 10, label = Letters), size = 4) +
+  geom_text(data = family_n_labels, aes(family, min(xylem_VLF$mean_VLF) - 1, label = n), size = 4, hjust = 0) +
   scale_y_log10() +
   xlab("Family") +
   ylab("VLF (%)") +
-  coord_flip()
+  coord_flip() +
+  theme(axis.title = element_text(size = 14))
 
 Dh_family_plot / VLF_family_plot + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & 
-  theme(plot.tag = element_text(size = 10))
+  theme(plot.tag = element_text(size = 14))
 
 
-ggsave("figures/Dh_VLF_family.png", scale = 1, width = 15.92, height = 15.94, units = "cm")
+ggsave("figures/Dh_VLF_family.png", scale = 1.5, width = 15.92, height = 15.94, units = "cm")
 ```
 
 
-## Phylogenetic differences in vessel size response to rainfall
+## Dh MAP Phylogenetic differences 
 ```{r}
 common_genera <- xylem_Dh |> group_by(family, genus) |> summarise(n = n()) |> filter(n > 5) |> pull("genus")
 
@@ -277,6 +278,15 @@ Dh_family_pred <- plot_interaction(Dh_MAP_family_lm, xylem_Dh |> dplyr::select(m
 Dh_family_sma <- sma(log(mean_Dh)~log(MAP)*family, xylem_Dh, method = "OLS")
 print(Dh_family_sma, coefbygroup = T)
 
+## Manually adding r-squared values to facet labels
+
+# family_facet_labels <- xylem_Dh |> distinct(family, apc_name) |> group_by(family) |> summarise(n = n())
+# family_facet_labels$n <- paste("n ==", family_facet_labels$n)
+# 
+# write.csv(family_facet_labels, "data/family_facet_labels.csv", row.names = F)
+
+family_facet_labels <- read.csv("data/family_facet_labels.csv", header = T)
+
 ggplot() +
   geom_line(data = Dh_family_pred, aes(MAP, exp(fit)), col = "red", linewidth = 1) +
   geom_point(data = xylem_Dh, aes(MAP, mean_Dh), size = 1) +
@@ -286,12 +296,13 @@ ggplot() +
   theme_bw() +
   scale_x_log10() +
   scale_y_log10() +
-  scale_color_brewer(palette = "Set1") 
-# +
-#   geom_text(aes(180, 90, label = r_sq), data = genus_facet_labels, size = 5, parse = T, hjust = 0, vjust = 0) +
-#   geom_text(aes(180, 90, label = n), data = genus_facet_labels, size = 5, parse = T, hjust = 0, vjust = 1.5) +
-#   theme(axis.title = element_text(size = 16),
-#         strip.text = element_text(size = 14))
+  scale_color_brewer(palette = "Set1") +
+  geom_text(aes(180, 100, label = r_sq), data = family_facet_labels, size = 4, parse = T, hjust = 0, vjust = 0) +
+  geom_text(aes(180, 100, label = n), data = family_facet_labels, size = 4, parse = T, hjust = 0, vjust = 1.5) +
+  theme(axis.title = element_text(size = 14),
+        strip.text = element_text(size = 12))
+
+ggsave("figures/Dh_MAP_family.png", scale = 1.5, width = 15.92, height = 9, units = "cm")
 
 ## Genus level
 Dh_MAP_genus_lm <- lm(log(mean_Dh)~log(MAP)*genus, data = xylem_Dh |> filter(n_samples > 5))
@@ -299,15 +310,13 @@ summary(Dh_MAP_genus_lm)
 
 Dh_genus_pred <- plot_interaction(Dh_MAP_genus_lm, xylem_Dh |> filter(n_samples > 5) |> dplyr::select(mean_Dh, MAP, genus, family))
 
-# Manually adding r-squared values to facet labels
-
 Dh_sma <- sma(log(mean_Dh)~log(MAP)*genus, xylem_Dh |> filter(n_samples > 5), method = "OLS")
 print(Dh_sma, coefbygroup = T)
 
-genus_facet_labels <- xylem_Dh |> filter(n_samples > 5) |> distinct(genus, apc_name) |> group_by(genus) |> summarise(n = n())
-genus_facet_labels$n <- paste("n =", genus_facet_labels$n)
-
-write.csv(genus_facet_labels, "data/genus_facet_labels.csv", row.names = F)
+# genus_facet_labels <- xylem_Dh |> filter(n_samples > 5) |> distinct(genus, apc_name) |> group_by(genus) |> summarise(n = n())
+# genus_facet_labels$n <- paste("n ==", genus_facet_labels$n)
+# 
+# write.csv(genus_facet_labels, "data/genus_facet_labels.csv", row.names = F)
 
 genus_facet_labels <- read.csv("data/genus_facet_labels.csv", header = T)
 
@@ -321,30 +330,56 @@ ggplot() +
   scale_x_log10() +
   scale_y_log10() +
   scale_color_brewer(palette = "Set1") +
-  geom_text(aes(180, 90, label = r_sq), data = genus_facet_labels, size = 5, parse = T, hjust = 0, vjust = 0) +
-  geom_text(aes(180, 90, label = n), data = genus_facet_labels, size = 5, parse = T, hjust = 0, vjust = 1.5) +
-  theme(axis.title = element_text(size = 16),
-        strip.text = element_text(size = 14))
+  geom_text(aes(180, 90, label = r_sq), data = genus_facet_labels, size = 4, parse = T, hjust = 0, vjust = 0) +
+  geom_text(aes(180, 90, label = n), data = genus_facet_labels, size = 4, parse = T, hjust = 0, vjust = 1.5) +
+  theme(axis.title = element_text(size = 14),
+        strip.text = element_text(size = 12))
 
-ggsave("figures/Dh_MAP_genus.png", scale = 1, width = 29.21, height = 12.09, units = "cm")
+ggsave("figures/Dh_MAP_genus.png", scale = 1.5, width = 15.92, height = 9, units = "cm")
 ```
 
 
-## Phylogenetic differences in VLF response to rainfall
+## VLF MAP Phylogenetic differences
 ```{r}
-VLF_family_lm <- lm(log(mean_VLF)~log(MAP)+family, data = xylem_VLF)
+## Family level
+VLF_family_lm <- lm(log(mean_VLF)~log(MAP)*family, data = xylem_VLF)
 summary(VLF_family_lm)
 
-VLF_interaction_lm <- lm(log(mean_VLF)~log(MAP)*family, data = xylem_VLF)
-summary(VLF_interaction_lm)
+VLF_family_pred <- plot_interaction(VLF_family_lm, xylem_VLF)
 
-VLF_myrtaceae_lm <- lm(log(mean_VLF)~log(MAP)+genus, data = xylem_VLF |> filter(n_samples > 5))
-summary(VLF_myrtaceae_lm)
-anova(VLF_myrtaceae_lm)
+VLF_family_sma <- sma(log(mean_VLF)~log(MAP)*family, xylem_VLF, method = "OLS")
+print(VLF_family_sma, coefbygroup = T)
 
-lm(log(mean_VLF)~log(MAP), data = xylem_VLF |> filter(genus == "Melaleuca")) |> summary()
+family_VLF_labels <- read.csv("data/family_VLF_labels.csv", header = T)
 
-VLF_genus_pred <- plot_interaction(VLF_myrtaceae_lm, xylem_VLF |> filter(n_samples > 5) |> dplyr::select(mean_VLF, MAP, genus, family))
+ggplot() +
+  geom_line(data = VLF_family_pred, aes(MAP, exp(fit)), col = "red", linewidth = 1) +
+  geom_point(data = xylem_VLF, aes(MAP, mean_VLF), size = 1) +
+  facet_wrap(~family, nrow = 2) +
+  xlab("Mean annual precipitation (mm)") +
+  ylab("VLF (%)") +
+  theme_bw() +
+  scale_x_log10() +
+  scale_y_log10() +
+  scale_color_brewer(palette = "Set1") +
+  geom_text(aes(180, 40, label = r_sq), data = family_VLF_labels, size = 4, parse = T, hjust = 0, vjust = 0) +
+  geom_text(aes(180, 40, label = n), data = family_VLF_labels, size = 4, parse = T, hjust = 0, vjust = 1.5) +
+  theme(axis.title = element_text(size = 14),
+        strip.text = element_text(size = 12))
+
+ggsave("figures/VLF_MAP_family.png", scale = 1.5, width = 15.94, height = 9, units = "cm")
+
+## Genus level
+VLF_genus_lm <- lm(log(mean_VLF)~log(MAP)*genus, data = xylem_VLF |> filter(n_samples > 5))
+summary(VLF_genus_lm)
+anova(VLF_genus_lm)
+
+VLF_genus_pred <- plot_interaction(VLF_genus_lm, xylem_VLF |> filter(n_samples > 5) |> dplyr::select(mean_VLF, MAP, genus, family))
+
+VLF_genus_sma <- sma(log(mean_VLF)~log(MAP)*genus, xylem_VLF |> filter(n_samples > 5), method = "OLS")
+print(VLF_genus_sma, coefbygroup = T)
+
+genus_VLF_labels <- read.csv("data/genus_VLF_labels.csv", header = T)
 
 ggplot() +
   geom_line(data = VLF_genus_pred, aes(MAP, exp(fit)), col = "red", linewidth = 1) +
@@ -352,45 +387,34 @@ ggplot() +
   facet_wrap(~genus, nrow = 2) +
   xlab("Mean annual precipitation (mm)") +
   ylab("VLF (%)") +
-  theme_classic() +
+  theme_bw() +
   scale_x_log10() +
   scale_y_log10() +
   scale_color_brewer(palette = "Set1") +
-  geom_text(aes(280, 50, label = n), data = genus_facet_labels, size = 3, parse = T)
+  geom_text(aes(180, 40, label = r_sq), data = genus_VLF_labels, size = 4, parse = T, hjust = 0, vjust = 0) +
+  geom_text(aes(180, 40, label = n), data = genus_VLF_labels, size = 4, parse = T, hjust = 0, vjust = 1.5) +
+  theme(axis.title = element_text(size = 14),
+        strip.text = element_text(size = 12))
 
-ggsave("figures/VLF_MAP_genus.png", scale = 1, width = 15.94, height = 15.94, units = "cm")
+ggsave("figures/VLF_MAP_genus.png", scale = 1.5, width = 15.94, height = 9, units = "cm")
 
-ggplot() +
-  geom_line(data = VLF_genus_pred |> filter(genus %in% c("Acacia", "Corymbia", "Eucalyptus", "Melaleuca")), aes(MAP, exp(fit)), col = "red", linewidth = 1) +
-  geom_point(data = xylem_VLF |> filter(genus %in% c("Acacia", "Corymbia", "Eucalyptus", "Melaleuca")), aes(MAP, mean_VLF), size = 1) +
-  facet_wrap(~genus) +
-  xlab("Mean annual precipitation (mm)") +
-  ylab("VLF (%)") +
-  theme_classic() +
-  scale_x_log10() +
-  scale_y_log10() +
-  scale_color_brewer(palette = "Set1") +
-  geom_text(aes(280, 50, label = n), data = genus_facet_labels |> filter(genus %in% c("Acacia", "Corymbia", "Eucalyptus", "Melaleuca")), size = 3)
-
-VLF_sma <- sma(log(mean_VLF)~log(MAP)*family, xylem_VLF, method = "OLS")
-print(VLF_sma, coefbygroup = T)
-
-ggsave("figures/VLF_MAP_genus_demo.png", scale = 0.75, width = 15.94, height = 15.94, units = "cm", dpi = 300)
 ```
 
 
-adding height data
+## Height analysis
 ```{r}
+austraits <- read_rds("data/austraits-5.0.0.rds")
+
 height_data <- extract_trait(austraits, "plant_height")
 
-euc_heights <- height_data$traits |> 
+species_heights <- height_data$traits |> 
   filter(taxon_name %in% xylem_Dh$apc_name) |> 
   filter(value_type == "maximum") |> 
   group_by(taxon_name) |> 
   summarise(max_height = max(value),
             mean_height = mean(value))
 
-xylem_Dh_height <- xylem_Dh |> left_join(euc_heights, by = c("apc_name"= "taxon_name"))
+xylem_Dh_height <- xylem_Dh |> left_join(species_heights, by = c("apc_name"= "taxon_name"))
 
 height_logged <- ggplot(data = xylem_Dh_height, aes(mean_height, mean_Dh)) +
   geom_smooth(method = "lm", se = F, col = "black", linewidth = 1) +
@@ -398,50 +422,33 @@ height_logged <- ggplot(data = xylem_Dh_height, aes(mean_height, mean_Dh)) +
   scale_x_log10() +
   scale_y_log10() +
   scale_colour_gradient2(low = "red", mid = "dark grey", high = "blue", midpoint = median(log(xylem_Dh_height$MAP)), trans = "log") +
-  theme_classic() +
+  theme_bw() +
   xlab("Maximum plant height (m)") + 
   ylab(D[h]~" (µm)") +
-  theme(legend.position = "none")
+  theme(legend.position = "none",
+        axis.title = element_text(size = 14)) 
 
 height_unlogged <- ggplot(data = xylem_Dh_height, aes(mean_height, mean_Dh)) +
   # geom_smooth(method = "lm", se = F, col = "black", linewidth = 1) +
   geom_point(aes(col = MAP), size = 1) +
   # scale_x_log10() +
   # scale_y_log10() +
-  scale_colour_gradient2(low = "red", mid = "dark grey", high = "blue", midpoint = mean(log(xylem_Dh_height$MAP)), trans = "log", breaks = c(220, 1037, 3368)) +
-  theme_classic() +
+  scale_colour_gradient2(low = "red", mid = "dark grey", high = "blue", midpoint = mean(log(xylem_Dh_height$MAP)), trans = "log", breaks = c(222, 1037, 3368)) +
+  theme_bw() +
   xlab("Maximum plant height (m)") + 
   ylab(D[h]~" (µm)") +
-  labs(colour = "MAP (mm)")
+  labs(colour = "MAP (mm)") +
+  theme(axis.title = element_text(size = 14)) 
 
 height_logged + height_unlogged + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & theme(plot.tag = element_text(size = 10))
 
-ggsave("figures/Dh_height_MAP_unlogged.png", scale = 1, width = 15.94, height = 7.34, units = "cm")
-
-ggplot(data = xylem_Dh_height, aes(MAP, mean_Dh)) +
-  # geom_smooth(method = "lm", se = F, col = "black", linewidth = 1) +
-  geom_point(aes(col = mean_height), size = 1) +
-  scale_x_log10() +
-  scale_y_log10() +
-  scale_colour_gradient(low = "black", high = "green", trans = "log") +
-  # scale_colour_steps(n.breaks = 5, trans = "log") +
-  theme_classic() +
-  xlab("Mean annual precipitation (mm)") + 
-  ylab(D[h]~" (µm)") +
-  labs(colour = "Maximum plant height (m)")
-
-ggsave("figures/Dh_MAP_height.png", scale = 1, width = 11, height = 7.34, units = "cm")
-
-Dh_height_lm <- lm(log(mean_Dh)~log(MAP)*log(mean_height), data = xylem_Dh_height)
-summary(Dh_height_lm)
-anova(Dh_height_lm)
-
-hist(xylem_Dh_height$MAP |> sqrt())
+ggsave("figures/Dh_height_MAP.png", scale = 1.5, width = 15.94, height = 7.34, units = "cm")
 ```
 
 
 ## Sankey diagram for distribution of species in dataset
 ```{r}
+## Code adapted from https://r-graph-gallery.com/sankey-diagram.html
 links <- read.csv("data/sankey_links.csv", header = T)
 
 nodes <- data.frame(
@@ -452,17 +459,58 @@ nodes <- data.frame(
 links$IDsource <- match(links$source, nodes$name)-1 
 links$IDtarget <- match(links$target, nodes$name)-1
  
-p <- sankeyNetwork(Links = links, Nodes = nodes,
+sankey_plot <- sankeyNetwork(Links = links, Nodes = nodes,
               Source = "IDsource", Target = "IDtarget",
               Value = "value", NodeID = "name", 
               sinksRight=FALSE, width = 600, height = 600, fontSize = 20, fontFamily = "Arial")
 
-p
-
-library(cowplot)
-
-plot_grid(p, whittaker)
+sankey_plot
 ```
+
+
+## Zanne et al. (2010) comparison
+```{r}
+zanne_data <- read.csv("data/zanne_data.csv", header = T)
+
+# Calculating same variables on our data
+comparison_data <- vessel_areas |> 
+  group_by(apc_name, other) |> 
+  mutate(area_mm = Area.µm.2/1000000, 
+         total_area = max(area_mm)) |> 
+  filter(Name == "vessel") |> 
+  group_by(apc_name, other) |> 
+  summarise(n=n(),
+         mean_area = mean(area_mm, na.rm=T),
+         n_per_area = n/total_area,
+         area_n_ratio = mean_area/n_per_area) |> 
+  distinct() |> 
+  group_by(apc_name) |> 
+  summarise(N = mean(n_per_area, na.rm = T),         # Vessel density
+            A = mean(mean_area, na.rm = T)) |>       # Mean area 
+  drop_na() |> 
+  left_join(namematched[c("apc_name", "family")], by = "apc_name") |>
+  distinct()
+
+ggplot() +
+  geom_hex(data = zanne_data, aes(x = N, y = A), bins = 15) +
+  scale_fill_gradient(low = "light grey", high = "dark green") +
+  geom_point(data = comparison_data, aes(x = N, y = A), size = 1, shape = 1, stroke = 1) +
+  scale_x_log10() +
+  scale_y_log10() +
+  theme_bw() +
+  facet_wrap(~family) +
+  xlab("Vessel density"~ (mm^-2)) +
+  ylab("Total vessel area"~ (mm^2)) +
+  theme(legend.position = c(0.5, 0.15),
+        legend.direction = "vertical",
+        axis.title = element_text(size = 14),
+        strip.text = element_text(size = 12)) +
+  labs(fill = "Count")
+
+
+ggsave("figures/zanne_plot.png", scale = 1.5, width = 15.94, height = 15.94, units = "cm")
+```
+
 
 ## Dataset statistics
 ```{r}
@@ -509,70 +557,23 @@ xylem_areas |> distinct(apc_name, species_name) |> filter(apc_name != species_na
 ```
 
 
-## Zanne et al. (2010) comparison
+## Moving unprocessed images to new folder
 ```{r}
-zanne_data <- read.csv("data/zanne_data.csv", header = T)
-zanne_native <- native_anywhere_in_australia(zanne_data$Binomial, 
-                                             resources = resources) |> 
-  right_join(zanne_data, by = c("species" = "Binomial")) |> 
-  filter(native_anywhere_in_aus == "TRUE" )
+processed_images <- list.files("/Volumes/Extension/Elijah honours/QuPath images", recursive = T, full.names = T) |> basename()
 
+original_dataset <- list.files("/Users/elijahmagistrado/OneDrive - UNSW/images", recursive = T, full.names = T) |> as.data.frame()
 
+names(original_dataset)[1] <- "file_name"
 
-# Calculating same variables on our data
-comparison_data <- xylem_areas |> 
-  group_by(apc_name, other) |> 
-  mutate(area_mm = Area.µm.2/1000000, 
-         total_area = max(area_mm)) |> 
-  filter(Name == "vessel") |> 
-  group_by(apc_name, other) |> 
-  summarise(n=n(),
-         mean_area = mean(area_mm, na.rm=T),
-         n_per_area = n/total_area,
-         area_n_ratio = mean_area/n_per_area) |> 
-  distinct() |> 
-  group_by(apc_name) |> 
-  summarise(N = mean(n_per_area, na.rm = T),         # Vessel density
-            A = mean(mean_area, na.rm = T)) |>       # Mean area 
-  drop_na() |> 
-  left_join(namematched[c("apc_name", "family")], by = "apc_name") |>
-  distinct()
+matching_files <- data.frame()
 
+for (image in processed_images) {
+  matching_file <- original_dataset |> filter(grepl(image, file_name, fixed = T))
+  
+  matching_files <- bind_rows(matching_files, matching_file)
+}
 
-ggplot() +
-  geom_hex(data = zanne_data, aes(x = N, y = A), bins = 15) +
-  scale_fill_gradient(low = "light grey", high = "dark green") +
-  geom_point(data = comparison_data, aes(x = N, y = A), size = 1, shape = 3) +
-  scale_x_log10() +
-  scale_y_log10() +
-  theme_classic() +
-  facet_wrap(~family) +
-  xlab("Vessel density"~ (mm^-2)) +
-  ylab("Total vessel area"~ (mm^2)) +
-  theme(legend.position = "none")
-
-
-ggsave("figures/zanne_plot.png", scale = 1, width = 15.94, height = 15.94, units = "cm")
+for (image in matching_files) {
+  file.copy(from = image, to = "/Volumes/Extension/Elijah honours/Original images/")
+}
 ```
-
-
-## Presentation figures
-```{r}
-ggplot(data = xylem_Dh, aes(x = MAP, y = mean_Dh)) +
-  geom_smooth(method = "lm", se = F, col = "red", linewidth = 1) +
-  geom_point(size = 1) +
-  scale_x_log10() +
-  scale_y_log10() +
-  theme_bw() +
-  scale_color_brewer(palette = "Set1") +
-  # facet_wrap(~family) +
-  xlab("Mean annual precipitation (mm)") + 
-  ylab(D[h]~" (µm)") +
-  theme(axis.title = element_text(size = 16)) +
-  geom_text(aes(200, 120, label = "R^2 == 0.06"), parse = T, check_overlap = T, size = 5, hjust = 0, vjust = 0) + 
-  geom_text(aes(200, 120, label = "n == 356"), parse = T, check_overlap = T, size = 5, hjust = 0, vjust = 1.5)
-
-ggsave("figures/Dh_MAP.png", scale = 1, width = 16, height = 12.07, units = "cm")
-```
-
-
