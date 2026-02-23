@@ -1,0 +1,182 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(APCalign)
+```
+
+
+# Overall dataset 2026
+```{r}
+data_dir <- "/Users/elijah/Library/CloudStorage/OneDrive-UNSW/Daniel\ Falster\'s\ files\ -\ NSW\ forestry\ collection"
+
+all_image_names <- list.files(data_dir, pattern = "_x.jpg", recursive = T) |> 
+  as.data.frame()
+
+names(all_image_names)[1] <- "file_name"
+
+all_image_names <- all_image_names %>% separate(file_name, c("folder", "file_name"), sep = "/")
+
+```
+
+
+# Images processed in 2023
+```{r}
+data_dir_2023 <- "/Users/elijah/Library/CloudStorage/OneDrive-UNSW/Daniel\ Falster\'s\ files\ -\ 2023\ Magistrado/Unprocessed\ images\ of\ selected\ images"
+
+all_image_names_2023 <- list.files(data_dir_2023, pattern = "_x", recursive = T) |> 
+  as.data.frame()
+
+names(all_image_names_2023)[1] <- "file_name"
+
+data_dir_Zoe <- "/Users/elijah/Library/CloudStorage/OneDrive-UNSW/Daniel\ Falster\'s\ files\ -\ Zoes\ work/photoshop/photoshop\ output"
+
+all_image_names_Zoe <- list.files(data_dir_Zoe, pattern = "_x.jpg", recursive = T) |> 
+  as.data.frame()
+
+names(all_image_names_Zoe)[1] <- "file_name"
+
+all_images_photoshopped <- bind_rows(all_image_names_2023, all_image_names_Zoe)
+
+species_done <- all_images_photoshopped |>
+  separate(file_name, c("family", "other"), sep = " ", extra = "merge", remove = F) |>
+  separate(other, c("species", "other"), sep = "_", extra = "merge") %>%  
+  separate(other, c("origin", "other"), sep = "_", extra = "merge") |> 
+  filter(!grepl("/", species)) 
+
+species_done_apc <- align_taxa(unique(species_done$species), resources = resources) %>% update_taxonomy(resources = resources)
+
+species_done_apc$accepted_name %>% native_anywhere_in_australia(resources = resources)
+```
+
+
+# NSW Forestry images to be processed
+```{r}
+NSW_forestry_not_processed <- all_image_names %>% filter(!file_name %in% all_images_photoshopped$file_name)
+```
+
+# Counts
+```{r}
+# Correcting for strange formatting of image folders
+species_merged <- NSW_forestry_not_processed |>
+  separate(file_name, c("family", "other"), sep = " ", extra = "merge", remove = F) |>
+  separate(other, c("species", "other"), sep = "_", extra = "merge") %>%  
+  separate(other, c("origin", "other"), sep = "_", extra = "merge") |> 
+  filter(!grepl("/", species)) 
+
+# eucalypts <- NSW_forestry_not_processed |>
+#   separate(file_name, c("family", "other"), sep = " ", extra = "merge", remove = F) |>
+#   separate(other, c("species", "other"), sep = "_", extra = "merge") |> 
+#   filter(grepl("/", species))  %>%  
+#   separate(other, c("origin", "other"), sep = "_", extra = "merge") %>%  
+#   separate(species, c("other", "species"), sep = "/", extra = "merge") |> 
+#   separate(species, c("family2", "species"), sep = " ", extra = "merge")
+
+# species_merged <- bind_rows(non_eucalypts, eucalypts)
+
+# Filtering samples collected in Australia
+native_sample <- species_merged %>% 
+  filter(grepl("NSW|QLD|VIC|NT|TAS|WA|^SA|Fraser|Alice|Australia|Vic|Lord Howe", origin))
+
+# resources <- load_taxonomic_resources()
+
+# Filtering samples collected in Australia that are native
+native_sample_apc <- create_taxonomic_update_lookup(native_sample$species, resources = resources) %>% distinct(original_name, accepted_name)
+
+native_sample <- native_sample %>% inner_join(native_sample_apc, by = c("species" = "original_name"))
+
+native_sample_spp <- native_sample$accepted_name %>% native_anywhere_in_australia(resources = resources, include_infrataxa = T)
+
+native_sample <- native_sample %>% inner_join(native_sample_spp, by = c("accepted_name" = "species"), multiple = "first")
+
+native_sample %>% group_by(native_anywhere_in_aus) %>% summarise(n = n())
+
+native_sample_export <- native_sample %>% rename(scientificName = species) %>% distinct(scientificName)
+write.csv(native_sample_export, "data/native_sample_export.csv", row.names = F)
+
+```
+
+
+
+# CSIRO images
+```{r}
+data_dir_CSIRO_1 <- "/Users/elijah/Library/CloudStorage/OneDrive-UNSW/Daniel\ Falster\'s\ files\ -\ CSIRO\ collection/EUC\ slides"
+data_dir_CSIRO_2 <- "/Users/elijah/Library/CloudStorage/OneDrive-UNSW/Daniel\ Falster\'s\ files\ -\ CSIRO\ collection/CSIRO\ ANGIOSPERMS\ SLIDES"
+
+all_image_names_CSIRO_1 <- list.files(data_dir_CSIRO_1, pattern = "-X0.jpg", recursive = T) |> 
+  as.data.frame()
+
+names(all_image_names_CSIRO_1)[1] <- "file_name"
+
+all_image_names_CSIRO_1 <- all_image_names_CSIRO_1 |>
+  separate(file_name, c("species", "other"), sep = " (?=[A-Z])", extra = "merge", remove = F) |>
+  separate(other, c("origin", "other"), sep = " (?=[0-9])", extra = "merge")
+
+
+
+all_image_names_CSIRO_2 <- list.files(data_dir_CSIRO_2, pattern = "-X0.jpg", recursive = T) |> 
+  as.data.frame()
+
+names(all_image_names_CSIRO_2)[1] <- "file_name"
+
+all_image_names_CSIRO_2 <- all_image_names_CSIRO_2 %>% 
+  separate(file_name, c("folder", "file_name"), sep = "/") %>% 
+  separate(file_name, c("species", "other"), sep = " (?=[A-Z])", extra = "merge", remove = F) |>
+  separate(other, c("family", "other"), sep = " (?=[A-Z])", extra = "merge") %>% 
+  separate(other, c("origin", "other"), sep = " (?=[0-9])", extra = "merge")
+  
+all_image_names_CSIRO <- bind_rows(all_image_names_CSIRO_1, all_image_names_CSIRO_2)
+
+native_sample_CSIRO <- all_image_names_CSIRO %>% 
+  filter(grepl("NSW|QLD|VIC|^NT|TAS|^WA|^SA\\b|Fraser|Alice|AUST|VIC", origin))
+
+```
+
+# CSIRO unique species
+```{r}
+
+native_sample_apc_CSIRO <- create_taxonomic_update_lookup(native_sample_CSIRO$species, resources = resources) %>% distinct(original_name, accepted_name)
+
+native_sample_CSIRO <- native_sample_CSIRO %>% inner_join(native_sample_apc_CSIRO, by = c("species" = "original_name"))
+
+native_sample_spp_CSIRO <- native_sample_CSIRO$accepted_name %>% native_anywhere_in_australia(resources = resources, include_infrataxa = T)
+
+native_sample_CSIRO <- native_sample_CSIRO %>% inner_join(native_sample_spp_CSIRO, by = c("accepted_name" = "species"), multiple = "first")
+
+unique_CSIRO <- native_sample_CSIRO %>% filter(!accepted_name %in% native_sample$accepted_name)
+unique_CSIRO_export <- unique_CSIRO %>% rename(scientificName = species) %>% distinct(scientificName)
+not_processed_names <- bind_rows(unique_CSIRO_export, native_sample_export)
+write.csv(not_processed_names, "data/not_processed.csv", row.names = F)
+```
+
+
+# Generating climate distribution
+```{r}
+not_processed <- read.csv("data/not_processed_names.csv", header = T)
+
+not_processed <- not_processed %>% left_join(climate_preferences, by = c("species" = "taxon_name"))
+
+not_processed_family <- not_processed %>% group_by(family) %>% summarise(n = n()) %>% filter(n >= 10)
+
+ggplot() +
+  geom_hex(data = climate_preferences, aes(x = MAT, y = MAP), bins = 15) +
+  scale_fill_gradient(low = "white", high =  "dark green", trans = "log") +
+  geom_point(data = gbif_names, aes(x = MAT, y =  MAP), size = 2, col = "black") +
+  geom_point(data = not_processed %>% filter(family %in% not_processed_family$family), aes(x = MAT, y =  MAP), size = 1, col = "red", shape = 4) +
+  theme_classic() +
+  xlim(5, 30) +
+  theme(legend.position = "none") +
+  xlab("Mean annual temperature (ºC)") +
+  ylab("Mean annual precipitation (mm)") +
+  theme(axis.title = element_text(size = 16)) +
+  facet_wrap(~family)
+
+ggsave("figures/whittaker_plot_all.png", scale = 1, width = 15.92, height = 15.92, units = "cm")
+```
+
+
+
+

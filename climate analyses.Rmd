@@ -11,7 +11,7 @@ output: html_document
 library(tidyverse)
 library(patchwork)
 library(terra)
-library(ausflora)
+library(APCalign)
 library(austraits)
 library(GGally)
 library(multcompView)
@@ -23,29 +23,39 @@ library(smatr)
 
 ## Importing and name-matching data
 ```{r}
-vessel_areas <- read.csv("data/vessel_measurements.csv", header = T) |>  
+vessel_areas_2023 <- read.csv("data/vessel_measurements.csv", header = T) 
+vessel_areas_2026 <- read.csv("data/2026_measurements.csv", header = T) 
+
+vessel_areas <- bind_rows(vessel_areas_2023, vessel_areas_2026) |>  
   separate(Image, c("family_original", "other"), sep = " ", extra = "merge") |>
   separate(other, c("species_name", "state", "other"), sep = "_", extra = "merge") |>
   mutate(area_mm = Area.µm.2/1000000,
          radius = sqrt(Area.µm.2/pi))
 
+rm(vessel_areas_2023, vessel_areas_2026)
+
 resources <- load_taxonomic_resources()     # Used for ausflora functions
 
-apc_names <- update_taxonomy(vessel_areas$species_name, resources = resources) |>
-  filter(grepl("accepted|synonym|variant", taxonomicStatusClean)) 
+apc_names <- align_taxa(unique(vessel_areas$species_name), resources = resources) %>% 
+  update_taxonomy(resources = resources)
+apc_names_native <- native_anywhere_in_australia(apc_names$accepted_name, resources = resources, include_infrataxa = T)
+apc_names <- apc_names %>% left_join(apc_names_native, by = c("accepted_name" = "species"), multiple = "first")
+
+# apc_names %>% group_by(family, native_anywhere_in_aus) %>% summarise (n = n()) %>% View()
+
+vessel_areas <- vessel_areas %>% left_join(apc_names %>% dplyr::select(original_name, accepted_name, genus, family, native_anywhere_in_aus), by = c("species_name" = "original_name")) %>% filter(native_anywhere_in_aus == "native")
+
 
 # Updated taxonomy used for GBIF occurrence species name
-# write.csv(apc_names["canonicalName"], "data/apc_names.csv", row.names = F)
+write.csv(apc_names %>% filter(native_anywhere_in_aus == "native") %>% 
+            dplyr::select(accepted_name) %>% 
+            rename(scientificName = accepted_name), "data/apc_names.csv", row.names = F)
+# apc_names <- read.csv("data/apc_names.csv", header = T)
 
 gbif_names <- read.csv("data/gbif_namematched.csv", header = T) |> filter(grepl("SPECIES|VARIETY", rank)) 
 
-namematched <- gbif_names |> dplyr::select(verbatimScientificName, species, genus) |> 
-  left_join(apc_names[c("aligned_name", "canonicalName", "family")], by = c("verbatimScientificName" = "canonicalName")) |> 
-  rename(species_name = aligned_name, gbif_name = species, apc_name = verbatimScientificName)
-
-vessel_areas <- vessel_areas |> left_join(namematched, by = "species_name")
-
-changed_taxonomy <- namematched |> filter(apc_name != species_name)
+vessel_areas <- vessel_areas |> 
+  left_join(gbif_names %>% dplyr::select(species, verbatimScientificName), by = c("accepted_name" = "verbatimScientificName"), multiple = "first") %>% rename(apc_name = accepted_name, gbif_name = species)
 ```
 
 
@@ -53,37 +63,37 @@ changed_taxonomy <- namematched |> filter(apc_name != species_name)
 ```{r}
 # Filtering columns from GBIF occurrences for RAM and processing time consideration
 
-# gbif_occurrences <- read.delim("data/gbif_raw_occs.csv", header=T, sep="\t")
+gbif_occurrences <- read.delim("data/gbif_raw_occs.csv", header=T, sep="\t")
 
-# gbif_filtered <- gbif_occurrences |>
-#   dplyr::select(species, scientificName, decimalLatitude, decimalLongitude) |>
-#   drop_na()
-# 
-# write.csv(gbif_filtered, "data/gbif_filtered.csv", row.names = F)
+gbif_filtered <- gbif_occurrences |>
+  dplyr::select(species, scientificName, decimalLatitude, decimalLongitude) |>
+  drop_na()
+
+write.csv(gbif_filtered, "data/gbif_filtered.csv", row.names = F)
 
 # Creating point vector for each occurrence
-# gbif_filtered <- read.csv("data/gbif_filtered.csv", header = T) |> drop_na()
-# occurrence_points <- vect(gbif_filtered, geom = c("decimalLongitude", "decimalLatitude"))
-# 
-# # Extracting climate values from each point
-# raster_list <- list.files("rasters_30s/", full.names = T) |> map(rast)
-# 
-# for (raster in raster_list) {
-#   gbif_filtered <- gbif_filtered |>
-#     mutate(!!sym(names(raster)) := terra::extract(raster, occurrence_points)[[2]])
-# }
-# 
-# occurrence_data <- gbif_filtered |> filter(species %in% namematched$gbif_name)
-# 
-# climate_preferences <- occurrence_data |>
-#   group_by(species) |>
-#   summarise(MAP=mean(MAP, na.rm=T),
-#             MAT=mean(MAT, na.rm=T)) |>
-#   rename(gbif_name = species) |> 
-#   left_join(namematched[c("gbif_name", "apc_name", "genus", "family")], by = "gbif_name") |> 
-#   distinct()
-# 
-# write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
+gbif_filtered <- read.csv("data/gbif_filtered.csv", header = T) |> drop_na()
+occurrence_points <- vect(gbif_filtered, geom = c("decimalLongitude", "decimalLatitude"))
+
+# Extracting climate values from each point
+raster_list <- list.files("rasters_30s/", full.names = T) |> map(rast)
+
+for (raster in raster_list) {
+  gbif_filtered <- gbif_filtered |>
+    mutate(!!sym(names(raster)) := terra::extract(raster, occurrence_points)[[2]])
+}
+
+occurrence_data <- gbif_filtered |> filter(species %in% namematched$gbif_name)
+
+climate_preferences <- occurrence_data |>
+  group_by(species) |>
+  summarise(MAP=mean(MAP, na.rm=T),
+            MAT=mean(MAT, na.rm=T)) |>
+  rename(gbif_name = species) |>
+  left_join(namematched[c("gbif_name", "apc_name", "genus", "family")], by = "gbif_name") |>
+  distinct()
+
+write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
 ```
 
 
@@ -99,12 +109,17 @@ changed_taxonomy <- namematched |> filter(apc_name != species_name)
 gbif_filtered_summary <- read.csv("data/angiosperm_climate.csv", header = T)
 climate_preferences <- read.csv("data/climate_preferences.csv", header = T)
 
+gbif_names <- gbif_names %>% left_join(climate_preferences, by = c("species" = "gbif_name"))
+
+# climate_preferences <- arrow::read_parquet("data/climate_centres.parquet")
+# climate_preferences <- climate_preferences %>% rename(MAT = average_temperature, MAP = annual_precipitation)
+
 ggplot() +
-  geom_hex(data = gbif_filtered_summary, aes(x = MAT, y = MAP), bins = 15) +
-  scale_fill_gradient(low = "light grey", high = "dark green", trans = "log") +
-  geom_point(data = climate_preferences, aes(x = MAT, y =  MAP), size = 0.5) +
-  theme_bw() +
-  xlim(5, 30) +
+  geom_hex(data = climate_preferences, aes(x = MAT, y = MAP), bins = 10, col = "light grey") +
+  scale_fill_gradient(low = "white", high = "dark green") +
+  geom_point(data = gbif_names, aes(x = MAT, y =  MAP), size = 1, alpha = 1) +
+  theme_classic() +
+  xlim(0, 30) +
   theme(legend.position = "none") +
   xlab("Mean annual temperature (ºC)") +
   ylab("Mean annual precipitation (mm)") +
@@ -118,12 +133,12 @@ ggsave("figures/whittaker_plot.png", scale = 1.5, width = 7.34, height = 7.34, u
 ```{r}
 xylem_Dh <- vessel_areas |> 
   filter(Name == "vessel") |>
-  group_by(apc_name, genus, other) |> 
+  group_by(gbif_name, genus, other) |> 
   summarise(sample_Dh = sum(radius^5)/ sum(radius^4)) |> 
-  group_by(apc_name) |> 
+  group_by(gbif_name) |> 
   summarise(mean_Dh = mean(sample_Dh, na.rm=T)) |> 
-  left_join(climate_preferences, by = "apc_name") |> 
-  left_join(vessel_areas["apc_name"], by = "apc_name") |> 
+  left_join(climate_preferences, by = c("gbif_name" = "taxon_name"))|> 
+  left_join(vessel_areas["gbif_name"], by = "gbif_name") |> 
   distinct() |> 
   group_by(genus) |> 
   mutate(n_samples = n()) |> 
