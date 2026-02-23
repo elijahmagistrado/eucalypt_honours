@@ -132,33 +132,33 @@ ggsave("figures/whittaker_plot.png", scale = 1.5, width = 7.34, height = 7.34, u
 ## Calculating Dh and VLF
 ```{r}
 xylem_Dh <- vessel_areas |> 
-  filter(Name == "vessel") |>
+  filter(Name == "vessel"|Classification == "vessel") |>
   group_by(gbif_name, genus, other) |> 
   summarise(sample_Dh = sum(radius^5)/ sum(radius^4)) |> 
   group_by(gbif_name) |> 
   summarise(mean_Dh = mean(sample_Dh, na.rm=T)) |> 
-  left_join(climate_preferences, by = c("gbif_name" = "taxon_name"))|> 
-  left_join(vessel_areas["gbif_name"], by = "gbif_name") |> 
+  left_join(climate_preferences, by = c("gbif_name" = "gbif_name"))|> 
+  left_join(gbif_names %>% dplyr::select(species, genus), by = c("gbif_name" = "species")) |> 
   distinct() |> 
-  group_by(genus) |> 
-  mutate(n_samples = n()) |> 
+  group_by(genus) |>
+  mutate(n_samples = n()) |>
   drop_na() 
 
 xylem_VLF <- vessel_areas |> 
-  group_by(apc_name, other) |> 
+  group_by(gbif_name, other) |> 
   mutate(sample_lumen_area = max(Area.µm.2)) |> 
-  filter(Name %in% c("vessel", "part")) |> 
-  group_by(apc_name, other) |> 
+  filter(Name %in% c("vessel", "part")|Classification %in% c("vessel", "part")) |> 
+  group_by(gbif_name, other) |> 
   summarise(vessel_area = sum(Area.µm.2),
-            sample_lumen_frac = vessel_area/sample_lumen_area) |> 
+            sample_lumen_frac = vessel_area/max(sample_lumen_area)) |> 
   distinct() |>
-  group_by(apc_name) |> 
+  group_by(gbif_name) |> 
   summarise(mean_VLF = mean(sample_lumen_frac, na.rm=T)*100) |> 
-  left_join(climate_preferences, by = "apc_name") |> 
-  left_join(vessel_areas["apc_name"], by = "apc_name") |> 
+  left_join(climate_preferences, by = c("gbif_name" = "gbif_name"))|> 
+  left_join(gbif_names %>% dplyr::select(species, genus), by = c("gbif_name" = "species")) |> 
   distinct() |> 
-  group_by(genus) |> 
-  mutate(n_samples = n()) |> 
+  group_by(genus) |>
+  mutate(n_samples = n()) |>
   drop_na() 
 
 ggplot() +
