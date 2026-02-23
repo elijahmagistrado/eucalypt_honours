@@ -18,6 +18,7 @@ library(multcompView)
 library(networkD3)
 library(MASS)
 library(smatr)
+library(ggpmisc)
 ```
 
 
@@ -138,10 +139,12 @@ xylem_Dh <- vessel_areas |>
   group_by(gbif_name) |> 
   summarise(mean_Dh = mean(sample_Dh, na.rm=T)) |> 
   left_join(climate_preferences, by = c("gbif_name" = "gbif_name"))|> 
-  left_join(gbif_names %>% dplyr::select(species, genus), by = c("gbif_name" = "species")) |> 
+  left_join(gbif_names %>% dplyr::select(species, genus, family), by = c("gbif_name" = "species")) |> 
   distinct() |> 
+  group_by(family) |>
+  mutate(family_n_samples = n()) |>
   group_by(genus) |>
-  mutate(n_samples = n()) |>
+  mutate(genus_n_samples = n())
   drop_na() 
 
 xylem_VLF <- vessel_areas |> 
@@ -155,14 +158,16 @@ xylem_VLF <- vessel_areas |>
   group_by(gbif_name) |> 
   summarise(mean_VLF = mean(sample_lumen_frac, na.rm=T)*100) |> 
   left_join(climate_preferences, by = c("gbif_name" = "gbif_name"))|> 
-  left_join(gbif_names %>% dplyr::select(species, genus), by = c("gbif_name" = "species")) |> 
+  left_join(gbif_names %>% dplyr::select(species, genus, family), by = c("gbif_name" = "species")) |> 
   distinct() |> 
+  group_by(family) |>
+  mutate(family_n_samples = n()) |>
   group_by(genus) |>
-  mutate(n_samples = n()) |>
+  mutate(genus_n_samples = n())
   drop_na() 
 
 ggplot() +
-  geom_density(data = xylem_Dh |> filter(n_samples > 5), aes(MAP, col = genus)) +
+  geom_density(data = xylem_Dh |> filter(family_n_samples > 5), aes(MAP, col = family)) +
   theme_bw() +
   scale_color_brewer(palette = "Set1")
 ```
@@ -207,6 +212,9 @@ summary(VLF_lm)
 
 ## Phylogenetic variation in vessel size and VLF
 ```{r}
+# Filtering out families with 10 or more samples
+xylem_Dh_family <- xylem_Dh |> filter(family_n_samples >= 10)
+
 generate_label_df <- function(TUKEY, variable){
 
      Tukey.levels <- TUKEY[[variable]][,4]
@@ -217,46 +225,49 @@ generate_label_df <- function(TUKEY, variable){
      return(Tukey.labels)
      }
  
-Dh_aov <- aov(log(mean_Dh)~family, data = xylem_Dh)
+Dh_aov <- aov(log(mean_Dh)~family, data = xylem_Dh_family)
 summary(Dh_aov)
 Dh_Tukey <- TukeyHSD(Dh_aov)
 
 LABELS <- generate_label_df(Dh_Tukey , "family")
 
-xylem_Dh <- xylem_Dh |> left_join(LABELS, by = c("family" = "treatment"))
+xylem_Dh_family <- xylem_Dh_family |> left_join(LABELS, by = c("family" = "treatment"))
 
-family_n_labels <- xylem_Dh |> group_by(family) |> summarise(n = n())
+family_n_labels <- xylem_Dh_family |> group_by(family) |> summarise(n = n())
 family_n_labels$n <- paste("n =", family_n_labels$n)
 
 Dh_family_plot <-
   ggplot() +
-  geom_boxplot(data = xylem_Dh, aes(fct_reorder(family, mean_Dh, median), mean_Dh)) +
+  geom_boxplot(data = xylem_Dh_family, aes(fct_reorder(family, mean_Dh, median), mean_Dh)) +
   theme_classic() +
-  geom_text(data = xylem_Dh |> group_by(family, Letters) |> summarise(max_Dh = max(mean_Dh)), 
+  geom_text(data = xylem_Dh_family |> group_by(family, Letters) |> summarise(max_Dh = max(mean_Dh)), 
             aes(family, y = max_Dh + 20, label = Letters), size = 4) +
-  geom_text(data = family_n_labels, aes(family, min(xylem_Dh$mean_Dh) - 4, label = n), size = 4, hjust = 0) +
+  geom_text(data = family_n_labels, aes(family, min(xylem_Dh_family$mean_Dh) - 4, label = n), size = 4, hjust = 0) +
   scale_y_log10() +
   xlab("Family") +
   ylab(D[h]~" (µm)") +
   coord_flip() +
   theme(axis.title = element_text(size = 14))
 
-VLF_aov <- aov(log(mean_VLF)~family, data = xylem_VLF)
+
+xylem_VLF_family <- xylem_VLF |> filter(family_n_samples >= 10)
+
+VLF_aov <- aov(log(mean_VLF)~family, data = xylem_VLF_family)
 summary(VLF_aov)
 VLF_Tukey <- TukeyHSD(VLF_aov)
 
 # Phylogenetic differences
 VLF_LABELS <- generate_label_df(VLF_Tukey, "family")
 
-xylem_VLF <- xylem_VLF |> left_join(VLF_LABELS, by = c("family" = "treatment"))
+xylem_VLF_family <- xylem_VLF_family |> left_join(VLF_LABELS, by = c("family" = "treatment"))
 
 VLF_family_plot <-
   ggplot() +
-  geom_boxplot(data = xylem_VLF, aes(fct_reorder(family, mean_VLF, median), mean_VLF)) +
+  geom_boxplot(data = xylem_VLF_family, aes(fct_reorder(family, mean_VLF, median), mean_VLF)) +
   theme_classic() +
-  geom_text(data = xylem_VLF |> group_by(family, Letters) |> summarise(max_VLF = max(mean_VLF)),
+  geom_text(data = xylem_VLF_family |> group_by(family, Letters) |> summarise(max_VLF = max(mean_VLF)),
             aes(family, y = max_VLF + 10, label = Letters), size = 4) +
-  geom_text(data = family_n_labels, aes(family, min(xylem_VLF$mean_VLF) - 1, label = n), size = 4, hjust = 0) +
+  geom_text(data = family_n_labels, aes(family, min(xylem_VLF_family$mean_VLF) - 1, label = n), size = 4, hjust = 0) +
   scale_y_log10() +
   xlab("Family") +
   ylab("VLF (%)") +
@@ -273,7 +284,7 @@ ggsave("figures/Dh_VLF_family.png", scale = 1.5, width = 15.92, height = 15.94, 
 
 ## Dh MAP Phylogenetic differences 
 ```{r}
-common_genera <- xylem_Dh |> group_by(family, genus) |> summarise(n = n()) |> filter(n > 5) |> pull("genus")
+common_genera <- xylem_Dh |> group_by(family, genus) |> summarise(n = n()) |> filter(n >10) |> pull("genus")
 
 plot_interaction <- function(model, data) {
   model_p <- predict.lm(model, data, se.fit = T)
@@ -283,49 +294,58 @@ plot_interaction <- function(model, data) {
   return(pred_data)
 }
 
+
 ## Family level
-Dh_MAP_family_lm <- lm(log(mean_Dh)~log(MAP)*family, data = xylem_Dh)
+Dh_MAP_family_lm <- lm(log(mean_Dh)~log(MAP)*family, data = xylem_Dh_family)
 summary(Dh_MAP_family_lm)
 anova(Dh_MAP_family_lm)
 
-Dh_family_pred <- plot_interaction(Dh_MAP_family_lm, xylem_Dh |> dplyr::select(mean_Dh, MAP, family))
+Dh_family_pred <- plot_interaction(Dh_MAP_family_lm, xylem_Dh_family |> dplyr::select(mean_Dh, MAP, family))
 
-Dh_family_sma <- sma(log(mean_Dh)~log(MAP)*family, xylem_Dh, method = "OLS")
+Dh_family_sma <- sma(log(mean_Dh)~log(MAP)*family, xylem_Dh_family, method = "OLS")
 print(Dh_family_sma, coefbygroup = T)
 
 ## Manually adding r-squared values to facet labels
 
-# family_facet_labels <- xylem_Dh |> distinct(family, apc_name) |> group_by(family) |> summarise(n = n())
+# family_facet_labels <- xylem_Dh_family |> distinct(family, gbif_name) |> group_by(family) |> summarise(n = n())
 # family_facet_labels$n <- paste("n ==", family_facet_labels$n)
 # 
 # write.csv(family_facet_labels, "data/family_facet_labels.csv", row.names = F)
 
 family_facet_labels <- read.csv("data/family_facet_labels.csv", header = T)
 
-ggplot() +
-  geom_line(data = Dh_family_pred, aes(MAP, exp(fit)), col = "red", linewidth = 1) +
-  geom_point(data = xylem_Dh, aes(MAP, mean_Dh), size = 1) +
-  facet_wrap(~family, nrow = 2) +
+
+ggplot(data = xylem_Dh_family, aes(MAP, mean_Dh)) +
+  stat_poly_eq(use_label("R2", "P"), label.y = 10) +
+  stat_poly_line() + 
+  # geom_line(data = Dh_family_pred, aes(MAP, exp(fit)), col = "red", linewidth = 1) +
+  geom_point(data = xylem_Dh_family, aes(MAP, mean_Dh), size = 1) +
   xlab("Mean annual precipitation (mm)") +
   ylab(D[h]~"(µm)") +
   theme_bw() +
   scale_x_log10() +
   scale_y_log10() +
   scale_color_brewer(palette = "Set1") +
-  geom_text(aes(180, 100, label = r_sq), data = family_facet_labels, size = 4, parse = T, hjust = 0, vjust = 0) +
-  geom_text(aes(180, 100, label = n), data = family_facet_labels, size = 4, parse = T, hjust = 0, vjust = 1.5) +
-  theme(axis.title = element_text(size = 14),
-        strip.text = element_text(size = 12))
+  facet_wrap(~family, nrow = 3) 
+
+  
+  
+  # geom_text(aes(180, 100, label = r_sq), data = family_facet_labels, size = 4, parse = T, hjust = 0, vjust = 0) +
+  # geom_text(aes(180, 100, label = n), data = family_facet_labels, size = 4, parse = T, hjust = 0, vjust = 1.5) +
+  # theme(axis.title = element_text(size = 14),
+  #       strip.text = element_text(size = 12))
 
 ggsave("figures/Dh_MAP_family.png", scale = 1.5, width = 15.92, height = 9, units = "cm")
 
 ## Genus level
-Dh_MAP_genus_lm <- lm(log(mean_Dh)~log(MAP)*genus, data = xylem_Dh |> filter(n_samples > 5))
+xylem_Dh_genus <- xylem_Dh |> filter(genus_n_samples >= 10)
+
+Dh_MAP_genus_lm <- lm(log(mean_Dh)~log(MAP)*genus, data = xylem_Dh_genus)
 summary(Dh_MAP_genus_lm)
 
-Dh_genus_pred <- plot_interaction(Dh_MAP_genus_lm, xylem_Dh |> filter(n_samples > 5) |> dplyr::select(mean_Dh, MAP, genus, family))
+Dh_genus_pred <- plot_interaction(Dh_MAP_genus_lm, xylem_Dh_genus |> dplyr::select(mean_Dh, MAP, genus, family))
 
-Dh_sma <- sma(log(mean_Dh)~log(MAP)*genus, xylem_Dh |> filter(n_samples > 5), method = "OLS")
+Dh_sma <- sma(log(mean_Dh)~log(MAP)*genus, xylem_Dh_genus, method = "OLS")
 print(Dh_sma, coefbygroup = T)
 
 # genus_facet_labels <- xylem_Dh |> filter(n_samples > 5) |> distinct(genus, apc_name) |> group_by(genus) |> summarise(n = n())
@@ -335,20 +355,24 @@ print(Dh_sma, coefbygroup = T)
 
 genus_facet_labels <- read.csv("data/genus_facet_labels.csv", header = T)
 
-ggplot() +
-  geom_line(data = Dh_genus_pred, aes(MAP, exp(fit)), col = "red", linewidth = 1) +
-  geom_point(data = xylem_Dh |> filter(n_samples > 5), aes(MAP, mean_Dh), size = 1) +
-  facet_wrap(~genus, nrow = 2) +
+ggplot(data = xylem_Dh_genus, mapping = aes(MAP, mean_Dh)) +
+  stat_poly_eq(use_label("R2", "P"), label.y = 10) +
+  stat_poly_line() + 
+  # geom_line(data = Dh_genus_pred, aes(MAP, exp(fit)), col = "red", linewidth = 1) +
+  geom_point(data = xylem_Dh_genus, aes(MAP, mean_Dh), size = 1) +
+  facet_wrap(~genus, nrow = 3) +
   xlab("Mean annual precipitation (mm)") +
   ylab(D[h]~"(µm)") +
   theme_bw() +
   scale_x_log10() +
   scale_y_log10() +
-  scale_color_brewer(palette = "Set1") +
-  geom_text(aes(180, 90, label = r_sq), data = genus_facet_labels, size = 4, parse = T, hjust = 0, vjust = 0) +
-  geom_text(aes(180, 90, label = n), data = genus_facet_labels, size = 4, parse = T, hjust = 0, vjust = 1.5) +
-  theme(axis.title = element_text(size = 14),
-        strip.text = element_text(size = 12))
+  scale_color_brewer(palette = "Set1") 
+
+  
+  # geom_text(aes(180, 90, label = r_sq), data = genus_facet_labels, size = 4, parse = T, hjust = 0, vjust = 0) +
+  # geom_text(aes(180, 90, label = n), data = genus_facet_labels, size = 4, parse = T, hjust = 0, vjust = 1.5) +
+  # theme(axis.title = element_text(size = 14),
+  #       strip.text = element_text(size = 12))
 
 ggsave("figures/Dh_MAP_genus.png", scale = 1.5, width = 15.92, height = 9, units = "cm")
 ```
