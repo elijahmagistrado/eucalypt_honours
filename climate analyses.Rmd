@@ -185,7 +185,7 @@ selected_genera <- xylem_Dh |> group_by(genus) |> summarise(n = n()) |> filter(n
 
 
 
-## Mixed model
+## Dh mixed model
 ```{r}
 # Data preparation
 xylem_Dh_genus <- xylem_Dh |> 
@@ -217,21 +217,47 @@ Dh_slopes_within <- estimate_relation(xylem_Dh_mixed_model, by = c("diff_from_ge
                                   preserve_range = T,
                                   include_random = T)
 
+Dh_slopes_within <- Dh_slopes_within |> inner_join(xylem_Dh_genus |> dplyr::select(genus, genus_mean_MAP) |> distinct(), by = "genus") |> 
+  group_by(genus) |> 
+  mutate(scaled_MAP = diff_from_genus_MAP + genus_mean_MAP.y)
+
+
+
+
 Dh_slopes_across <- estimate_relation(xylem_Dh_mixed_model, by = c("genus_mean_MAP"),
                                   preserve_range = T,
                                   include_random = F)
 
 Dh_slopes_family <- estimate_relation(xylem_Dh_mixed_model, by = c("genus_mean_MAP", "family"),
-                                  preserve_range = T,
+                                  preserve_range = F,
                                   include_random = T)
+
 
 Dh_avg_within_slopes <- estimate_relation(xylem_Dh_mixed_model, by = c("diff_from_genus_MAP"),
                                   preserve_range = T,
                                   include_random = F)
 
+
 Dh_predicted_points <- estimate_means(xylem_Dh_mixed_model, by = "genus", include_random = T)
 Dh_predicted_points <- Dh_predicted_points |> inner_join(xylem_Dh_genus, by = "genus")
+
+random_effects <- estimate_grouplevel(xylem_Dh_mixed_model)
+
 ```
+
+```{r}
+pred_within <- xylem_Dh_genus %>%
+  group_by(genus) %>%
+  reframe(
+    diff_from_genus_MAP = seq(min(diff_from_genus_MAP),
+                                      max(diff_from_genus_MAP),
+                                      length.out = 50),
+    genus_mean_MAP = mean(genus_mean_MAP)  # each genus's own mean
+  ) %>%
+  mutate(Predicted = predict(xylem_Dh_mixed_model, newdata = ., 
+                              allow.new.levels = FALSE))
+```
+
 
 ## Dh mixed model testing
 ```{r}
@@ -255,7 +281,7 @@ ggplot() +
   # Raw data
   geom_point(data = xylem_Dh_genus, aes(x = log_MAP, y = log_Dh), col = "lightgrey")  + 
   # Within-genus responses
-  geom_line(data = Dh_slopes_within, aes(x = diff_from_genus_MAP + genus_mean_MAP, y = Predicted, group = genus), col = "lightgrey", linewidth = 1) +
+  geom_line(data = Dh_slopes_within, aes(x = scaled_MAP, y = Predicted, group = genus), col = "lightgrey", linewidth = 1) +
   # Across-genus response
   geom_line(data = Dh_slopes_across, aes(x = genus_mean_MAP, y = Predicted), col = "black", linewidth = 2) +
   # Average within-genus response
@@ -275,13 +301,16 @@ ggplot() +
   # Coloured genus
   geom_point(data = xylem_Dh_genus |> filter(genus %in% selected_genera$genus), aes(x = log_MAP, y = log_Dh, col = genus), shape = 1)  + 
   # Within-genus responses
-  geom_line(data = Dh_prediction_within |> filter(genus %in% selected_genera$genus), aes(x = diff_from_genus_MAP + genus_mean_MAP, y = Predicted, col = genus), linewidth = 1) +
+  geom_line(data = Dh_slopes_within |> filter(genus %in% selected_genera$genus), aes(x = scaled_MAP, y = Predicted, col = genus), linewidth = 1) +
+  # geom_ribbon(data = Dh_slopes_within |> filter(genus %in% selected_genera$genus), aes(x = scaled_MAP, y = Predicted, ymin = CI_low, ymax = CI_high, fill = genus), alpha = 0.1) +
   #   # Predicted genus means
   # geom_point(data = Dh_predicted_points |> filter(genus %in% selected_genera$genus), aes(x = genus_mean_MAP, y = Mean, col = genus), size = 2, stroke = 1, shape = 1) +
   
   # Formatting
   theme_classic()  +
-  facet_wrap(~genus) -> genus_facet
+  theme(legend.position = "none") +
+  scale_x_log10() + 
+  facet_wrap(~genus) -> Dh_genus_facet
 
 
 # selected family facet
@@ -295,19 +324,130 @@ ggplot() +
   # Coloured family
   geom_point(data = xylem_Dh_genus |> filter(family %in% selected_families$family), aes(x = log_MAP, y = log_Dh, col = family), shape = 1)  + 
   # Family random effect
-  geom_line(data = Dh_slopes_family |> filter(family %in% selected_families$family), aes(x = diff_from_genus_MAP + genus_mean_MAP, y = Predicted, col = family), linewidth = 1) +
+  geom_line(data = Dh_slopes_family |> filter(family %in% selected_families$family), aes(x = genus_mean_MAP, y = Predicted, col = family, group = family), linewidth = 1) +
   # Formatting
   theme_classic() +
-  facet_wrap(~family) -> family_facet
+  theme(legend.position = "none") +
+  facet_wrap(~family) -> Dh_family_facet
 
-genus_facet + family_facet
+Dh_genus_facet + Dh_family_facet
 
-ggsave("figures/mixed_model.png", scale = 2, width = 15.92, height = 7.34, units = "cm")
+ggsave("figures/Dh_mixed_model.png", scale = 2, width = 15.92, height = 7.34, units = "cm")
 ```
 
 
 
-## VLF analyses
+## VLF mixed model
+```{r}
+# Data preparation
+xylem_VLF_genus <- xylem_VLF |> 
+  group_by(genus) |> 
+  mutate(
+    log_VLF = log(mean_VLF),
+    log_MAP = log(MAP),
+    genus_mean_MAP = mean(log(MAP)),
+    genus_mean_VLF = mean(log(mean_VLF))
+  ) |> 
+  ungroup() |> 
+  mutate(
+    diff_from_genus_MAP = log_MAP - genus_mean_MAP,
+  )
+
+xylem_VLF_genus$genus <- as.factor(xylem_VLF_genus$genus)
+xylem_VLF_genus$family <- as.factor(xylem_VLF_genus$family)
+
+# Mixed model with genus-centering
+xylem_VLF_mixed_model <- glmmTMB(log_VLF ~ genus_mean_MAP + 
+                                  diff_from_genus_MAP +
+                                  (1 | family) + 
+                                  (1 + diff_from_genus_MAP || genus),
+                                data = xylem_VLF_genus,
+                                family = gaussian())
+
+# Creating model prediction data for plotting
+VLF_slopes_within <- estimate_relation(xylem_VLF_mixed_model, by = c("diff_from_genus_MAP", "genus"),
+                                  preserve_range = T,
+                                  include_random = T)
+
+VLF_slopes_across <- estimate_relation(xylem_VLF_mixed_model, by = c("genus_mean_MAP"),
+                                  preserve_range = T,
+                                  include_random = F)
+
+VLF_slopes_family <- estimate_relation(xylem_VLF_mixed_model, by = c("genus_mean_MAP", "family"),
+                                  preserve_range = T,
+                                  include_random = T)
+
+VLF_avg_within_slopes <- estimate_relation(xylem_VLF_mixed_model, by = c("diff_from_genus_MAP"),
+                                  preserve_range = T,
+                                  include_random = F)
+
+
+VLF_predicted_points <- estimate_means(xylem_VLF_mixed_model, by = "genus", include_random = T)
+VLF_predicted_points <- VLF_predicted_points |> inner_join(xylem_VLF_genus, by = "genus")
+```
+
+
+## VLF Plots
+```{r}
+# this one shows differences in within genus responses (thin grey line) vs across genus responses (thick black line), average within genus responses (thick grey line)
+ggplot() +
+  # Raw data
+  geom_point(data = xylem_VLF_genus, aes(x = log_MAP, y = log_VLF), col = "lightgrey")  + 
+  # Within-genus responses
+  geom_line(data = VLF_slopes_within, aes(x = diff_from_genus_MAP + genus_mean_MAP, y = Predicted, group = genus), col = "lightgrey", linewidth = 1) +
+  # Across-genus response
+  geom_line(data = VLF_slopes_across, aes(x = genus_mean_MAP, y = Predicted), col = "black", linewidth = 2) +
+  # Average within-genus response
+  geom_line(data = VLF_avg_within_slopes, aes(x = diff_from_genus_MAP + genus_mean_MAP, y = Predicted), col = "#707070", linewidth = 2, linetype = 2) +
+  # Predicted genus means
+  geom_point(data = VLF_predicted_points, aes(x = genus_mean_MAP, y = Mean), col = "black", size = 2, stroke = 1, shape = 1) +
+  theme_classic()
+
+# selected genus facet
+ggplot() +
+  # Raw data
+  geom_point(data = xylem_VLF_genus |> dplyr::select(-genus), aes(x = log_MAP, y = log_VLF), col = "lightgrey")  + 
+  # Across-genus response
+  geom_line(data = VLF_slopes_across |> dplyr::select(-genus), aes(x = genus_mean_MAP, y = Predicted), col = "black", linewidth = 2) +
+  # Average within-genus response
+  geom_line(data = VLF_avg_within_slopes |> dplyr::select(-genus), aes(x = diff_from_genus_MAP + genus_mean_MAP, y = Predicted), col = "#707070", linewidth = 1, linetype = 2) +
+  # Coloured genus
+  geom_point(data = xylem_VLF_genus |> filter(genus %in% selected_genera$genus), aes(x = log_MAP, y = log_VLF, col = genus), shape = 1)  + 
+  # Within-genus responses
+  geom_line(data = VLF_slopes_within |> filter(genus %in% selected_genera$genus), aes(x = diff_from_genus_MAP + genus_mean_MAP, y = Predicted, col = genus), linewidth = 1) +
+  #   # Predicted genus means
+  # geom_point(data = Dh_predicted_points |> filter(genus %in% selected_genera$genus), aes(x = genus_mean_MAP, y = Mean, col = genus), size = 2, stroke = 1, shape = 1) +
+  
+  # Formatting
+  theme_classic()  +
+  facet_wrap(~genus) -> VLF_genus_facet
+
+
+# selected family facet
+ggplot() +
+  # Raw data
+  geom_point(data = xylem_VLF_genus |> dplyr::select(-family), aes(x = log_MAP, y = log_VLF), col = "lightgrey")  +
+  # Across-genus response
+  geom_line(data = VLF_slopes_across |> dplyr::select(-family), aes(x = genus_mean_MAP, y = Predicted), col = "black", linewidth = 2) +
+  # Average within-genus response
+  geom_line(data = VLF_avg_within_slopes |> dplyr::select(-family), aes(x = diff_from_genus_MAP + genus_mean_MAP, y = Predicted), col = "#707070", linewidth = 1, linetype = 2) +
+  # Coloured family
+  geom_point(data = xylem_VLF_genus |> filter(family %in% selected_families$family), aes(x = log_MAP, y = log_VLF, col = family), shape = 1)  + 
+  # Family random effect
+  geom_line(data = VLF_slopes_family |> filter(family %in% selected_families$family), aes(x = diff_from_genus_MAP + genus_mean_MAP, y = Predicted, col = family), linewidth = 1) +
+  # Formatting
+  theme_classic() +
+  facet_wrap(~family) -> VLF_family_facet
+
+VLF_genus_facet + VLF_family_facet
+
+ggsave("figures/VLF_mixed_model.png", scale = 2, width = 15.92, height = 7.34, units = "cm")
+```
+
+
+
+
+
 ```{r}
 xylem_VLF_genus <- xylem_VLF |> 
   group_by(genus) |> 
