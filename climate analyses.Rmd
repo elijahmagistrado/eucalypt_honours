@@ -235,32 +235,45 @@ anova(xylem_Dh_regular_model, xylem_Dh_mixed_model)
 ## Dh genus plot, mainly by Claude Sonnet 4.6
 ```{r}
 # ── 1. Across-genus marginal effect ──────────────────────────────────────────
-across_pred <- ggpredict(xylem_Dh_mixed_model, terms = "genus_mean_MAP [all]")
+Dh_across_pred <- ggpredict(xylem_Dh_mixed_model, terms = "genus_mean_MAP [all]")
+
+# ── Average within-genus response (population-level, no random effects) ───────
+Dh_avg_within_pred <- ggpredict(
+  xylem_Dh_mixed_model,
+  terms = "diff_from_genus_MAP [all]"
+  # type = "fixed" is default — random effects set to 0
+)
+
+# Recentre to global mean MAP so it sits on the same x-axis
+global_mean_MAP <- mean(xylem_Dh_genus$genus_mean_MAP, na.rm = TRUE)
+
+Dh_avg_within_scaled <- as_tibble(Dh_avg_within_pred) %>%
+  mutate(x_scaled = x + global_mean_MAP)
 
 # ── 2. Within-genus marginal effects per genus ────────────────────────────────
-within_pred <- ggpredict(
+Dh_within_pred <- ggpredict(
   xylem_Dh_mixed_model,
   terms = c("diff_from_genus_MAP [all]", "genus [all]"),
   type = "random"
 )
 
 # ── 3. Scale within-genus x to across-genus x-axis ───────────────────────────
-genus_means <- xylem_Dh_genus %>%
+Dh_genus_means <- xylem_Dh_genus %>%
   group_by(genus) %>%
   summarise(genus_mean_MAP = mean(genus_mean_MAP, na.rm = TRUE), .groups = "drop")
 
-within_pred_scaled <- within_pred %>%
+Dh_within_pred_scaled <- Dh_within_pred %>%
   as_tibble() %>%
   rename(genus = group) %>%
   left_join(genus_means, by = "genus") %>%
   mutate(x_scaled = x + genus_mean_MAP)
 
 # ── 4. Compute axis breaks from data range ────────────────────────────────────
-y_range <- exp(range(xylem_Dh_genus$log_Dh, na.rm = TRUE))
-x_range <- exp(range(xylem_Dh_genus$genus_mean_MAP + xylem_Dh_genus$diff_from_genus_MAP, na.rm = TRUE))
+Dh_y_range <- exp(range(xylem_Dh_genus$log_Dh, na.rm = TRUE))
+Dh_x_range <- exp(range(xylem_Dh_genus$genus_mean_MAP + xylem_Dh_genus$diff_from_genus_MAP, na.rm = TRUE))
 
-y_breaks <- log(log_breaks(n = 6)(y_range))
-x_breaks <- log(log_breaks(n = 6)(x_range))
+Dh_y_breaks <- log(log_breaks(n = 6)(Dh_y_range))
+Dh_x_breaks <- log(log_breaks(n = 6)(Dh_x_range))
 
 # ── 5. Plot ───────────────────────────────────────────────────────────────────
 ggplot() +
@@ -272,14 +285,20 @@ ggplot() +
   ) +
   # Across-genus line — black, same in every facet
   geom_ribbon(
-    data = as_tibble(across_pred),
+    data = as_tibble(Dh_across_pred),
     aes(x = x, ymin = conf.low, ymax = conf.high),
     fill = "black", alpha = 0.15, inherit.aes = FALSE
   ) +
   geom_line(
-    data = as_tibble(across_pred),
+    data = as_tibble(Dh_across_pred),
     aes(x = x, y = predicted),
     colour = "black", linewidth = 1.5, inherit.aes = FALSE
+  ) +
+  # Average within-genus response — dashed black line
+  geom_line(
+    data = Dh_avg_within_scaled,
+    aes(x = x_scaled, y = predicted),
+    colour = "#575757", linewidth = 2, linetype = "dotted", inherit.aes = FALSE
   ) +
   # Selected genus points — coloured
  geom_point(
@@ -289,24 +308,24 @@ ggplot() +
   ) +
   # Within-genus lines — coloured, scaled to global x-axis
   geom_ribbon(
-    data = within_pred_scaled |> filter(genus %in% selected_genera$genus),
+    data = Dh_within_pred_scaled |> filter(genus %in% selected_genera$genus),
     aes(x = x_scaled, ymin = conf.low, ymax = conf.high, fill = genus),
     alpha = 0.2, inherit.aes = FALSE
   ) +
   geom_line(
-    data = within_pred_scaled |> filter(genus %in% selected_genera$genus),
+    data = Dh_within_pred_scaled |> filter(genus %in% selected_genera$genus),
     aes(x = x_scaled, y = predicted, colour = genus),
     linewidth = 0.9, inherit.aes = FALSE
   ) +
   # Facet by genus
   facet_wrap(~ genus, scales = "fixed") +
   scale_y_continuous(
-    breaks = y_breaks,
+    breaks = Dh_y_breaks,
     labels = \(x) round(exp(x), 1),
     name = "Dh (μm)"
   ) +
   scale_x_continuous(
-    breaks = x_breaks,
+    breaks = Dh_x_breaks,
     labels = \(x) round(exp(x), 0),
     name = "Mean Annual Precipitation (mm)"
   ) +
@@ -320,30 +339,22 @@ ggplot() +
     legend.position = "none",
     strip.background = element_rect(fill = "grey95"),
     strip.text = element_text(face = "italic")
-  ) -> genus_facet
+  ) -> Dh_genus_facet
+
+Dh_genus_facet
 ```
 
 
 ## Dh family plot, mainly by Claude Sonnet 4.6
 ```{r}
-# ── 1. Across-family marginal effect (genus_mean_MAP) ────────────────────────
-across_pred <- ggpredict(xylem_Dh_mixed_model, terms = "genus_mean_MAP [all]")
-
 # ── 2. Family-level predictions ───────────────────────────────────────────────
 # Family only has a random intercept (1 | family), so we predict
 # over genus_mean_MAP for each family
-family_pred <- ggpredict(
+Dh_family_pred <- ggpredict(
   xylem_Dh_mixed_model,
   terms = c("genus_mean_MAP [all]", "family [all]"),
   type = "random"
 )
-
-# ── 3. Axis breaks ────────────────────────────────────────────────────────────
-y_range <- exp(range(xylem_Dh_genus$log_Dh, na.rm = TRUE))
-x_range <- exp(range(xylem_Dh_genus$genus_mean_MAP + xylem_Dh_genus$diff_from_genus_MAP, na.rm = TRUE))
-
-y_breaks <- log(log_breaks(n = 6)(y_range))
-x_breaks <- log(log_breaks(n = 6)(x_range))
 
 # ── 4. Plot ───────────────────────────────────────────────────────────────────
 ggplot() +
@@ -355,12 +366,12 @@ ggplot() +
   ) +
   # Across-family line — black, same in every facet
   geom_ribbon(
-    data = as_tibble(across_pred),
+    data = as_tibble(Dh_across_pred),
     aes(x = x, ymin = conf.low, ymax = conf.high),
     fill = "black", alpha = 0.15, inherit.aes = FALSE
   ) +
   geom_line(
-    data = as_tibble(across_pred),
+    data = as_tibble(Dh_across_pred),
     aes(x = x, y = predicted),
     colour = "black", linewidth = 1.5, inherit.aes = FALSE
   ) +
@@ -372,23 +383,23 @@ ggplot() +
   ) +
   # Family-level lines — coloured (intercept shifts only, parallel slopes)
   geom_ribbon(
-    data = as_tibble(family_pred |> filter(group %in% selected_families$family)) %>% rename(family = group),
+    data = as_tibble(Dh_family_pred |> filter(group %in% selected_families$family)) %>% rename(family = group),
     aes(x = x, ymin = conf.low, ymax = conf.high, fill = family),
     alpha = 0.2, inherit.aes = FALSE
   ) +
   geom_line(
-    data = as_tibble(family_pred |> filter(group %in% selected_families$family)) %>% rename(family = group),
+    data = as_tibble(Dh_family_pred |> filter(group %in% selected_families$family)) %>% rename(family = group),
     aes(x = x, y = predicted, colour = family),
     linewidth = 0.9, inherit.aes = FALSE
   ) +
   facet_wrap(~ family, scales = "fixed") +
   scale_y_continuous(
-    breaks = y_breaks,
+    breaks = Dh_y_breaks,
     labels = \(x) round(exp(x), 1),
     name = "Dh (μm)"
   ) +
   scale_x_continuous(
-    breaks = x_breaks,
+    breaks = Dh_x_breaks,
     labels = \(x) round(exp(x), 0),
     name = "Mean Annual Precipitation (mm)"
   ) +
@@ -402,12 +413,14 @@ ggplot() +
     legend.position = "none",
     strip.background = element_rect(fill = "grey95"),
     strip.text = element_text(face = "italic")
-  ) -> family_facet
+  ) -> Dh_family_facet
+
+Dh_family_facet
 ```
 
 ## Combined graph
 ```{r}
-genus_facet / family_facet
+Dh_genus_facet / Dh_family_facet
 
 ggsave("figures/Dh_mixed_model_Claude.png", scale = 1, width = 18.46, height = 27.16, units = "cm")
 ```
@@ -449,32 +462,39 @@ xylem_VLF_mixed_model <- glmmTMB(log_VLF ~ genus_mean_MAP +
 ## VLF Genus Plots
 ```{r}
 # ── 1. Across-genus marginal effect ──────────────────────────────────────────
-across_pred <- ggpredict(xylem_VLF_mixed_model, terms = "genus_mean_MAP [all]")
+VLF_across_pred <- ggpredict(xylem_VLF_mixed_model, terms = "genus_mean_MAP [all]")
+
+# ── Average within-genus response (population-level, no random effects) ───────
+VLF_avg_within_pred <- ggpredict(
+  xylem_VLF_mixed_model,
+  terms = "diff_from_genus_MAP [all]"
+  # type = "fixed" is default — random effects set to 0
+)
+
+# Recentre to global mean MAP so it sits on the same x-axis
+VLF_avg_within_scaled <- as_tibble(VLF_avg_within_pred) %>%
+  mutate(x_scaled = x + global_mean_MAP)
 
 # ── 2. Within-genus marginal effects per genus ────────────────────────────────
-within_pred <- ggpredict(
+VLF_within_pred <- ggpredict(
   xylem_VLF_mixed_model,
   terms = c("diff_from_genus_MAP [all]", "genus [all]"),
   type = "random"
 )
 
 # ── 3. Scale within-genus x to across-genus x-axis ───────────────────────────
-genus_means <- xylem_VLF_genus %>%
-  group_by(genus) %>%
-  summarise(genus_mean_MAP = mean(genus_mean_MAP, na.rm = TRUE), .groups = "drop")
-
-within_pred_scaled <- within_pred %>%
+VLF_within_pred_scaled <- VLF_within_pred %>%
   as_tibble() %>%
   rename(genus = group) %>%
   left_join(genus_means, by = "genus") %>%
   mutate(x_scaled = x + genus_mean_MAP)
 
 # ── 4. Compute axis breaks from data range ────────────────────────────────────
-y_range <- exp(range(xylem_VLF_genus$log_VLF, na.rm = TRUE))
-x_range <- exp(range(xylem_VLF_genus$genus_mean_MAP + xylem_VLF_genus$diff_from_genus_MAP, na.rm = TRUE))
+VLF_y_range <- exp(range(xylem_VLF_genus$log_VLF, na.rm = TRUE))
+VLF_x_range <- exp(range(xylem_VLF_genus$genus_mean_MAP + xylem_VLF_genus$diff_from_genus_MAP, na.rm = TRUE))
 
-y_breaks <- log(log_breaks(n = 6)(y_range))
-x_breaks <- log(log_breaks(n = 6)(x_range))
+VLF_y_breaks <- log(log_breaks(n = 6)(VLF_y_range))
+VLF_x_breaks <- log(log_breaks(n = 6)(VLF_x_range))
 
 # ── 5. Plot ───────────────────────────────────────────────────────────────────
 ggplot() +
@@ -486,14 +506,20 @@ ggplot() +
   ) +
   # Across-genus line — black, same in every facet
   geom_ribbon(
-    data = as_tibble(across_pred),
+    data = as_tibble(VLF_across_pred),
     aes(x = x, ymin = conf.low, ymax = conf.high),
     fill = "black", alpha = 0.15, inherit.aes = FALSE
   ) +
   geom_line(
-    data = as_tibble(across_pred),
+    data = as_tibble(VLF_across_pred),
     aes(x = x, y = predicted),
     colour = "black", linewidth = 1.5, inherit.aes = FALSE
+  ) +
+  # Average within-genus response — dashed black line
+  geom_line(
+    data = VLF_avg_within_scaled,
+    aes(x = x_scaled, y = predicted),
+    colour = "#575757", linewidth = 2, linetype = "dotted", inherit.aes = FALSE
   ) +
   # Selected genus points — coloured
  geom_point(
@@ -503,24 +529,24 @@ ggplot() +
   ) +
   # Within-genus lines — coloured, scaled to global x-axis
   geom_ribbon(
-    data = within_pred_scaled |> filter(genus %in% selected_genera$genus),
+    data = VLF_within_pred_scaled |> filter(genus %in% selected_genera$genus),
     aes(x = x_scaled, ymin = conf.low, ymax = conf.high, fill = genus),
     alpha = 0.2, inherit.aes = FALSE
   ) +
   geom_line(
-    data = within_pred_scaled |> filter(genus %in% selected_genera$genus),
+    data = VLF_within_pred_scaled |> filter(genus %in% selected_genera$genus),
     aes(x = x_scaled, y = predicted, colour = genus),
     linewidth = 0.9, inherit.aes = FALSE
   ) +
   # Facet by genus
   facet_wrap(~ genus, scales = "fixed") +
   scale_y_continuous(
-    breaks = y_breaks,
+    breaks = VLF_y_breaks,
     labels = \(x) round(exp(x), 1),
     name = "VLF (%)"
   ) +
   scale_x_continuous(
-    breaks = x_breaks,
+    breaks = VLF_x_breaks,
     labels = \(x) round(exp(x), 0),
     name = "Mean Annual Precipitation (mm)"
   ) +
@@ -534,29 +560,21 @@ ggplot() +
     legend.position = "none",
     strip.background = element_rect(fill = "grey95"),
     strip.text = element_text(face = "italic")
-  ) -> genus_facet
+  ) -> VLF_genus_facet
+
+VLF_genus_facet
 ```
 
 ## VLF Family plots
 ```{r}
-# ── 1. Across-family marginal effect (genus_mean_MAP) ────────────────────────
-across_pred <- ggpredict(xylem_VLF_mixed_model, terms = "genus_mean_MAP [all]")
-
 # ── 2. Family-level predictions ───────────────────────────────────────────────
 # Family only has a random intercept (1 | family), so we predict
 # over genus_mean_MAP for each family
-family_pred <- ggpredict(
+VLF_family_pred <- ggpredict(
   xylem_VLF_mixed_model,
   terms = c("genus_mean_MAP [all]", "family [all]"),
   type = "random"
 )
-
-# ── 3. Axis breaks ────────────────────────────────────────────────────────────
-y_range <- exp(range(xylem_VLF_genus$log_VLF, na.rm = TRUE))
-x_range <- exp(range(xylem_VLF_genus$genus_mean_MAP + xylem_VLF_genus$diff_from_genus_MAP, na.rm = TRUE))
-
-y_breaks <- log(log_breaks(n = 6)(y_range))
-x_breaks <- log(log_breaks(n = 6)(x_range))
 
 # ── 4. Plot ───────────────────────────────────────────────────────────────────
 ggplot() +
@@ -568,12 +586,12 @@ ggplot() +
   ) +
   # Across-family line — black, same in every facet
   geom_ribbon(
-    data = as_tibble(across_pred),
+    data = as_tibble(VLF_across_pred),
     aes(x = x, ymin = conf.low, ymax = conf.high),
     fill = "black", alpha = 0.15, inherit.aes = FALSE
   ) +
   geom_line(
-    data = as_tibble(across_pred),
+    data = as_tibble(VLF_across_pred),
     aes(x = x, y = predicted),
     colour = "black", linewidth = 1.5, inherit.aes = FALSE
   ) +
@@ -585,23 +603,23 @@ ggplot() +
   ) +
   # Family-level lines — coloured (intercept shifts only, parallel slopes)
   geom_ribbon(
-    data = as_tibble(family_pred |> filter(group %in% selected_families$family)) %>% rename(family = group),
+    data = as_tibble(VLF_family_pred |> filter(group %in% selected_families$family)) %>% rename(family = group),
     aes(x = x, ymin = conf.low, ymax = conf.high, fill = family),
     alpha = 0.2, inherit.aes = FALSE
   ) +
   geom_line(
-    data = as_tibble(family_pred |> filter(group %in% selected_families$family)) %>% rename(family = group),
+    data = as_tibble(VLF_family_pred |> filter(group %in% selected_families$family)) %>% rename(family = group),
     aes(x = x, y = predicted, colour = family),
     linewidth = 0.9, inherit.aes = FALSE
   ) +
   facet_wrap(~ family, scales = "fixed") +
   scale_y_continuous(
-    breaks = y_breaks,
+    breaks = VLF_y_breaks,
     labels = \(x) round(exp(x), 1),
     name = "VLF (%)"
   ) +
   scale_x_continuous(
-    breaks = x_breaks,
+    breaks = VLF_x_breaks,
     labels = \(x) round(exp(x), 0),
     name = "Mean Annual Precipitation (mm)"
   ) +
@@ -615,12 +633,14 @@ ggplot() +
     legend.position = "none",
     strip.background = element_rect(fill = "grey95"),
     strip.text = element_text(face = "italic")
-  ) -> family_facet
+  ) -> VLF_family_facet
+
+VLF_family_facet
 ```
 
 ## Combined graph
 ```{r}
-genus_facet / family_facet
+VLF_genus_facet / VLF_family_facet
 
 ggsave("figures/VLF_mixed_model_Claude.png", scale = 1, width = 18.46, height = 27.16, units = "cm")
 ```
