@@ -10,15 +10,8 @@ output: html_document
 ```{r}
 library(tidyverse)
 library(patchwork)
-# library(terra)
+library(terra)
 library(APCalign)
-# library(austraits)
-library(GGally)
-library(multcompView)
-library(networkD3)
-library(MASS)
-library(smatr)
-library(ggpmisc)
 library(glmmTMB)
 library(easystats)
 library(ggeffects)
@@ -65,9 +58,14 @@ vessel_areas <- vessel_areas |>
 
 ## Creating climate preference data
 ```{r}
+library(arrow)
 # Filtering columns from GBIF occurrences for RAM and processing time consideration
 
-gbif_occurrences <- read.delim("data/gbif_raw_occs.csv", header=T, sep="\t")
+## Converting very large CSV to parquet
+# gbif_occurrences <- fread("data/gbif_raw_occs.csv", header=T, sep="\t")
+# write_parquet(gbif_occurrences, "data/gbif_raw_occs.parquet")
+
+gbif_occurrences_parquet <- read_parquet("data/gbif_raw_occs.parquet")
 
 gbif_filtered <- gbif_occurrences |>
   dplyr::select(species, scientificName, decimalLatitude, decimalLongitude) |>
@@ -174,10 +172,10 @@ xylem_VLF <- vessel_areas |>
   mutate(genus_n_samples = n()) |> 
   drop_na() 
 
-ggplot() +
-  geom_density(data = xylem_Dh |> filter(family_n_samples > 5), aes(MAP, col = family)) +
-  theme_bw() +
-  scale_color_brewer(palette = "Set1")
+# ggplot() +
+#   geom_density(data = xylem_Dh |> filter(family_n_samples > 5), aes(MAP, col = family)) +
+#   theme_bw() +
+#   scale_color_brewer(palette = "Set1")
 
 selected_families <- xylem_Dh |> group_by(family) |> summarise(n = n()) |> filter(n >= 10)
 
