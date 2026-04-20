@@ -1,0 +1,137 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+```{r}
+ggplot() +
+  # Raw data — light grey points
+    geom_point(
+    data = xylem_Dh_genus |> dplyr::select(-family),
+    aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_Dh),
+    colour = "grey80", size = 1, alpha = 0.5
+  ) +
+  # Across-genus line — black, same in every facet
+  geom_line(
+    data = as_tibble(Dh_across_pred),
+    aes(x = x, y = predicted),
+    colour = "black", linewidth = 1.5, inherit.aes = FALSE
+  ) +
+  # Family-level lines — coloured (intercept shifts only, parallel slopes)
+  geom_line(
+    data = as_tibble(Dh_family_pred |> filter(group %in% selected_genera$family)) %>% rename(family = group),
+    aes(x = x, y = predicted),
+    col = "grey50", linewidth = 0.75, inherit.aes = FALSE
+  ) +
+  # Selected genus points — coloured
+ geom_point(
+    data = xylem_Dh_genus |> filter(genus %in% selected_genera$genus),
+    aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_Dh,
+    colour = genus), size = 2, alpha = 1, shape = 1
+  ) +
+  # Within-genus lines — coloured, scaled to global x-axis
+  geom_line(
+    data = Dh_within_pred_scaled |> filter(genus %in% selected_genera$genus),
+    aes(x = x_scaled, y = predicted, colour = genus),
+    linetype = "dashed", linewidth = 0.5, inherit.aes = FALSE
+  ) +
+  # Facet by genus
+  facet_wrap(~ family, scales = "fixed") +
+  scale_y_continuous(
+    breaks = Dh_y_breaks,
+    labels = \(x) round(exp(x), 1),
+    name = "Dh (μm)"
+  ) +
+  scale_x_continuous(
+    breaks = Dh_x_breaks,
+    labels = \(x) round(exp(x), 0),
+    name = "Mean Annual Precipitation (mm)"
+  ) +
+  labs(
+    colour = "Genus",
+    # title = "Hydraulic diameter ~ MAP",
+    # subtitle = "Black = across-genus effect | Colour = within-genus effect"
+  ) +
+  theme_bw() +
+  theme(
+    # legend.position = "none",
+    strip.background = element_rect(fill = "grey95"),
+    strip.text = element_text(face = "italic")
+  ) -> Dh_genus_test
+
+Dh_genus_test
+
+ggsave("figures/Dh_mixed_model_Claude_test.png", scale = 1, width = 24.62, height = 15.92, units = "cm")
+```
+
+```{r}
+ggplot() +
+  # Raw data — light grey points
+    geom_point(
+    data = xylem_Dh_genus |> dplyr::select(-family),
+    aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_Dh),
+    colour = "grey80", size = 1, alpha = 0.5
+  ) +
+  # Across-genus line — black, same in every facet
+  geom_line(
+    data = as_tibble(Dh_across_pred),
+    aes(x = x, y = predicted),
+    colour = "black", linewidth = 1.5, inherit.aes = FALSE
+  ) +
+  # Family-level lines — coloured (intercept shifts only, parallel slopes)
+  geom_line(
+    data = as_tibble(Dh_family_pred |> filter(group %in% selected_genera$family)) %>% rename(family = group),
+    aes(x = x, y = predicted),
+    col = "grey50", linewidth = 0.75, inherit.aes = FALSE
+  ) +
+  # Selected genus points — coloured
+ geom_point(
+    data = xylem_Dh_genus |> filter(genus %in% selected_genera$genus),
+    aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_Dh,
+    colour = genus), size = 2, alpha = 1, shape = 1
+  ) +
+  # Within-genus lines — coloured, scaled to global x-axis
+  geom_line(
+    data = Dh_within_pred_scaled |> filter(genus %in% selected_genera$genus),
+    aes(x = x_scaled, y = predicted, colour = genus),
+    linetype = "dashed", linewidth = 0.5, inherit.aes = FALSE
+  ) +
+  # Facet by genus
+  facet_wrap(family~genus, scales = "fixed") +
+  scale_y_continuous(
+    breaks = Dh_y_breaks,
+    labels = \(x) round(exp(x), 1),
+    name = "Dh (μm)"
+  ) +
+  scale_x_continuous(
+    breaks = Dh_x_breaks,
+    labels = \(x) round(exp(x), 0),
+    name = "Mean Annual Precipitation (mm)"
+  ) +
+  labs(
+    colour = "Genus",
+    # title = "Hydraulic diameter ~ MAP",
+    # subtitle = "Black = across-genus effect | Colour = within-genus effect"
+  ) +
+  theme_bw() +
+  theme(
+    # legend.position = "none",
+    strip.background = element_rect(fill = "grey95"),
+    strip.text = element_text(face = "italic")
+  )
+```
+
