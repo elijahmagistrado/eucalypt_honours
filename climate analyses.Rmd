@@ -181,10 +181,8 @@ ggplot() +
 
 selected_families <- xylem_Dh |> group_by(family) |> summarise(n = n()) |> filter(n >= 10)
 
-selected_genera <- xylem_Dh |> group_by(genus) |> summarise(n = n()) |> filter(n >= 10)
+selected_genera <- xylem_Dh |> group_by(genus, family) |> summarise(n = n()) |> filter(n >= 10)
 ```
-
-
 
 # Dh
 ## Dh mixed model
@@ -231,6 +229,19 @@ anova(xylem_Dh_regular_model, xylem_Dh_mixed_model)
 ```
 
 
+
+
+## Colour palettes
+```{r}
+# ── 1. Create family-level colour palette ────────────────────────────────────
+selected_families <- selected_families |> mutate(color = scales::hue_pal()(n_distinct(family))[as.integer(factor(family))])
+
+
+
+# ── 2. Map genus → family colour ─────────────────────────────────────────────
+genus_colours <- selected_genera |> 
+  left_join(selected_families, by = "family")
+```
 
 ## Dh genus plot, mainly by Claude Sonnet 4.6
 ```{r}
@@ -324,6 +335,8 @@ ggplot() +
     labels = \(x) round(exp(x), 1),
     name = "Dh (μm)"
   ) +
+  scale_colour_manual(values = genus_colours$color) +
+  scale_fill_manual(values = genus_colours$color) +
   scale_x_continuous(
     breaks = Dh_x_breaks,
     labels = \(x) round(exp(x), 0),
@@ -408,6 +421,8 @@ ggplot() +
     # title = "Hydraulic diameter ~ MAP",
     # subtitle = "Black = across-genus effect | Colour = family random effect"
   ) +
+  scale_colour_manual(values = selected_families$color) +
+  scale_fill_manual(values = selected_families$color) +
   theme_bw() +
   theme(
     legend.position = "none",
@@ -555,6 +570,8 @@ ggplot() +
     # title = "Hydraulic diameter ~ MAP",
     # subtitle = "Black = across-genus effect | Colour = within-genus effect"
   ) +
+  scale_colour_manual(values = genus_colours$color) +
+  scale_fill_manual(values = genus_colours$color) +
   theme_bw() +
   theme(
     legend.position = "none",
@@ -628,6 +645,8 @@ ggplot() +
     # title = "Hydraulic diameter ~ MAP",
     # subtitle = "Black = across-genus effect | Colour = family random effect"
   ) +
+  scale_colour_manual(values = selected_families$color) +
+  scale_fill_manual(values = selected_families$color) +
   theme_bw() +
   theme(
     legend.position = "none",
