@@ -277,7 +277,8 @@ Dh_within_pred_scaled <- Dh_within_pred %>%
   as_tibble() %>%
   rename(genus = group) %>%
   left_join(genus_means, by = "genus") %>%
-  mutate(x_scaled = x + genus_mean_MAP)
+  mutate(x_scaled = x + genus_mean_MAP) |> 
+  left_join(selected_genera, by = "genus")
 
 # ── 4. Compute axis breaks from data range ────────────────────────────────────
 Dh_y_range <- exp(range(xylem_Dh_genus$log_Dh, na.rm = TRUE))
@@ -427,7 +428,11 @@ Dh_family_facet
 ```{r}
 Dh_genus_facet / Dh_family_facet
 
-ggsave("figures/Dh_mixed_model_Claude.png", scale = 1, width = 18.46, height = 27.16, units = "cm")
+ggsave("figures/Dh_mixed_model_Claude.png", scale = 1, width = 15.92, height = 24.62, units = "cm")
+
+Dh_genus_facet + Dh_family_facet
+
+ggsave("figures/Dh_mixed_model_Claude_landscape.png", scale = 1, width = 24.62, height = 15.92, units = "cm")
 ```
 
 
@@ -736,7 +741,7 @@ VLF_genus
 
 Dh_genus + VLF_genus
 
-ggsave("figures/Dh_VLF_overall.png", scale = 1, width = 18.46, height = 9.23, units = "cm")
+ggsave("figures/Dh_VLF_overall.png", scale = 1, width = 15.92, height = 7.96, units = "cm")
 ```
 
 
