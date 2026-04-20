@@ -284,7 +284,7 @@ Dh_y_range <- exp(range(xylem_Dh_genus$log_Dh, na.rm = TRUE))
 Dh_x_range <- exp(range(xylem_Dh_genus$genus_mean_MAP + xylem_Dh_genus$diff_from_genus_MAP, na.rm = TRUE))
 
 Dh_y_breaks <- log(log_breaks(n = 6)(Dh_y_range))
-Dh_x_breaks <- log(log_breaks(n = 6)(Dh_x_range))
+Dh_x_breaks <- log(log_breaks(n = 4)(Dh_x_range))
 
 # ── 5. Plot ───────────────────────────────────────────────────────────────────
 ggplot() +
@@ -295,22 +295,17 @@ ggplot() +
     colour = "grey80", size = 1, alpha = 0.5
   ) +
   # Across-genus line — black, same in every facet
-  geom_ribbon(
-    data = as_tibble(Dh_across_pred),
-    aes(x = x, ymin = conf.low, ymax = conf.high),
-    fill = "black", alpha = 0.15, inherit.aes = FALSE
-  ) +
   geom_line(
     data = as_tibble(Dh_across_pred),
     aes(x = x, y = predicted),
     colour = "black", linewidth = 1.5, inherit.aes = FALSE
   ) +
-  # Average within-genus response — dashed black line
-  geom_line(
-    data = Dh_avg_within_scaled,
-    aes(x = x_scaled, y = predicted),
-    colour = "#575757", linewidth = 2, linetype = "dotted", inherit.aes = FALSE
-  ) +
+  # # Average within-genus response — dashed black line
+  # geom_line(
+  #   data = Dh_avg_within_scaled,
+  #   aes(x = x_scaled, y = predicted),
+  #   colour = "#575757", linewidth = 2, linetype = "dotted", inherit.aes = FALSE
+  # ) +
   # Selected genus points — coloured
  geom_point(
     data = xylem_Dh_genus |> filter(genus %in% selected_genera$genus),
@@ -378,11 +373,6 @@ ggplot() +
     colour = "grey80", size = 1, alpha = 0.5
   ) +
   # Across-family line — black, same in every facet
-  geom_ribbon(
-    data = as_tibble(Dh_across_pred),
-    aes(x = x, ymin = conf.low, ymax = conf.high),
-    fill = "black", alpha = 0.15, inherit.aes = FALSE
-  ) +
   geom_line(
     data = as_tibble(Dh_across_pred),
     aes(x = x, y = predicted),
@@ -509,7 +499,7 @@ VLF_y_range <- exp(range(xylem_VLF_genus$log_VLF, na.rm = TRUE))
 VLF_x_range <- exp(range(xylem_VLF_genus$genus_mean_MAP + xylem_VLF_genus$diff_from_genus_MAP, na.rm = TRUE))
 
 VLF_y_breaks <- log(log_breaks(n = 6)(VLF_y_range))
-VLF_x_breaks <- log(log_breaks(n = 6)(VLF_x_range))
+VLF_x_breaks <- log(log_breaks(n = 4)(VLF_x_range))
 
 # ── 5. Plot ───────────────────────────────────────────────────────────────────
 ggplot() +
@@ -520,22 +510,17 @@ ggplot() +
     colour = "grey80", size = 1, alpha = 0.5
   ) +
   # Across-genus line — black, same in every facet
-  geom_ribbon(
-    data = as_tibble(VLF_across_pred),
-    aes(x = x, ymin = conf.low, ymax = conf.high),
-    fill = "black", alpha = 0.15, inherit.aes = FALSE
-  ) +
   geom_line(
     data = as_tibble(VLF_across_pred),
     aes(x = x, y = predicted),
     colour = "black", linewidth = 1.5, inherit.aes = FALSE
   ) +
-  # Average within-genus response — dashed black line
-  geom_line(
-    data = VLF_avg_within_scaled,
-    aes(x = x_scaled, y = predicted),
-    colour = "#575757", linewidth = 2, linetype = "dotted", inherit.aes = FALSE
-  ) +
+  # # Average within-genus response — dashed black line
+  # geom_line(
+  #   data = VLF_avg_within_scaled,
+  #   aes(x = x_scaled, y = predicted),
+  #   colour = "#575757", linewidth = 2, linetype = "dotted", inherit.aes = FALSE
+  # ) +
   # Selected genus points — coloured
  geom_point(
     data = xylem_VLF_genus |> filter(genus %in% selected_genera$genus),
@@ -602,11 +587,6 @@ ggplot() +
     colour = "grey80", size = 1, alpha = 0.5
   ) +
   # Across-family line — black, same in every facet
-  geom_ribbon(
-    data = as_tibble(VLF_across_pred),
-    aes(x = x, ymin = conf.low, ymax = conf.high),
-    fill = "black", alpha = 0.15, inherit.aes = FALSE
-  ) +
   geom_line(
     data = as_tibble(VLF_across_pred),
     aes(x = x, y = predicted),
