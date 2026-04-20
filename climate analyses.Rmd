@@ -186,7 +186,7 @@ selected_genera <- xylem_Dh |> group_by(genus) |> summarise(n = n()) |> filter(n
 
 
 
-
+# Dh
 ## Dh mixed model
 ```{r}
 # Data preparation
@@ -428,7 +428,7 @@ ggsave("figures/Dh_mixed_model_Claude.png", scale = 1, width = 18.46, height = 2
 
 
 
-
+# VLF
 ## VLF mixed model
 ```{r}
 # Data preparation
@@ -645,10 +645,104 @@ VLF_genus_facet / VLF_family_facet
 ggsave("figures/VLF_mixed_model_Claude.png", scale = 1, width = 18.46, height = 27.16, units = "cm")
 ```
 
+## Overall plots
+```{r}
+ggplot() +
+  # Raw data — light grey points
+    geom_point(
+    data = xylem_Dh_genus,
+    aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_Dh),
+    colour = "grey80", size = 2, alpha = 0.5
+  ) +
+  # Within-genus lines — coloured, scaled to global x-axis
+  geom_line(
+    data = Dh_within_pred_scaled,
+    aes(x = x_scaled, y = predicted, group = genus),
+    colour = "grey50", linewidth = 1.5, alpha = 0.1, inherit.aes = FALSE
+  ) +
+  # Across-genus line — black, same in every facet
+  geom_line(
+    data = as_tibble(Dh_across_pred),
+    aes(x = x, y = predicted),
+    colour = "black", linewidth = 1.5, inherit.aes = FALSE
+  ) +
+  # Average within-genus response — dashed black line
+  geom_line(
+    data = Dh_avg_within_scaled,
+    aes(x = x_scaled, y = predicted),
+    colour = "blue", linewidth = 0.5, inherit.aes = FALSE
+  ) +
+  scale_y_continuous(
+    breaks = Dh_y_breaks,
+    labels = \(x) round(exp(x), 1),
+    name = "Dh (μm)"
+  ) +
+  scale_x_continuous(
+    breaks = Dh_x_breaks,
+    labels = \(x) round(exp(x), 0),
+    name = "Mean Annual Precipitation (mm)"
+  ) +
+  theme_bw() +
+  theme(
+    legend.position = "none",
+    strip.background = element_rect(fill = "grey95"),
+    strip.text = element_text(face = "italic")
+  ) -> Dh_genus
+
+Dh_genus
+
+ggplot() +
+  # Raw data — light grey points
+    geom_point(
+    data = xylem_VLF_genus,
+    aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_VLF),
+    colour = "grey80", size = 2, alpha = 0.5
+  ) +
+  # Within-genus lines — coloured, scaled to global x-axis
+  geom_line(
+    data = VLF_within_pred_scaled,
+    aes(x = x_scaled, y = predicted, group = genus),
+    colour = "grey50", linewidth = 1.5, alpha = 0.1, inherit.aes = FALSE
+  ) +
+  # Across-genus line — black, same in every facet
+  geom_line(
+    data = as_tibble(VLF_across_pred),
+    aes(x = x, y = predicted),
+    colour = "black", linewidth = 1.5, inherit.aes = FALSE
+  ) +
+  # Average within-genus response — dashed black line
+  geom_line(
+    data = VLF_avg_within_scaled,
+    aes(x = x_scaled, y = predicted),
+    colour = "blue", linewidth = 0.5, inherit.aes = FALSE
+  ) +
+  scale_y_continuous(
+    breaks = VLF_y_breaks,
+    labels = \(x) round(exp(x), 1),
+    name = "VLF (%)"
+  ) +
+  scale_x_continuous(
+    breaks = VLF_x_breaks,
+    labels = \(x) round(exp(x), 0),
+    name = "Mean Annual Precipitation (mm)"
+  ) +
+  theme_bw() +
+  theme(
+    legend.position = "none",
+    strip.background = element_rect(fill = "grey95"),
+    strip.text = element_text(face = "italic")
+  ) -> VLF_genus
+
+VLF_genus
+
+Dh_genus + VLF_genus
+
+ggsave("figures/Dh_VLF_overall.png", scale = 1, width = 18.46, height = 9.23, units = "cm")
+```
 
 
 
-
+# Other
 
 
 ## Dh MAP Phylogenetic differences 
