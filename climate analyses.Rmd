@@ -258,7 +258,7 @@ Dh_within_pred <- ggpredict(
 )
 
 # ── 3. Scale within-genus x to across-genus x-axis ───────────────────────────
-Dh_genus_means <- xylem_Dh_genus %>%
+genus_means <- xylem_Dh_genus %>%
   group_by(genus) %>%
   summarise(genus_mean_MAP = mean(genus_mean_MAP, na.rm = TRUE), .groups = "drop")
 
