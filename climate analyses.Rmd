@@ -52,7 +52,7 @@ vessel_areas <- vessel_areas %>% left_join(apc_names %>% dplyr::select(original_
 gbif_names <- read.csv("data/gbif_namematched.csv", header = T) |> filter(grepl("SPECIES|VARIETY", rank)) 
 
 vessel_areas <- vessel_areas |> 
-  left_join(gbif_names %>% dplyr::select(species, verbatimScientificName), by = c("accepted_name" = "verbatimScientificName"), multiple = "first") %>% rename(apc_name = accepted_name, gbif_name = species)
+  left_join(gbif_names %>% dplyr::select(species, verbatimScientificName, scientificName), by = c("accepted_name" = "verbatimScientificName"), multiple = "first") %>% rename(apc_name = accepted_name, gbif_name = species)
 ```
 
 
@@ -107,7 +107,6 @@ library(arrow)
 
 # Loading and extracting rasters----
 
-library(terra)
 library(data.table)
 
 # Creating point vector for each occurrence
@@ -142,7 +141,7 @@ tracheophyte_climate_preferences <- gbif_filtered |>
 rm(gbif_filtered)
 gc()
 
-write.csv(tracheophyte_climate_preferences, "data/tracheophyte_climate_preferences.csv", row.names = F)
+# write.csv(tracheophyte_climate_preferences, "data/tracheophyte_climate_preferences.csv", row.names = F)
 ```
 
 
@@ -186,7 +185,7 @@ climate_preferences <- data_AU |>
 rm(data_AU)
 gc()
 
-write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
+# write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
 
 ```
 
@@ -197,17 +196,17 @@ tracheophyte_climate_preferences <- read.csv("data/tracheophyte_climate_preferen
 climate_preferences <- read.csv("data/climate_preferences.csv", header = T)
 
 ggplot() +
-  geom_hex(data = tracheophyte_climate_preferences, aes(x = MAT, y = MAP), bins = 15, col = "light grey") +
-  scale_fill_gradient(low = "white", high = "dark green", transform = "log") +
-  geom_point(data = climate_preferences, aes(x = MAT, y =  MAP), size = 0.5, alpha = 1) +
+  geom_hex(data = tracheophyte_climate_preferences, aes(x = MAT, y = MAP), bins = 10, col = "light grey", alpha = 0.5) +
+  scale_fill_gradient(low = "white", high = "dark green", trans = "log") +
+  geom_point(data = climate_preferences, aes(x = MAT, y =  MAP), size = 1, alpha = 0.2) +
   theme_classic() +
   xlim(0, 30) +
   theme(legend.position = "none") +
   xlab("Mean annual temperature (ºC)") +
-  ylab("Mean annual precipitation (mm)") +
-  theme(axis.title = element_text(size = 14))
+  ylab("Mean annual precipitation (mm)") 
+  # theme(axis.title = element_text(size = 14))
 
-ggsave("figures/whittaker_plot.png", scale = 1.5, width = 7.34, height = 7.34, units = "cm")
+# ggsave("figures/whittaker_plot.png", scale = 1, width = 7.96, height = 7.96, units = "cm")
 ```
 
 
@@ -215,36 +214,27 @@ ggsave("figures/whittaker_plot.png", scale = 1.5, width = 7.34, height = 7.34, u
 ```{r}
 xylem_Dh <- vessel_areas |> 
   filter(Name == "vessel"|Classification == "vessel") |>
-  group_by(gbif_name, genus, other) |> 
+  group_by(scientificName, genus, other) |> 
   summarise(sample_Dh = sum(radius^5)/ sum(radius^4)) |> 
-  group_by(gbif_name) |> 
+  group_by(scientificName) |> 
   summarise(mean_Dh = mean(sample_Dh, na.rm=T)) |> 
-  left_join(climate_preferences, by = c("gbif_name" = "gbif_name"))|> 
-  left_join(gbif_names %>% dplyr::select(species, genus, family), by = c("gbif_name" = "species")) |> 
+  left_join(climate_preferences, by = c("scientificName")) |> 
+  # left_join(gbif_names %>% dplyr::select(scientificName, genus, family), by = c("scientificName")) |> 
   distinct() |> 
-  group_by(family) |>
-  mutate(family_n_samples = n()) |>
-  group_by(genus) |>
-  mutate(genus_n_samples = n()) |> 
   drop_na() 
 
 xylem_VLF <- vessel_areas |> 
-  group_by(gbif_name, other) |> 
+  group_by(scientificName, other) |> 
   mutate(sample_lumen_area = max(Area.µm.2)) |> 
   filter(Name %in% c("vessel", "part")|Classification %in% c("vessel", "part")) |> 
-  group_by(gbif_name, other) |> 
+  group_by(scientificName, other) |> 
   summarise(vessel_area = sum(Area.µm.2),
             sample_lumen_frac = vessel_area/max(sample_lumen_area)) |> 
   distinct() |>
-  group_by(gbif_name) |> 
+  group_by(scientificName) |> 
   summarise(mean_VLF = mean(sample_lumen_frac, na.rm=T)*100) |> 
-  left_join(climate_preferences, by = c("gbif_name" = "gbif_name"))|> 
-  left_join(gbif_names %>% dplyr::select(species, genus, family), by = c("gbif_name" = "species")) |> 
+  left_join(climate_preferences, by = c("scientificName"))|> 
   distinct() |> 
-  group_by(family) |>
-  mutate(family_n_samples = n()) |>
-  group_by(genus) |>
-  mutate(genus_n_samples = n()) |> 
   drop_na() 
 
 # ggplot() +
