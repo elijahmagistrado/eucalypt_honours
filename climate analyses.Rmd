@@ -86,7 +86,7 @@ vessel_areas <- vessel_areas |>
 ```
 
 
-## Creating climate preference data
+## Creating climate preference data for all native tracheophytes
 ```{r}
 library(arrow)
 # Filtering columns from GBIF occurrences for RAM and processing time consideration
@@ -95,22 +95,15 @@ library(arrow)
 # gbif_occurrences <- fread("data/gbif_raw_occs.csv", header=T, sep="\t")
 # write_parquet(gbif_occurrences, "data/gbif_raw_occs.parquet")
 
-gbif_occurrences <- read_parquet("data/gbif_raw_occs.parquet")
+# gbif_occurrences <- read_parquet("data/gbif_raw_occs.parquet")
+# 
+# gbif_filtered <- gbif_occurrences |>
+#   filter(grepl("SPECIES|VARIETY", taxonRank)) |> 
+#   dplyr::select(family, genus, species, scientificName, decimalLatitude, decimalLongitude, coordinateUncertaintyInMeters) |>
+#   drop_na() |> 
+#   filter(coordinateUncertaintyInMeters <= 10000)
 
-data_AU <- read_parquet("data/gbif_sample_occs.parquet") |> 
-  filter(
-    countryCode == "AU" & 
-      year >=1900 & 
-      coordinateUncertaintyInMeters <= 10000
-    )
-
-gbif_filtered <- data_AU |>
-  filter(grepl("SPECIES|VARIETY", taxonRank)) |> 
-  dplyr::select(family, genus, species, scientificName, decimalLatitude, decimalLongitude, coordinateUncertaintyInMeters) |>
-  drop_na() |> 
-  filter(coordinateUncertaintyInMeters <= 10000)
-
-write_parquet(gbif_filtered, "data/gbif_filtered.parquet")
+# write_parquet(gbif_filtered, "data/gbif_filtered.parquet")
 
 # Loading and extracting rasters----
 
@@ -137,8 +130,7 @@ rm(extracted)
 gc()
 
 # Filter and summarise
-climate_preferences <- gbif_filtered |>
-  filter(scientificName %in% gbif_names$scientificName) |>
+tracheophyte_climate_preferences <- gbif_filtered |>
   group_by(family, genus, species, scientificName) |>
   summarise(
     MAP = mean(wc2.1_30s_bio_12, na.rm = TRUE),
@@ -150,19 +142,64 @@ climate_preferences <- gbif_filtered |>
 rm(gbif_filtered)
 gc()
 
-write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
+write.csv(tracheophyte_climate_preferences, "data/tracheophyte_climate_preferences.csv", row.names = F)
 ```
+
+
+## Creating climate preferences for sample species
+```{r}
+# Creating point vector for each occurrence
+data_AU <- read_parquet("data/gbif_sample_occs.parquet") |> 
+  filter(
+    countryCode == "AU" & 
+      year >=1900 & 
+      coordinateUncertaintyInMeters <= 10000
+    )
+
+# Create points once
+occurrence_points <- vect(data_AU, geom = c("decimalLongitude", "decimalLatitude"))
+
+# Load all rasters as a single stack (one read pass, shared memory)
+raster_stack <- list.files("rasters_30s/", full.names = TRUE) |>
+  rast()  # terra::rast() accepts a vector of paths → stacks them
+
+# Extract all layers at once (single pass over points)
+extracted <- terra::extract(raster_stack, occurrence_points, ID = FALSE)
+
+# Bind columns once instead of mutating in a loop
+data_AU <- cbind(data_AU, extracted)
+
+rm(extracted)
+gc()
+
+# Filter and summarise
+climate_preferences <- data_AU |>
+  filter(scientificName %in% gbif_names$scientificName) |>
+  group_by(family, genus, species, scientificName) |>
+  summarise(
+    MAP = mean(wc2.1_30s_bio_12, na.rm = TRUE),
+    MAT = mean(wc2.1_30s_bio_1, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  distinct()
+
+rm(data_AU)
+gc()
+
+write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
+
+```
+
 
 ## Creating whittaker plot
 ```{r}
+tracheophyte_climate_preferences <- read.csv("data/tracheophyte_climate_preferences.csv", header = T)
 climate_preferences <- read.csv("data/climate_preferences.csv", header = T)
 
-gbif_names <- gbif_names %>% left_join(angiosperm_climate_preferences |> dplyr::select(scientificName, MAP, MAT), by = c("scientificName"))
-
 ggplot() +
-  # geom_hex(data = angiosperm_climate_preferences, aes(x = MAT, y = MAP), bins = 15, col = "light grey") +
-  # scale_fill_gradient(low = "white", high = "dark green", transform = "log") +
-  geom_point(data = angiosperm_climate_preferences, aes(x = MAT, y =  MAP), size = 0.5, alpha = 1) +
+  geom_hex(data = tracheophyte_climate_preferences, aes(x = MAT, y = MAP), bins = 15, col = "light grey") +
+  scale_fill_gradient(low = "white", high = "dark green", transform = "log") +
+  geom_point(data = climate_preferences, aes(x = MAT, y =  MAP), size = 0.5, alpha = 1) +
   theme_classic() +
   xlim(0, 30) +
   theme(legend.position = "none") +
@@ -171,8 +208,6 @@ ggplot() +
   theme(axis.title = element_text(size = 14))
 
 ggsave("figures/whittaker_plot.png", scale = 1.5, width = 7.34, height = 7.34, units = "cm")
-
-
 ```
 
 
