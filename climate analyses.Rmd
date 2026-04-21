@@ -56,6 +56,36 @@ vessel_areas <- vessel_areas |>
 ```
 
 
+## GBIF download
+```{r}
+# species_names <- gbif_names$scientificName
+# 
+# # # Requires free GBIF account — set credentials once:
+# # options(gbif_user = "",
+# #         gbif_pwd  = "",
+# #         gbif_email = "")
+# 
+# # Get taxon keys for all species
+# keys <- sapply(species_names, function(sp) name_backbone(name = sp)$usageKey)
+# keys <- keys[!is.na(keys)]
+# 
+# # Submit download request
+# download_key <- occ_download(
+#   pred_in("taxonKey", keys),
+#   pred("hasCoordinate", TRUE),
+#   format = "SIMPLE_CSV"
+# )
+
+# # Wait for it to finish, then retrieve
+# occ_download_wait(download_key)
+# data <- occ_download_get(download_key) |> occ_download_import()
+# 
+# write_parquet(data, "data/gbif_sample_occs.parquet")
+
+# data_AU <- data |> filter(countryCode == "AU" & year >=1900 & coordinateUncertaintyInMeters <= 10000)
+```
+
+
 ## Creating climate preference data
 ```{r}
 library(arrow)
@@ -67,7 +97,14 @@ library(arrow)
 
 gbif_occurrences <- read_parquet("data/gbif_raw_occs.parquet")
 
-gbif_filtered <- gbif_occurrences |>
+data_AU <- read_parquet("data/gbif_sample_occs.parquet") |> 
+  filter(
+    countryCode == "AU" & 
+      year >=1900 & 
+      coordinateUncertaintyInMeters <= 10000
+    )
+
+gbif_filtered <- data_AU |>
   filter(grepl("SPECIES|VARIETY", taxonRank)) |> 
   dplyr::select(family, genus, species, scientificName, decimalLatitude, decimalLongitude, coordinateUncertaintyInMeters) |>
   drop_na() |> 
@@ -96,9 +133,12 @@ extracted <- terra::extract(raster_stack, occurrence_points, ID = FALSE)
 # Bind columns once instead of mutating in a loop
 gbif_filtered <- cbind(gbif_filtered, extracted)
 
+rm(extracted)
+gc()
+
 # Filter and summarise
-angiosperm_climate_preferences <- gbif_filtered |>
-  # filter(scientificName %in% gbif_names$scientificName) |>
+climate_preferences <- gbif_filtered |>
+  filter(scientificName %in% gbif_names$scientificName) |>
   group_by(family, genus, species, scientificName) |>
   summarise(
     MAP = mean(wc2.1_30s_bio_12, na.rm = TRUE),
@@ -107,33 +147,22 @@ angiosperm_climate_preferences <- gbif_filtered |>
   ) |>
   distinct()
 
-sample_climate_preferences <- angiosperm_climate_preferences |>
-  filter(scientificName %in% gbif_names$scientificName) 
+rm(gbif_filtered)
+gc()
 
-write.csv(angiosperm_climate_preferences, "data/angiosperm_climate_preferences.csv", row.names = F)
+write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
 ```
 
 ## Creating whittaker plot
 ```{r}
-# gbif_filtered_summary <- gbif_filtered |>
-#   group_by(scientificName) |>
-#   summarise(MAP = mean(MAP, na.rm = T),
-#             MAT = mean(MAT, na.rm = T))
-# 
-# write.csv(gbif_filtered_summary, "data/angiosperm_climate.csv", row.names = F)
-
-# gbif_filtered_summary <- read.csv("data/angiosperm_climate.csv", header = T)
 climate_preferences <- read.csv("data/climate_preferences.csv", header = T)
 
-gbif_names <- gbif_names %>% left_join(climate_preferences, by = c("species" = "gbif_name"))
-
-# climate_preferences <- arrow::read_parquet("data/climate_centres.parquet")
-# climate_preferences <- climate_preferences %>% rename(MAT = average_temperature, MAP = annual_precipitation)
+gbif_names <- gbif_names %>% left_join(angiosperm_climate_preferences |> dplyr::select(scientificName, MAP, MAT), by = c("scientificName"))
 
 ggplot() +
-  geom_hex(data = climate_preferences, aes(x = MAT, y = MAP), bins = 15, col = "light grey") +
-  scale_fill_gradient(low = "white", high = "dark green", transform = "log") +
-  geom_point(data = gbif_names, aes(x = MAT, y =  MAP), size = 0.5, alpha = 1) +
+  # geom_hex(data = angiosperm_climate_preferences, aes(x = MAT, y = MAP), bins = 15, col = "light grey") +
+  # scale_fill_gradient(low = "white", high = "dark green", transform = "log") +
+  geom_point(data = angiosperm_climate_preferences, aes(x = MAT, y =  MAP), size = 0.5, alpha = 1) +
   theme_classic() +
   xlim(0, 30) +
   theme(legend.position = "none") +
@@ -143,9 +172,6 @@ ggplot() +
 
 ggsave("figures/whittaker_plot.png", scale = 1.5, width = 7.34, height = 7.34, units = "cm")
 
-
-whittaker_base_plot() +
-  geom_point(data = gbif_names, aes(x = MAT, y =  MAP/10), size = 1, alpha = 1)
 
 ```
 
