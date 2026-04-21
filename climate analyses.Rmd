@@ -65,39 +65,53 @@ library(arrow)
 # gbif_occurrences <- fread("data/gbif_raw_occs.csv", header=T, sep="\t")
 # write_parquet(gbif_occurrences, "data/gbif_raw_occs.parquet")
 
-gbif_occurrences_parquet <- read_parquet("data/gbif_raw_occs.parquet")
+gbif_occurrences <- read_parquet("data/gbif_raw_occs.parquet")
 
 gbif_filtered <- gbif_occurrences |>
-  dplyr::select(species, scientificName, decimalLatitude, decimalLongitude) |>
-  drop_na()
+  filter(grepl("SPECIES|VARIETY", taxonRank)) |> 
+  dplyr::select(family, genus, species, scientificName, decimalLatitude, decimalLongitude, coordinateUncertaintyInMeters) |>
+  drop_na() |> 
+  filter(coordinateUncertaintyInMeters <= 10000)
 
-write.csv(gbif_filtered, "data/gbif_filtered.csv", row.names = F)
+write_parquet(gbif_filtered, "data/gbif_filtered.parquet")
+
+# Loading and extracting rasters----
+
+library(terra)
+library(data.table)
 
 # Creating point vector for each occurrence
-gbif_filtered <- read.csv("data/gbif_filtered.csv", header = T) |> drop_na()
+gbif_filtered <- read_parquet("data/gbif_filtered.parquet")
+
+# Create points once
 occurrence_points <- vect(gbif_filtered, geom = c("decimalLongitude", "decimalLatitude"))
 
-# Extracting climate values from each point
-raster_list <- list.files("rasters_30s/", full.names = T) |> map(rast)
+# Load all rasters as a single stack (one read pass, shared memory)
+raster_stack <- list.files("rasters_30s/", full.names = TRUE) |>
+  rast()  # terra::rast() accepts a vector of paths → stacks them
 
-for (raster in raster_list) {
-  gbif_filtered <- gbif_filtered |>
-    mutate(!!sym(names(raster)) := terra::extract(raster, occurrence_points)[[2]])
-}
+# Extract all layers at once (single pass over points)
+extracted <- terra::extract(raster_stack, occurrence_points, ID = FALSE)
 
-occurrence_data <- gbif_filtered |> filter(species %in% namematched$gbif_name)
+# Bind columns once instead of mutating in a loop
+gbif_filtered <- cbind(gbif_filtered, extracted)
 
-climate_preferences <- occurrence_data |>
-  group_by(species) |>
-  summarise(MAP=mean(MAP, na.rm=T),
-            MAT=mean(MAT, na.rm=T)) |>
-  rename(gbif_name = species) |>
-  left_join(namematched[c("gbif_name", "apc_name", "genus", "family")], by = "gbif_name") |>
+# Filter and summarise
+angiosperm_climate_preferences <- gbif_filtered |>
+  # filter(scientificName %in% gbif_names$scientificName) |>
+  group_by(family, genus, species, scientificName) |>
+  summarise(
+    MAP = mean(wc2.1_30s_bio_12, na.rm = TRUE),
+    MAT = mean(wc2.1_30s_bio_1, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
   distinct()
 
-write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
-```
+sample_climate_preferences <- angiosperm_climate_preferences |>
+  filter(scientificName %in% gbif_names$scientificName) 
 
+write.csv(angiosperm_climate_preferences, "data/angiosperm_climate_preferences.csv", row.names = F)
+```
 
 ## Creating whittaker plot
 ```{r}
