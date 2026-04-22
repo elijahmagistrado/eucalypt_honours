@@ -30,6 +30,7 @@ vessel_areas <- bind_rows(vessel_areas_2023, vessel_areas_2026) |>
          radius = sqrt(Area.µm.2/pi))
 
 rm(vessel_areas_2023, vessel_areas_2026)
+gc()
 
 resources <- load_taxonomic_resources()     # Used for ausflora functions
 
@@ -138,6 +139,12 @@ tracheophyte_climate_preferences <- gbif_filtered |>
   ) |>
   distinct()
 
+tracheophyte_taxa <- create_taxonomic_update_lookup(tracheophyte_climate_preferences$scientificName, resources = resources)
+tracheophyte_native_taxa <- native_anywhere_in_australia(tracheophyte_taxa$suggested_name, resources = resources) |> left_join(tracheophyte_taxa, by = c("species" = "suggested_name"), multiple = "first") |> filter(native_anywhere_in_aus == "native")
+
+
+tracheophyte_climate_preferences <- tracheophyte_climate_preferences |> filter(scientificName %in% tracheophyte_native_taxa$original_name)
+
 rm(gbif_filtered)
 gc()
 
@@ -183,6 +190,8 @@ climate_preferences <- data_AU |>
   distinct()
 
 rm(data_AU)
+rm(occurrence_points)
+rm(raster_stack)
 gc()
 
 # write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
@@ -196,9 +205,9 @@ tracheophyte_climate_preferences <- read.csv("data/tracheophyte_climate_preferen
 climate_preferences <- read.csv("data/climate_preferences.csv", header = T)
 
 ggplot() +
-  geom_hex(data = tracheophyte_climate_preferences, aes(x = MAT, y = MAP), bins = 10, col = "light grey", alpha = 0.5) +
-  scale_fill_gradient(low = "white", high = "dark green", trans = "log") +
-  geom_point(data = climate_preferences, aes(x = MAT, y =  MAP), size = 1, alpha = 0.2) +
+  geom_hex(data = tracheophyte_climate_preferences, aes(x = MAT, y = MAP), bins = 10, col = "light grey", alpha = 1, linewidth = 0.1) +
+  scale_fill_gradient(low = "white", high = "forestgreen") +
+  geom_point(data = climate_preferences, aes(x = MAT, y =  MAP), size = 0.05, alpha = 1) +
   theme_classic() +
   xlim(0, 30) +
   theme(legend.position = "none") +
@@ -206,7 +215,7 @@ ggplot() +
   ylab("Mean annual precipitation (mm)") 
   # theme(axis.title = element_text(size = 14))
 
-# ggsave("figures/whittaker_plot.png", scale = 1, width = 7.96, height = 7.96, units = "cm")
+ggsave("figures/whittaker_plot.png", scale = 1, width = 7.96, height = 7.96, units = "cm")
 ```
 
 
@@ -300,10 +309,86 @@ anova(xylem_Dh_regular_model, xylem_Dh_mixed_model)
 selected_families <- selected_families |> mutate(color = scales::hue_pal()(n_distinct(family))[as.integer(factor(family))])
 
 
-
 # ── 2. Map genus → family colour ─────────────────────────────────────────────
 genus_colours <- selected_genera |> 
-  left_join(selected_families, by = "family")
+  left_join(selected_families, by = "family") |> arrange(family, genus)
+
+```
+
+## Dh family plot, mainly by Claude Sonnet 4.6
+```{r}
+# ── 1. Across-genus marginal effect ──────────────────────────────────────────
+Dh_across_pred <- ggpredict(xylem_Dh_mixed_model, terms = "genus_mean_MAP [all]")
+
+# ── 2. Family-level predictions ───────────────────────────────────────────────
+# Family only has a random intercept (1 | family), so we predict
+# over genus_mean_MAP for each family
+Dh_family_pred <- ggpredict(
+  xylem_Dh_mixed_model,
+  terms = c("genus_mean_MAP [all]", "family [all]"),
+  type = "random"
+)
+
+Dh_family_pred <- Dh_family_pred |> left_join(selected_genera, by = c("group" = "family"))
+
+# ── 4. Plot ───────────────────────────────────────────────────────────────────
+ggplot() +
+  # Raw data — light grey points
+  geom_point(
+    data = xylem_Dh_genus |> dplyr::select(-family),
+    aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_Dh),
+    colour = "grey90", size = 1, alpha = 1
+  ) +
+  # Across-family line — black, same in every facet
+  geom_line(
+    data = as_tibble(Dh_across_pred),
+    aes(x = x, y = predicted),
+    colour = "black", linewidth = 1.5, inherit.aes = FALSE
+  ) +
+  # Selected family points — coloured
+ geom_point(
+    data = xylem_Dh_genus |> filter(family %in% selected_families$family),
+    aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_Dh,
+    colour = family), size = 0.5, alpha = 1
+  ) +
+  # Family-level lines — coloured (intercept shifts only, parallel slopes)
+  geom_ribbon(
+    data = as_tibble(Dh_family_pred |> filter(group %in% selected_families$family)) %>% rename(family = group),
+    aes(x = x, ymin = conf.low, ymax = conf.high, fill = family),
+    alpha = 0.2, inherit.aes = FALSE
+  ) +
+  geom_line(
+    data = as_tibble(Dh_family_pred |> filter(group %in% selected_families$family)) %>% rename(family = group),
+    aes(x = x, y = predicted, colour = family),
+    linewidth = 1, inherit.aes = FALSE,
+    linetype = 2
+  ) +
+  facet_wrap(~ family, scales = "fixed") +
+  scale_y_continuous(
+    breaks = Dh_y_breaks,
+    labels = \(x) round(exp(x), 1),
+    name = "Dh (μm)"
+  ) +
+  scale_x_continuous(
+    breaks = Dh_x_breaks,
+    labels = \(x) round(exp(x), 0),
+    name = "Mean Annual Precipitation (mm)"
+  ) +
+  labs(
+    colour = "Family", fill = "Family",
+    # title = "Hydraulic diameter ~ MAP",
+    # subtitle = "Black = across-genus effect | Colour = family random effect"
+  ) +
+  scale_colour_manual(values = selected_families$color) +
+  scale_fill_manual(values = selected_families$color) +
+  theme_classic() +
+  theme(
+    legend.position = "none",
+    strip.background = element_rect(fill = "grey95"),
+    strip.text = element_text(face = "italic")
+  ) -> Dh_family_facet
+
+Dh_family_facet
 ```
 
 ## Dh genus plot, mainly by Claude Sonnet 4.6
@@ -350,13 +435,34 @@ Dh_x_range <- exp(range(xylem_Dh_genus$genus_mean_MAP + xylem_Dh_genus$diff_from
 Dh_y_breaks <- log(log_breaks(n = 6)(Dh_y_range))
 Dh_x_breaks <- log(log_breaks(n = 4)(Dh_x_range))
 
+# Ordering by family
+ordered_levels <- xylem_Dh_genus %>%
+  distinct(family, genus) %>%
+  arrange(family, genus) %>%
+  pull(genus)
+
+xylem_Dh_genus <- xylem_Dh_genus |> mutate(genus = factor(genus, levels = ordered_levels))
+genus_means <- genus_means |> mutate(genus = factor(genus, levels = ordered_levels))
+Dh_within_pred_scaled <- Dh_within_pred_scaled |> mutate(genus = factor(genus, levels = ordered_levels))
+
+
+# Full dataset with family info, minus genus column for background
+family_background <- xylem_Dh_genus %>%
+  select(-genus) %>%                    # removes genus so points appear in all panels
+  left_join(
+    xylem_Dh_genus %>% distinct(genus, family),
+    by = "family"                       # rejoin by family so points appear in
+  ) |>                                  # all genera panels within the same family
+  mutate(genus = factor(genus, levels = ordered_levels)) |> 
+  filter(genus %in% selected_genera$genus)
+
 # ── 5. Plot ───────────────────────────────────────────────────────────────────
 ggplot() +
   # Raw data — light grey points
     geom_point(
     data = xylem_Dh_genus |> dplyr::select(-genus),
     aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_Dh),
-    colour = "grey80", size = 1, alpha = 0.5
+    colour = "grey90", size = 1, alpha = 1
   ) +
   # Across-genus line — black, same in every facet
   geom_line(
@@ -364,28 +470,38 @@ ggplot() +
     aes(x = x, y = predicted),
     colour = "black", linewidth = 1.5, inherit.aes = FALSE
   ) +
-  # # Average within-genus response — dashed black line
-  # geom_line(
-  #   data = Dh_avg_within_scaled,
-  #   aes(x = x_scaled, y = predicted),
-  #   colour = "#575757", linewidth = 2, linetype = "dotted", inherit.aes = FALSE
-  # ) +
+  # Selected family points — coloured
+ geom_point(
+    data = family_background,
+    aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_Dh,
+    colour = genus), size = 0.1, alpha = 1
+  ) +
+  # Family-level lines — coloured (intercept shifts only, parallel slopes)
+  geom_line(
+    data = as_tibble(Dh_family_pred |> filter(group %in% selected_genera$family)) |> rename(family = group),
+    aes(x = x, y = predicted, col = genus),
+    linewidth = 1, inherit.aes = FALSE,
+    linetype = 2
+  ) +
   # Selected genus points — coloured
  geom_point(
     data = xylem_Dh_genus |> filter(genus %in% selected_genera$genus),
-    aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_Dh,
-    colour = genus), size = 2, alpha = 1, shape = 1
+    aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_Dh), 
+    col = "grey40", size = 0.5, alpha = 1
   ) +
   # Within-genus lines — coloured, scaled to global x-axis
   geom_ribbon(
     data = Dh_within_pred_scaled |> filter(genus %in% selected_genera$genus),
-    aes(x = x_scaled, ymin = conf.low, ymax = conf.high, fill = genus),
+    aes(x = x_scaled, ymin = conf.low, ymax = conf.high),
+    fill = "grey50",
     alpha = 0.2, inherit.aes = FALSE
   ) +
   geom_line(
     data = Dh_within_pred_scaled |> filter(genus %in% selected_genera$genus),
-    aes(x = x_scaled, y = predicted, colour = genus),
-    linewidth = 0.9, inherit.aes = FALSE
+    aes(x = x_scaled, y = predicted),
+    col = "grey30",
+    linewidth = 0.5, inherit.aes = FALSE,
+    linetype = 2
   ) +
   # Facet by genus
   facet_wrap(~ genus, scales = "fixed") +
@@ -396,17 +512,19 @@ ggplot() +
   ) +
   scale_colour_manual(values = genus_colours$color) +
   scale_fill_manual(values = genus_colours$color) +
+  # scale_colour_manual(values = selected_families$color) +
+  # scale_fill_manual(values = selected_families$color) +
   scale_x_continuous(
     breaks = Dh_x_breaks,
     labels = \(x) round(exp(x), 0),
     name = "Mean Annual Precipitation (mm)"
   ) +
   labs(
-    colour = "Genus", fill = "Genus",
+    # colour = "Genus", fill = "Genus",
     # title = "Hydraulic diameter ~ MAP",
     # subtitle = "Black = across-genus effect | Colour = within-genus effect"
   ) +
-  theme_bw() +
+  theme_classic() +
   theme(
     legend.position = "none",
     strip.background = element_rect(fill = "grey95"),
@@ -417,85 +535,17 @@ Dh_genus_facet
 ```
 
 
-## Dh family plot, mainly by Claude Sonnet 4.6
-```{r}
-# ── 2. Family-level predictions ───────────────────────────────────────────────
-# Family only has a random intercept (1 | family), so we predict
-# over genus_mean_MAP for each family
-Dh_family_pred <- ggpredict(
-  xylem_Dh_mixed_model,
-  terms = c("genus_mean_MAP [all]", "family [all]"),
-  type = "random"
-)
 
-# ── 4. Plot ───────────────────────────────────────────────────────────────────
-ggplot() +
-  # Raw data — light grey points
-  geom_point(
-    data = xylem_Dh_genus |> dplyr::select(-family),
-    aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_Dh),
-    colour = "grey80", size = 1, alpha = 0.5
-  ) +
-  # Across-family line — black, same in every facet
-  geom_line(
-    data = as_tibble(Dh_across_pred),
-    aes(x = x, y = predicted),
-    colour = "black", linewidth = 1.5, inherit.aes = FALSE
-  ) +
-  # Selected family points — coloured
- geom_point(
-    data = xylem_Dh_genus |> filter(family %in% selected_families$family),
-    aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_Dh,
-    colour = family), size = 2, alpha = 1, shape = 1
-  ) +
-  # Family-level lines — coloured (intercept shifts only, parallel slopes)
-  geom_ribbon(
-    data = as_tibble(Dh_family_pred |> filter(group %in% selected_families$family)) %>% rename(family = group),
-    aes(x = x, ymin = conf.low, ymax = conf.high, fill = family),
-    alpha = 0.2, inherit.aes = FALSE
-  ) +
-  geom_line(
-    data = as_tibble(Dh_family_pred |> filter(group %in% selected_families$family)) %>% rename(family = group),
-    aes(x = x, y = predicted, colour = family),
-    linewidth = 0.9, inherit.aes = FALSE
-  ) +
-  facet_wrap(~ family, scales = "fixed") +
-  scale_y_continuous(
-    breaks = Dh_y_breaks,
-    labels = \(x) round(exp(x), 1),
-    name = "Dh (μm)"
-  ) +
-  scale_x_continuous(
-    breaks = Dh_x_breaks,
-    labels = \(x) round(exp(x), 0),
-    name = "Mean Annual Precipitation (mm)"
-  ) +
-  labs(
-    colour = "Family", fill = "Family",
-    # title = "Hydraulic diameter ~ MAP",
-    # subtitle = "Black = across-genus effect | Colour = family random effect"
-  ) +
-  scale_colour_manual(values = selected_families$color) +
-  scale_fill_manual(values = selected_families$color) +
-  theme_bw() +
-  theme(
-    legend.position = "none",
-    strip.background = element_rect(fill = "grey95"),
-    strip.text = element_text(face = "italic")
-  ) -> Dh_family_facet
-
-Dh_family_facet
-```
 
 ## Combined graph
 ```{r}
-Dh_genus_facet / Dh_family_facet
+Dh_family_facet / Dh_genus_facet
 
 ggsave("figures/Dh_mixed_model_Claude.png", scale = 1, width = 15.92, height = 24.62, units = "cm")
-
-Dh_genus_facet + Dh_family_facet
-
-ggsave("figures/Dh_mixed_model_Claude_landscape.png", scale = 1, width = 24.62, height = 15.92, units = "cm")
+# 
+# Dh_family_facet + Dh_genus_facet
+# 
+# ggsave("figures/Dh_mixed_model_Claude_landscape.png", scale = 1, width = 24.62, height = 12.31, units = "cm")
 ```
 
 
@@ -526,6 +576,10 @@ xylem_VLF_mixed_model <- glmmTMB(log_VLF ~ genus_mean_MAP +
                                   diff_from_genus_MAP +
                                   (1 | family) + 
                                   (1 + diff_from_genus_MAP || genus),
+                                data = xylem_VLF_genus,
+                                family = gaussian())
+
+xylem_VLF_regular_model <- glmmTMB(log_VLF ~ log_MAP,
                                 data = xylem_VLF_genus,
                                 family = gaussian())
 
@@ -712,6 +766,15 @@ VLF_genus_facet / VLF_family_facet
 ggsave("figures/VLF_mixed_model_Claude.png", scale = 1, width = 18.46, height = 27.16, units = "cm")
 ```
 
+
+## Comparison of regular linear regression
+```{r}
+Dh_simple_pred <- ggpredict(xylem_Dh_regular_model, terms = "log_MAP [all]")
+
+VLF_simple_pred <- ggpredict(xylem_VLF_regular_model, terms = "log_MAP [all]")
+```
+
+
 ## Overall plots
 ```{r}
 ggplot() +
@@ -719,13 +782,19 @@ ggplot() +
     geom_point(
     data = xylem_Dh_genus,
     aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_Dh),
-    colour = "grey80", size = 2, alpha = 0.5
+    colour = "grey50", size = 1, alpha = 1
   ) +
   # Within-genus lines — coloured, scaled to global x-axis
   geom_line(
     data = Dh_within_pred_scaled,
     aes(x = x_scaled, y = predicted, group = genus),
     colour = "grey50", linewidth = 1.5, alpha = 0.1, inherit.aes = FALSE
+  ) +
+  # Simple linear regression
+  geom_line(
+    data = as_tibble(Dh_simple_pred),
+    aes(x = x, y = predicted),
+    colour = "red", linewidth = 0.5, inherit.aes = FALSE, linetype = 2
   ) +
   # Across-genus line — black, same in every facet
   geom_line(
@@ -742,14 +811,14 @@ ggplot() +
   scale_y_continuous(
     breaks = Dh_y_breaks,
     labels = \(x) round(exp(x), 1),
-    name = "Dh (μm)"
+    name = D[h]~" (µm)"
   ) +
   scale_x_continuous(
     breaks = Dh_x_breaks,
     labels = \(x) round(exp(x), 0),
     name = "Mean Annual Precipitation (mm)"
   ) +
-  theme_bw() +
+  theme_classic() +
   theme(
     legend.position = "none",
     strip.background = element_rect(fill = "grey95"),
@@ -763,13 +832,19 @@ ggplot() +
     geom_point(
     data = xylem_VLF_genus,
     aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_VLF),
-    colour = "grey80", size = 2, alpha = 0.5
+    colour = "grey50", size = 1, alpha = 1
   ) +
   # Within-genus lines — coloured, scaled to global x-axis
   geom_line(
     data = VLF_within_pred_scaled,
     aes(x = x_scaled, y = predicted, group = genus),
     colour = "grey50", linewidth = 1.5, alpha = 0.1, inherit.aes = FALSE
+  ) +
+  # Simple linear regression
+  geom_line(
+    data = as_tibble(VLF_simple_pred),
+    aes(x = x, y = predicted),
+    colour = "red", linewidth = 0.5, inherit.aes = FALSE, linetype = 2
   ) +
   # Across-genus line — black, same in every facet
   geom_line(
@@ -793,7 +868,7 @@ ggplot() +
     labels = \(x) round(exp(x), 0),
     name = "Mean Annual Precipitation (mm)"
   ) +
-  theme_bw() +
+  theme_classic() +
   theme(
     legend.position = "none",
     strip.background = element_rect(fill = "grey95"),
