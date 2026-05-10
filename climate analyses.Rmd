@@ -281,7 +281,7 @@ xylem_Dh_genus$family <- as.factor(xylem_Dh_genus$family)
 xylem_Dh_mixed_model <- glmmTMB(log_Dh ~ genus_mean_MAP + 
                                   diff_from_genus_MAP +
                                   (1 | family) + 
-                                  (1 + diff_from_genus_MAP || genus),
+                                  (diff_from_genus_MAP | genus),
                                 data = xylem_Dh_genus,
                                 family = gaussian())
 ```
@@ -294,6 +294,12 @@ xylem_Dh_regular_model <- glmmTMB(log_Dh ~ log_MAP, data = xylem_Dh_genus,
 
 parameters(xylem_Dh_mixed_model)
 summary(xylem_Dh_mixed_model)
+r2(xylem_Dh_mixed_model)
+r2_nakagawa(xylem_Dh_mixed_model, by_group = T)
+
+parameters(xylem_Dh_regular_model)
+summary(xylem_Dh_regular_model)
+r2(xylem_Dh_regular_model)
 
 check_model(xylem_Dh_mixed_model)
 
@@ -314,7 +320,7 @@ selected_families <- selected_families |> mutate(color = scales::hue_pal()(n_dis
 
 # ── 2. Map genus → family colour ─────────────────────────────────────────────
 genus_colours <- selected_genera |> 
-  left_join(selected_families, by = "family") |> arrange(family, genus)
+  left_join(selected_families, by = "family") 
   
 
 ```
@@ -439,18 +445,6 @@ Dh_within_pred_scaled <- Dh_within_pred %>%
   mutate(x_scaled = x + genus_mean_MAP) |> 
   left_join(selected_genera, by = "genus")
 
-
-# Ordering by family
-ordered_levels <- xylem_Dh_genus %>%
-  distinct(family, genus) %>%
-  arrange(family, genus) %>%
-  pull(genus)
-
-xylem_Dh_genus <- xylem_Dh_genus |> mutate(genus = factor(genus, levels = ordered_levels))
-genus_means <- genus_means |> mutate(genus = factor(genus, levels = ordered_levels))
-Dh_within_pred_scaled <- Dh_within_pred_scaled |> mutate(genus = factor(genus, levels = ordered_levels))
-
-
 # Full dataset with family info, minus genus column for background
 family_background <- xylem_Dh_genus %>%
   select(-genus) %>%                    # removes genus so points appear in all panels
@@ -541,7 +535,6 @@ Dh_genus_facet
 
 
 
-
 ## Combined graph
 ```{r}
 Dh_family_facet / Dh_genus_facet
@@ -576,7 +569,7 @@ xylem_VLF_genus$family <- as.factor(xylem_VLF_genus$family)
 xylem_VLF_mixed_model <- glmmTMB(log_VLF ~ genus_mean_MAP + 
                                   diff_from_genus_MAP +
                                   (1 | family) + 
-                                  (1 + diff_from_genus_MAP || genus),
+                                  (diff_from_genus_MAP | genus),
                                 data = xylem_VLF_genus,
                                 family = gaussian())
 
@@ -591,6 +584,8 @@ xylem_VLF_regular_model <- glmmTMB(log_VLF ~ log_MAP,
 
 parameters(xylem_VLF_mixed_model)
 summary(xylem_VLF_mixed_model)
+r2(xylem_VLF_mixed_model)
+summary(xylem_VLF_regular_model)
 
 check_model(xylem_VLF_mixed_model)
 
@@ -719,16 +714,6 @@ VLF_within_pred_scaled <- VLF_within_pred %>%
   left_join(genus_means, by = "genus") %>%
   mutate(x_scaled = x + genus_mean_MAP) |> 
   left_join(selected_genera, by = "genus")
-
-# Ordering by family
-ordered_levels <- xylem_VLF_genus %>%
-  distinct(family, genus) %>%
-  arrange(family, genus) %>%
-  pull(genus)
-
-xylem_VLF_genus <- xylem_VLF_genus |> mutate(genus = factor(genus, levels = ordered_levels))
-genus_means <- genus_means |> mutate(genus = factor(genus, levels = ordered_levels))
-VLF_within_pred_scaled <- VLF_within_pred_scaled |> mutate(genus = factor(genus, levels = ordered_levels))
 
 
 # Full dataset with family info, minus genus column for background
@@ -1192,9 +1177,9 @@ comparison_data <- vessel_areas |>
   distinct()
 
 ggplot() +
-  geom_hex(data = zanne_data, aes(x = N, y = A), bins = 15, col = "light grey") +
-  scale_fill_gradient(low = "white", high = "dark green") +
-  geom_point(data = comparison_data, aes(x = N, y = A), size = 1, shape = 1, stroke = 1) +
+  geom_hex(data = zanne_data, aes(x = N, y = A), bins = 10, col = "light grey", linewidth = 0.1) +
+  scale_fill_gradient(low = "white", high = "forestgreen") +
+  geom_point(data = comparison_data, aes(x = N, y = A), size = 0.05) +
   scale_x_log10() +
   scale_y_log10() +
   theme_classic() +
@@ -1208,7 +1193,7 @@ ggplot() +
   labs(fill = "Count")
 
 
-ggsave("figures/zanne_plot.png", scale = 1.5, width = 15.94, height = 15.94, units = "cm")
+ggsave("figures/zanne_plot.png", scale = 1, width = 15.94, height = 15.94, units = "cm")
 ```
 
 
