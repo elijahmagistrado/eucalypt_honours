@@ -386,7 +386,7 @@ ggplot() +
  geom_point(
     data = xylem_Dh_genus |> filter(family %in% selected_families$family),
     aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_Dh,
-    colour = family), size = 0.5, alpha = 1
+    colour = family), size = 1, alpha = 1, shape = 1
   ) +
   # Family-level lines — coloured (intercept shifts only, parallel slopes)
   geom_ribbon(
@@ -397,7 +397,7 @@ ggplot() +
   geom_line(
     data = as_tibble(Dh_family_pred |> filter(group %in% selected_families$family)) %>% rename(family = group),
     aes(x = x, y = predicted, colour = family),
-    linewidth = 1, inherit.aes = FALSE,
+    linewidth = 0.75, inherit.aes = FALSE,
     linetype = 2
   ) +
   facet_wrap(~ family, scales = "fixed") +
@@ -472,7 +472,7 @@ family_background <- xylem_Dh_genus %>%
     xylem_Dh_genus %>% distinct(genus, family),
     by = "family"                       # rejoin by family so points appear in
   ) |>                                  # all genera panels within the same family
-  mutate(genus = factor(genus, levels = ordered_levels)) |> 
+  # mutate(genus = factor(genus, levels = ordered_levels)) |> 
   filter(genus %in% selected_genera$genus)
 
 # ── 5. Plot ───────────────────────────────────────────────────────────────────
@@ -495,18 +495,11 @@ ggplot() +
  #    aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_Dh,
  #    colour = genus), size = 0.1, alpha = 1
  #  ) +
-  # Family-level lines — coloured (intercept shifts only, parallel slopes)
-  geom_line(
-    data = as_tibble(Dh_family_pred |> filter(group %in% selected_genera$family)) |> rename(family = group),
-    aes(x = x, y = predicted, col = genus),
-    linewidth = 1, inherit.aes = FALSE,
-    linetype = 2
-  ) +
   # Selected genus points — coloured
  geom_point(
     data = xylem_Dh_genus |> filter(genus %in% selected_genera$genus),
     aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_Dh), 
-    col = "grey40", size = 0.5, alpha = 1
+    col = "grey40", size = 1, alpha = 1, shape = 1
   ) +
   # Within-genus lines — coloured, scaled to global x-axis
   geom_ribbon(
@@ -519,7 +512,14 @@ ggplot() +
     data = Dh_within_pred_scaled |> filter(genus %in% selected_genera$genus),
     aes(x = x_scaled, y = predicted),
     col = "grey30",
-    linewidth = 1, inherit.aes = FALSE,
+    linewidth = 0.75, inherit.aes = FALSE,
+    linetype = 2
+  ) +
+  # Family-level lines — coloured (intercept shifts only, parallel slopes)
+  geom_line(
+    data = as_tibble(Dh_family_pred |> filter(group %in% selected_genera$family)) |> rename(family = group),
+    aes(x = x, y = predicted, col = genus),
+    linewidth = 0.75, inherit.aes = FALSE,
     linetype = 2
   ) +
   # Facet by genus
@@ -681,7 +681,7 @@ ggplot() +
  geom_point(
     data = xylem_VLF_genus |> filter(family %in% selected_families$family),
     aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_VLF,
-    colour = family), size = 0.5, alpha = 1
+    colour = family), size = 1, alpha = 1, shape = 1
   ) +
   # Family-level lines — coloured (intercept shifts only, parallel slopes)
   geom_ribbon(
@@ -692,7 +692,7 @@ ggplot() +
   geom_line(
     data = as_tibble(VLF_family_pred |> filter(group %in% selected_families$family)) %>% rename(family = group),
     aes(x = x, y = predicted, colour = family),
-    linewidth = 1, inherit.aes = FALSE,
+    linewidth = 0.75, inherit.aes = FALSE,
     linetype = 2
   ) +
   facet_wrap(~ family, scales = "fixed") +
@@ -768,7 +768,7 @@ family_background <- xylem_VLF_genus %>%
     xylem_VLF_genus %>% distinct(genus, family),
     by = "family"                       # rejoin by family so points appear in
   ) |>                                  # all genera panels within the same family
-  mutate(genus = factor(genus, levels = ordered_levels)) |> 
+  # mutate(genus = factor(genus, levels = ordered_levels)) |> 
   filter(genus %in% selected_genera$genus)
 
 # ── 5. Plot ───────────────────────────────────────────────────────────────────
@@ -791,18 +791,11 @@ ggplot() +
  #    aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_VLF,
  #    colour = genus), size = 0.1, alpha = 1
  #  ) +
-  # Family-level lines — coloured (intercept shifts only, parallel slopes)
-  geom_line(
-    data = as_tibble(VLF_family_pred |> filter(group %in% selected_genera$family)) |> rename(family = group),
-    aes(x = x, y = predicted, col = genus),
-    linewidth = 1, inherit.aes = FALSE,
-    linetype = 2
-  ) +
   # Selected genus points — coloured
  geom_point(
     data = xylem_VLF_genus |> filter(genus %in% selected_genera$genus),
     aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_VLF), 
-    col = "grey40", size = 0.5, alpha = 1
+    col = "grey40", size = 1, alpha = 1, shape = 1
   ) +
   # Within-genus lines — coloured, scaled to global x-axis
   geom_ribbon(
@@ -815,7 +808,14 @@ ggplot() +
     data = VLF_within_pred_scaled |> filter(genus %in% selected_genera$genus),
     aes(x = x_scaled, y = predicted),
     col = "grey30",
-    linewidth = 1, inherit.aes = FALSE,
+    linewidth = 0.75, inherit.aes = FALSE,
+    linetype = 2
+  ) +
+  # Family-level lines — coloured (intercept shifts only, parallel slopes)
+  geom_line(
+    data = as_tibble(VLF_family_pred |> filter(group %in% selected_genera$family)) |> rename(family = group),
+    aes(x = x, y = predicted, col = genus),
+    linewidth = 0.75, inherit.aes = FALSE,
     linetype = 2
   ) +
   # Facet by genus
