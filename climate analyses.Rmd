@@ -368,6 +368,13 @@ Dh_x_range <- exp(range(xylem_Dh_genus$genus_mean_MAP + xylem_Dh_genus$diff_from
 Dh_y_breaks <- log(log_breaks(n = 6)(Dh_y_range))
 Dh_x_breaks <- log(log_breaks(n = 4)(Dh_x_range))
 
+# Compute n per family, optionally restrict to only the families you're plotting
+family_n <- xylem_Dh_genus |>
+  dplyr::group_by(family) |>
+  dplyr::summarise(n = dplyr::n(), .groups = "drop") |>
+  dplyr::filter(family %in% selected_families$family) # Remove this line if you want n for ALL families
+
+
 # ── 4. Plot ───────────────────────────────────────────────────────────────────
 ggplot() +
   # Raw data — light grey points
@@ -400,6 +407,15 @@ ggplot() +
     linewidth = 0.75, inherit.aes = FALSE,
     linetype = 2
   ) +
+# sample size label
+  geom_text(
+    data = family_n,
+    aes(x = -Inf, y = Inf, label = paste0("n = ", n)),
+    hjust = -0.25, vjust = 1.15,
+    inherit.aes = FALSE,
+    colour = "black",
+    size = 2.5,
+  ) +
   facet_wrap(~ family, scales = "fixed") +
   scale_y_continuous(
     breaks = Dh_y_breaks,
@@ -422,7 +438,7 @@ ggplot() +
   theme(
     legend.position = "none",
     strip.background = element_rect(fill = "grey95"),
-    strip.text = element_text(face = "italic")
+    # strip.text = element_text(face = "italic")
   ) -> Dh_family_facet
 
 Dh_family_facet
@@ -475,6 +491,13 @@ family_background <- xylem_Dh_genus %>%
   # mutate(genus = factor(genus, levels = ordered_levels)) |> 
   filter(genus %in% selected_genera$genus)
 
+# Compute n per family, optionally restrict to only the families you're plotting
+genus_n <- xylem_Dh_genus |>
+  dplyr::group_by(genus) |>
+  dplyr::summarise(n = dplyr::n(), .groups = "drop") |>
+  dplyr::filter(genus %in% selected_genera$genus) # Remove this line if you want n for ALL families
+
+
 # ── 5. Plot ───────────────────────────────────────────────────────────────────
 ggplot() +
   # Raw data — light grey points
@@ -522,6 +545,15 @@ ggplot() +
     linewidth = 0.75, inherit.aes = FALSE,
     linetype = 2
   ) +
+# sample size label
+  geom_text(
+    data = genus_n,
+    aes(x = -Inf, y = Inf, label = paste0("n = ", n)),
+    hjust = -0.25, vjust = 1.15,
+    inherit.aes = FALSE,
+    colour = "black",
+    size = 2.5,
+  ) +
   # Facet by genus
   facet_wrap(~ genus, scales = "fixed") +
   scale_y_continuous(
@@ -547,7 +579,7 @@ ggplot() +
   theme(
     legend.position = "none",
     strip.background = element_rect(fill = "grey95"),
-    strip.text = element_text(face = "italic")
+    # strip.text = element_text(face = "italic")
   ) -> Dh_genus_facet
 
 Dh_genus_facet
@@ -695,6 +727,15 @@ ggplot() +
     linewidth = 0.75, inherit.aes = FALSE,
     linetype = 2
   ) +
+# sample size label
+  geom_text(
+    data = family_n,
+    aes(x = -Inf, y = Inf, label = paste0("n = ", n)),
+    hjust = -0.25, vjust = 1.15,
+    inherit.aes = FALSE,
+    colour = "black",
+    size = 2.5,
+  ) +
   facet_wrap(~ family, scales = "fixed") +
   scale_y_continuous(
     breaks = VLF_y_breaks,
@@ -817,6 +858,15 @@ ggplot() +
     aes(x = x, y = predicted, col = genus),
     linewidth = 0.75, inherit.aes = FALSE,
     linetype = 2
+  ) +
+# sample size label
+  geom_text(
+    data = genus_n,
+    aes(x = -Inf, y = Inf, label = paste0("n = ", n)),
+    hjust = -0.25, vjust = 1.15,
+    inherit.aes = FALSE,
+    colour = "black",
+    size = 2.5,
   ) +
   # Facet by genus
   facet_wrap(~ genus, scales = "fixed") +
