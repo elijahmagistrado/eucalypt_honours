@@ -54,7 +54,7 @@ vessel_areas <- vessel_areas %>% left_join(apc_names %>% dplyr::select(original_
 gbif_names <- read.csv("data/gbif_namematched.csv", header = T) |> filter(grepl("SPECIES|VARIETY", rank)) 
 
 vessel_areas <- vessel_areas |> 
-  left_join(gbif_names %>% dplyr::select(species, verbatimScientificName, scientificName), by = c("accepted_name" = "verbatimScientificName"), multiple = "first") %>% rename(apc_name = accepted_name, gbif_name = species)
+  left_join(gbif_names %>% dplyr::select(species, verbatimScientificName, scientificName), by = c("accepted_name" = "verbatimScientificName"), multiple = "first") %>% rename(apc_name = accepted_name, gbif_name = species) |> filter(!state %in% c("kb", "PNG", "1"))
 ```
 
 
@@ -112,7 +112,7 @@ library(arrow)
 library(data.table)
 
 # Creating point vector for each occurrence
-gbif_filtered <- read_parquet("data/gbif_filtered.parquet")
+gbif_filtered <- read_parquet("data/gbif_filtered.parquet") |> filter(coordinateUncertaintyInMeters <= 1000)
 
 # Create points once
 occurrence_points <- vect(gbif_filtered, geom = c("decimalLongitude", "decimalLatitude"))
@@ -160,7 +160,7 @@ data_AU <- read_parquet("data/gbif_sample_occs.parquet") |>
   filter(
     countryCode == "AU" & 
       year >=1900 & 
-      coordinateUncertaintyInMeters <= 10000
+      coordinateUncertaintyInMeters <= 1000
     )
 
 # Create points once
@@ -295,7 +295,6 @@ xylem_Dh_regular_model <- glmmTMB(log_Dh ~ log_MAP, data = xylem_Dh_genus,
 parameters(xylem_Dh_mixed_model)
 summary(xylem_Dh_mixed_model)
 r2(xylem_Dh_mixed_model)
-r2_nakagawa(xylem_Dh_mixed_model, by_group = T)
 
 parameters(xylem_Dh_regular_model)
 summary(xylem_Dh_regular_model)
@@ -307,6 +306,27 @@ compare_performance(xylem_Dh_regular_model, xylem_Dh_mixed_model)
 anova(xylem_Dh_regular_model, xylem_Dh_mixed_model)
 ```
 
+```{r}
+# 1. Align datasets to ensure identical N
+valid_data <- xylem_Dh_genus[complete.cases(xylem_Dh_genus$log_MAP, 
+                                            xylem_Dh_genus$genus_mean_MAP, 
+                                            xylem_Dh_genus$diff_from_genus_MAP), ]
+
+# 2. Refit both models on the aligned data
+xylem_Dh_mixed_model <- glmmTMB(log_Dh ~ genus_mean_MAP + diff_from_genus_MAP + 
+                                  (1 | family) + (diff_from_genus_MAP | genus),
+                                data = valid_data, family = gaussian())
+
+xylem_Dh_regular_model <- glmmTMB(log_Dh ~ log_MAP, 
+                                  data = valid_data, family = gaussian())
+
+# 3. Verify identical N
+all.equal(nobs(xylem_Dh_mixed_model), nobs(xylem_Dh_regular_model)) # Should return TRUE
+
+# 4. Compare AIC
+AIC(xylem_Dh_mixed_model, xylem_Dh_regular_model)
+
+```
 
 
 
@@ -585,7 +605,11 @@ xylem_VLF_regular_model <- glmmTMB(log_VLF ~ log_MAP,
 parameters(xylem_VLF_mixed_model)
 summary(xylem_VLF_mixed_model)
 r2(xylem_VLF_mixed_model)
+
+
+parameters(xylem_VLF_regular_model)
 summary(xylem_VLF_regular_model)
+r2(xylem_VLF_regular_model)
 
 check_model(xylem_VLF_mixed_model)
 
@@ -593,6 +617,27 @@ compare_performance(xylem_VLF_regular_model, xylem_VLF_mixed_model)
 anova(xylem_VLF_regular_model, xylem_VLF_mixed_model)
 ```
 
+```{r}
+# 1. Align datasets to ensure identical N
+valid_data <- xylem_VLF_genus[complete.cases(xylem_VLF_genus$log_MAP, 
+                                            xylem_VLF_genus$genus_mean_MAP, 
+                                            xylem_VLF_genus$diff_from_genus_MAP), ]
+
+# 2. Refit both models on the aligned data
+xylem_VLF_mixed_model <- glmmTMB(log_VLF ~ genus_mean_MAP + diff_from_genus_MAP + 
+                                  (1 | family) + (diff_from_genus_MAP | genus),
+                                data = valid_data, family = gaussian())
+
+xylem_VLF_regular_model <- glmmTMB(log_VLF ~ log_MAP, 
+                                  data = valid_data, family = gaussian())
+
+# 3. Verify identical N
+all.equal(nobs(xylem_VLF_mixed_model), nobs(xylem_VLF_regular_model)) # Should return TRUE
+
+# 4. Compare AIC
+AIC(xylem_VLF_mixed_model, xylem_VLF_regular_model)
+
+```
 
 
 ## VLF family plot, mainly by Claude Sonnet 4.6
@@ -1238,6 +1283,10 @@ nrow(apc_names |> distinct(canonicalName))
 # Number of species in selected families
 xylem_areas |> distinct(family, apc_name) |> group_by(family) |> summarise(n = n())
 xylem_areas |> distinct(apc_name, species_name) |> filter(apc_name != species_name) |> nrow()
+
+
+image_count <- vessel_areas |> filter(scientificName %in% xylem_Dh$scientificName) |> 
+  group_by(family, genus, scientificName, other) |> summarise(n=n())
 
 ```
 
