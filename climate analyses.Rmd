@@ -216,7 +216,7 @@ ggplot() +
   ylab("Mean annual precipitation (mm)") 
   # theme(axis.title = element_text(size = 14))
 
-ggsave("figures/whittaker_plot.png", scale = 1, width = 7.96, height = 7.96, units = "cm")
+ggsave("figures/whittaker_plot.png", scale = 1, width = 7.96, height = 7.96, units = "cm", dpi = 330)
 ```
 
 
@@ -420,7 +420,7 @@ ggplot() +
   scale_y_continuous(
     breaks = Dh_y_breaks,
     labels = \(x) round(exp(x), 1),
-    name = "Dh (μm)"
+    name = expression(italic(D)[h] ~ "(μm)")
   ) +
   scale_x_continuous(
     breaks = Dh_x_breaks,
@@ -559,7 +559,7 @@ ggplot() +
   scale_y_continuous(
     breaks = Dh_y_breaks,
     labels = \(x) round(exp(x), 1),
-    name = "Dh (μm)"
+    name = expression(italic(D)[h] ~ "(μm)")
   ) +
   scale_colour_manual(values = genus_colours$color) +
   scale_fill_manual(values = genus_colours$color) +
@@ -591,7 +591,7 @@ Dh_genus_facet
 ```{r}
 Dh_family_facet / Dh_genus_facet
 
-ggsave("figures/Dh_mixed_model_Claude.png", scale = 1, width = 15.92, height = 24.62, units = "cm")
+ggsave("figures/Dh_mixed_model_Claude.png", scale = 1, width = 15.92, height = 23, units = "cm", dpi = 330)
 ```
 
 
@@ -758,7 +758,7 @@ ggplot() +
   theme(
     legend.position = "none",
     strip.background = element_rect(fill = "grey95"),
-    strip.text = element_text(face = "italic")
+    # strip.text = element_text(face = "italic")
   ) -> VLF_family_facet
 
 VLF_family_facet
@@ -886,7 +886,7 @@ ggplot() +
   theme(
     legend.position = "none",
     strip.background = element_rect(fill = "grey95"),
-    strip.text = element_text(face = "italic")
+    # strip.text = element_text(face = "italic")
   ) -> VLF_genus_facet
 
 VLF_genus_facet
@@ -899,7 +899,7 @@ VLF_genus_facet
 ```{r}
 VLF_family_facet / VLF_genus_facet
 
-ggsave("figures/VLF_mixed_model_Claude.png", scale = 1, width = 15.92, height = 24.62, units = "cm")
+ggsave("figures/VLF_mixed_model_Claude.png", scale = 1, width = 15.92, height = 23, units = "cm", dpi = 330)
 ```
 
 
@@ -911,112 +911,96 @@ VLF_simple_pred <- ggpredict(xylem_VLF_regular_model, terms = "log_MAP [all]")
 ```
 
 
-## Overall plots
+
 ```{r}
-ggplot() +
-  # Raw data — light grey points
-    geom_point(
-    data = xylem_Dh_genus,
-    aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_Dh),
-    colour = "grey50", size = 1, alpha = 1
+library(ggplot2)
+library(patchwork)
+
+# ==========================================
+# 📝 MODIFIABLE LEGEND TEXT & PROPERTIES
+# ==========================================
+line_labels <- c(
+  "Within-genus" = "Within-genus",
+  "Simple regression" = "Simple regression",
+  "Across-genus" = "Across-genus",
+  "Average within-genus" = "Avg. within-genus"
+)
+line_colors <- c(
+  "Within-genus" = "grey50",
+  "Simple regression" = "red",
+  "Across-genus" = "black",
+  "Average within-genus" = "blue"
+)
+line_types <- c(
+  "Within-genus" = "solid",
+  "Simple regression" = "dashed",
+  "Across-genus" = "solid",
+  "Average within-genus" = "solid"
+)
+
+# --- Dh_genus plot ---
+Dh_genus <- ggplot() +
+  geom_point(data = xylem_Dh_genus, aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_Dh),
+             colour = "grey40", size = 1, alpha = 1, shape = 1) +
+  geom_line(data = Dh_within_pred_scaled, aes(x = x_scaled, y = predicted, group = genus, color = "Within-genus"),
+            linewidth = 1.5, alpha = 0.1, inherit.aes = FALSE) +
+  geom_line(data = as_tibble(Dh_simple_pred), aes(x = x, y = predicted, color = "Simple regression"),
+            linewidth = 0.5, inherit.aes = FALSE) +
+  geom_line(data = as_tibble(Dh_across_pred), aes(x = x, y = predicted, color = "Across-genus"),
+            linewidth = 1.5, inherit.aes = FALSE) +
+  geom_line(data = Dh_avg_within_scaled, aes(x = x_scaled, y = predicted, color = "Average within-genus"),
+            linewidth = 0.5, inherit.aes = FALSE) +
+  scale_color_manual(
+    name = "Response type",
+    values = line_colors,
+    guide = guide_legend(
+    )
   ) +
-  # Within-genus lines — coloured, scaled to global x-axis
-  geom_line(
-    data = Dh_within_pred_scaled,
-    aes(x = x_scaled, y = predicted, group = genus),
-    colour = "grey50", linewidth = 1.5, alpha = 0.1, inherit.aes = FALSE
-  ) +
-  # Simple linear regression
-  geom_line(
-    data = as_tibble(Dh_simple_pred),
-    aes(x = x, y = predicted),
-    colour = "red", linewidth = 0.5, inherit.aes = FALSE, linetype = 2
-  ) +
-  # Across-genus line — black, same in every facet
-  geom_line(
-    data = as_tibble(Dh_across_pred),
-    aes(x = x, y = predicted),
-    colour = "black", linewidth = 1.5, inherit.aes = FALSE
-  ) +
-  # Average within-genus response — dashed black line
-  geom_line(
-    data = Dh_avg_within_scaled,
-    aes(x = x_scaled, y = predicted),
-    colour = "blue", linewidth = 0.5, inherit.aes = FALSE
-  ) +
-  scale_y_continuous(
-    breaks = Dh_y_breaks,
-    labels = \(x) round(exp(x), 1),
-    name = D[h]~" (µm)"
-  ) +
-  scale_x_continuous(
-    breaks = Dh_x_breaks,
-    labels = \(x) round(exp(x), 0),
-    name = "Mean Annual Precipitation (mm)"
-  ) +
+  scale_y_continuous(breaks = Dh_y_breaks, labels = \(x) round(exp(x), 1), name = expression(italic(D)[h] ~ "(μm)")) +
+  scale_x_continuous(breaks = Dh_x_breaks, labels = \(x) round(exp(x), 0), name = "Mean Annual Precipitation (mm)") +
   theme_classic() +
   theme(
     legend.position = "none",
     strip.background = element_rect(fill = "grey95"),
     strip.text = element_text(face = "italic")
-  ) -> Dh_genus
+  )
 
-Dh_genus
-
-ggplot() +
-  # Raw data — light grey points
-    geom_point(
-    data = xylem_VLF_genus,
-    aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_VLF),
-    colour = "grey50", size = 1, alpha = 1
+# --- VLF_genus plot (identical scale setup) ---
+VLF_genus <- ggplot() +
+  geom_point(data = xylem_VLF_genus, aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_VLF),
+             colour = "grey40", size = 1, alpha = 1, shape = 1) +
+  geom_line(data = VLF_within_pred_scaled, aes(x = x_scaled, y = predicted, group = genus, color = "Within-genus"),
+            linewidth = 1.5, alpha = 0.1, inherit.aes = FALSE) +
+  geom_line(data = as_tibble(VLF_simple_pred), aes(x = x, y = predicted, color = "Simple regression"),
+            linewidth = 0.5, inherit.aes = FALSE) +
+  geom_line(data = as_tibble(VLF_across_pred), aes(x = x, y = predicted, color = "Across-genus"),
+            linewidth = 1.5, inherit.aes = FALSE) +
+  geom_line(data = VLF_avg_within_scaled, aes(x = x_scaled, y = predicted, color = "Average within-genus"),
+            linewidth = 0.5, inherit.aes = FALSE) +
+  scale_color_manual(
+    name = "Response type",
+    values = line_colors,
+    guide = guide_legend(
+    )
   ) +
-  # Within-genus lines — coloured, scaled to global x-axis
-  geom_line(
-    data = VLF_within_pred_scaled,
-    aes(x = x_scaled, y = predicted, group = genus),
-    colour = "grey50", linewidth = 1.5, alpha = 0.1, inherit.aes = FALSE
-  ) +
-  # Simple linear regression
-  geom_line(
-    data = as_tibble(VLF_simple_pred),
-    aes(x = x, y = predicted),
-    colour = "red", linewidth = 0.5, inherit.aes = FALSE, linetype = 2
-  ) +
-  # Across-genus line — black, same in every facet
-  geom_line(
-    data = as_tibble(VLF_across_pred),
-    aes(x = x, y = predicted),
-    colour = "black", linewidth = 1.5, inherit.aes = FALSE
-  ) +
-  # Average within-genus response — dashed black line
-  geom_line(
-    data = VLF_avg_within_scaled,
-    aes(x = x_scaled, y = predicted),
-    colour = "blue", linewidth = 0.5, inherit.aes = FALSE
-  ) +
-  scale_y_continuous(
-    breaks = VLF_y_breaks,
-    labels = \(x) round(exp(x), 1),
-    name = "VLF (%)"
-  ) +
-  scale_x_continuous(
-    breaks = VLF_x_breaks,
-    labels = \(x) round(exp(x), 0),
-    name = "Mean Annual Precipitation (mm)"
-  ) +
+  scale_y_continuous(breaks = VLF_y_breaks, labels = \(x) round(exp(x), 1), name = "VLF (%)") +
+  scale_x_continuous(breaks = VLF_x_breaks, labels = \(x) round(exp(x), 0), name = "Mean Annual Precipitation (mm)") +
   theme_classic() +
   theme(
     legend.position = "none",
     strip.background = element_rect(fill = "grey95"),
     strip.text = element_text(face = "italic")
-  ) -> VLF_genus
+  )
 
-VLF_genus
+# --- Combine with patchwork ---
+combined_plot <- Dh_genus + VLF_genus + plot_layout(guides = "collect")
+combined_plot & theme(legend.position = "bottom")
 
-Dh_genus + VLF_genus
+ggsave("figures/Dh_VLF_overall.png", scale = 1, width = 15.92, height = 7.96, units = "cm", dpi = 330)
 
-ggsave("figures/Dh_VLF_overall.png", scale = 1, width = 15.92, height = 7.96, units = "cm")
+
 ```
+
 
 
 
@@ -1288,7 +1272,7 @@ ggplot() +
   labs(fill = "Count")
 
 
-ggsave("figures/zanne_plot.png", scale = 1, width = 15.94, height = 15.94, units = "cm")
+ggsave("figures/zanne_plot.png", scale = 1, width = 15.94, height = 15.94, units = "cm",dpi = 330)
 ```
 
 
@@ -1336,6 +1320,7 @@ xylem_areas |> distinct(apc_name, species_name) |> filter(apc_name != species_na
 
 
 image_count <- vessel_areas |> filter(scientificName %in% xylem_Dh$scientificName) |> 
+  filter(Name == "vessel"|Classification == "vessel") |> 
   group_by(family, genus, scientificName, other) |> summarise(n=n())
 
 ```
