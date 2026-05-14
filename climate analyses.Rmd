@@ -994,9 +994,9 @@ VLF_genus <- ggplot() +
 
 # --- Combine with patchwork ---
 combined_plot <- Dh_genus + VLF_genus + plot_layout(guides = "collect")
-combined_plot & theme(legend.position = "bottom")
+combined_plot & theme(legend.position = "bottom", legend.text = element_text(size = 7.5), legend.title = element_text(size = 8, face = "bold"))
 
-ggsave("figures/Dh_VLF_overall.png", scale = 1, width = 15.92, height = 7.96, units = "cm", dpi = 330)
+ggsave("figures/Dh_VLF_overall.png", scale = 1, width = 15.92, height = 9.5, units = "cm", dpi = 330)
 
 
 ```
