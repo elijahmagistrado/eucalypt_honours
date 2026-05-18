@@ -284,13 +284,64 @@ xylem_Dh_mixed_model <- glmmTMB(log_Dh ~ genus_mean_MAP +
                                   (diff_from_genus_MAP | genus),
                                 data = xylem_Dh_genus,
                                 family = gaussian())
+
+xylem_Dh_mixed_model <- glmmTMB(log_Dh ~ 
+                                  (1 | family) + 
+                                  (1 | genus),
+                                data = xylem_Dh_genus,
+                                family = gaussian())
+
 ```
+
+```{r}
+# Data preparation
+xylem_Dh_genus <- xylem_Dh |> 
+  group_by(genus) |> 
+  mutate(
+    log_Dh = log(mean_Dh),
+    log_MAP = log(MAP),
+    genus_mean_MAP = mean(log(MAP)),
+    genus_mean_Dh = mean(log(mean_Dh))
+  ) |> 
+  ungroup() |> 
+  mutate(
+    diff_from_genus_MAP = log_MAP - genus_mean_MAP,
+  )
+
+# Mixed model with genus-centering
+xylem_Dh_mixed_model <- glmmTMB(log_Dh ~ genus_mean_MAP + 
+                                  diff_from_genus_MAP +
+                                  (1 | family) + 
+                                  (diff_from_genus_MAP | genus),
+                                data = xylem_Dh_genus,
+                                family = gaussian())
+
+# Results - Mixed model
+parameters(xylem_Dh_mixed_model)
+summary(xylem_Dh_mixed_model)
+r2(xylem_Dh_mixed_model)
+
+# Simple model
+xylem_Dh_regular_model <- glmmTMB(log_Dh ~ log_MAP, data = xylem_Dh_genus,
+                                family = gaussian())
+
+# Results - simple model
+parameters(xylem_Dh_regular_model)
+summary(xylem_Dh_regular_model)
+r2(xylem_Dh_regular_model)
+
+# Comparison
+compare_performance(xylem_Dh_regular_model, xylem_Dh_mixed_model)
+anova(xylem_Dh_regular_model, xylem_Dh_mixed_model)
+```
+
 
 
 ## Dh mixed model testing
 ```{r}
 xylem_Dh_regular_model <- glmmTMB(log_Dh ~ log_MAP, data = xylem_Dh_genus,
                                 family = gaussian())
+
 
 parameters(xylem_Dh_mixed_model)
 summary(xylem_Dh_mixed_model)
@@ -627,6 +678,55 @@ xylem_VLF_mixed_model <- glmmTMB(log_VLF ~ genus_mean_MAP +
 
 ```
 
+
+
+```{r}
+# Data preparation
+xylem_VLF_genus <- xylem_VLF |> 
+  group_by(genus) |> 
+  mutate(
+    log_VLF = log(mean_VLF),
+    log_MAP = log(MAP),
+    genus_mean_MAP = mean(log(MAP)),
+    genus_mean_VLF = mean(log(mean_VLF))
+  ) |> 
+  ungroup() |> 
+  mutate(
+    diff_from_genus_MAP = log_MAP - genus_mean_MAP,
+  )
+
+xylem_VLF_genus$genus <- as.factor(xylem_VLF_genus$genus)
+xylem_VLF_genus$family <- as.factor(xylem_VLF_genus$family)
+
+# Mixed model with genus-centering
+xylem_VLF_mixed_model <- glmmTMB(log_VLF ~ genus_mean_MAP + 
+                                  diff_from_genus_MAP +
+                                  (1 | family) + 
+                                  (diff_from_genus_MAP | genus),
+                                data = xylem_VLF_genus,
+                                family = gaussian())
+
+# Mixed model testing
+parameters(xylem_VLF_mixed_model)
+summary(xylem_VLF_mixed_model)
+r2(xylem_VLF_mixed_model)
+
+# Simple model
+xylem_VLF_regular_model <- glmmTMB(log_VLF ~ log_MAP,
+                                data = xylem_VLF_genus,
+                                family = gaussian())
+
+# Simple model testing
+parameters(xylem_VLF_regular_model)
+summary(xylem_VLF_regular_model)
+r2(xylem_VLF_regular_model)
+
+# Comparison
+compare_performance(xylem_VLF_regular_model, xylem_VLF_mixed_model)
+anova(xylem_VLF_regular_model, xylem_VLF_mixed_model)
+```
+
+
 # VLF
 ## VLF mixed model testing
 ```{r}
@@ -908,6 +1008,12 @@ ggsave("figures/VLF_mixed_model_Claude.png", scale = 1, width = 15.92, height = 
 Dh_simple_pred <- ggpredict(xylem_Dh_regular_model, terms = "log_MAP [all]")
 
 VLF_simple_pred <- ggpredict(xylem_VLF_regular_model, terms = "log_MAP [all]")
+
+xylem_Dh_simple_mixed_model <- glmmTMB(log_Dh ~ log_MAP + (1|genus), data = xylem_Dh_genus,
+                                family = gaussian())
+Dh_simple_mixed_pred <- ggpredict(xylem_Dh_simple_mixed_model, terms = "log_MAP [all]")
+
+
 ```
 
 
@@ -923,19 +1029,22 @@ line_labels <- c(
   "Within-genus" = "Within-genus",
   "Simple regression" = "Simple regression",
   "Across-genus" = "Across-genus",
-  "Average within-genus" = "Avg. within-genus"
+  "Average within-genus" = "Avg. within-genus",
+  "Mixed model" = "green"
 )
 line_colors <- c(
   "Within-genus" = "grey50",
   "Simple regression" = "red",
   "Across-genus" = "black",
-  "Average within-genus" = "blue"
+  "Average within-genus" = "blue",
+  "Mixed model" = "green"
 )
 line_types <- c(
   "Within-genus" = "solid",
   "Simple regression" = "dashed",
   "Across-genus" = "solid",
-  "Average within-genus" = "solid"
+  "Average within-genus" = "solid",
+  "Mixed model" = "green"
 )
 
 # --- Dh_genus plot ---
@@ -945,6 +1054,8 @@ Dh_genus <- ggplot() +
   geom_line(data = Dh_within_pred_scaled, aes(x = x_scaled, y = predicted, group = genus, color = "Within-genus"),
             linewidth = 1.5, alpha = 0.1, inherit.aes = FALSE) +
   geom_line(data = as_tibble(Dh_simple_pred), aes(x = x, y = predicted, color = "Simple regression"),
+            linewidth = 0.5, inherit.aes = FALSE) +
+  geom_line(data = as_tibble(Dh_simple_mixed_pred), aes(x = x, y = predicted, color = "Mixed model"),
             linewidth = 0.5, inherit.aes = FALSE) +
   geom_line(data = as_tibble(Dh_across_pred), aes(x = x, y = predicted, color = "Across-genus"),
             linewidth = 1.5, inherit.aes = FALSE) +
@@ -1005,6 +1116,7 @@ ggsave("figures/Dh_VLF_overall.png", scale = 1, width = 15.92, height = 9.5, uni
 
 
 # Other
+
 
 
 ## Dh MAP Phylogenetic differences 
