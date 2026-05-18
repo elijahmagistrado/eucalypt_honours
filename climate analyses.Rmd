@@ -333,7 +333,7 @@ r2(xylem_Dh_regular_model)
 # Comparison
 compare_performance(xylem_Dh_regular_model, xylem_Dh_mixed_model)
 anova(xylem_Dh_regular_model, xylem_Dh_mixed_model)
-```
+``` 
 
 
 
@@ -640,7 +640,7 @@ Dh_genus_facet
 
 ## Combined graph
 ```{r}
-Dh_family_facet / Dh_genus_facet
+Dh_family_facet / Dh_genus_facet + plot_annotation(tag_levels = 'a', tag_suffix = ')')
 
 ggsave("figures/Dh_mixed_model_Claude.png", scale = 1, width = 15.92, height = 23, units = "cm", dpi = 330)
 ```
@@ -997,7 +997,7 @@ VLF_genus_facet
 
 ## Combined graph
 ```{r}
-VLF_family_facet / VLF_genus_facet
+VLF_family_facet / VLF_genus_facet + plot_annotation(tag_levels = 'a', tag_suffix = ')')
 
 ggsave("figures/VLF_mixed_model_Claude.png", scale = 1, width = 15.92, height = 23, units = "cm", dpi = 330)
 ```
@@ -1029,22 +1029,22 @@ line_labels <- c(
   "Within-genus" = "Within-genus",
   "Simple regression" = "Simple regression",
   "Across-genus" = "Across-genus",
-  "Average within-genus" = "Avg. within-genus",
-  "Mixed model" = "green"
+  "Average within-genus" = "Avg. within-genus"
+  # "Mixed model" = "green"
 )
 line_colors <- c(
   "Within-genus" = "grey50",
   "Simple regression" = "red",
   "Across-genus" = "black",
-  "Average within-genus" = "blue",
-  "Mixed model" = "green"
+  "Average within-genus" = "blue"
+  # "Mixed model" = "green"
 )
 line_types <- c(
   "Within-genus" = "solid",
   "Simple regression" = "dashed",
   "Across-genus" = "solid",
-  "Average within-genus" = "solid",
-  "Mixed model" = "green"
+  "Average within-genus" = "solid"
+  # "Mixed model" = "green"
 )
 
 # --- Dh_genus plot ---
@@ -1055,8 +1055,8 @@ Dh_genus <- ggplot() +
             linewidth = 1.5, alpha = 0.1, inherit.aes = FALSE) +
   geom_line(data = as_tibble(Dh_simple_pred), aes(x = x, y = predicted, color = "Simple regression"),
             linewidth = 0.5, inherit.aes = FALSE) +
-  geom_line(data = as_tibble(Dh_simple_mixed_pred), aes(x = x, y = predicted, color = "Mixed model"),
-            linewidth = 0.5, inherit.aes = FALSE) +
+  # geom_line(data = as_tibble(Dh_simple_mixed_pred), aes(x = x, y = predicted, color = "Mixed model"),
+            # linewidth = 0.5, inherit.aes = FALSE) +
   geom_line(data = as_tibble(Dh_across_pred), aes(x = x, y = predicted, color = "Across-genus"),
             linewidth = 1.5, inherit.aes = FALSE) +
   geom_line(data = Dh_avg_within_scaled, aes(x = x_scaled, y = predicted, color = "Average within-genus"),
@@ -1104,11 +1104,10 @@ VLF_genus <- ggplot() +
   )
 
 # --- Combine with patchwork ---
-combined_plot <- Dh_genus + VLF_genus + plot_layout(guides = "collect")
+combined_plot <- Dh_genus + VLF_genus + plot_layout(guides = "collect") + plot_annotation(tag_levels = 'a', tag_suffix = ')')
 combined_plot & theme(legend.position = "bottom", legend.text = element_text(size = 7.5), legend.title = element_text(size = 8, face = "bold"))
 
 ggsave("figures/Dh_VLF_overall.png", scale = 1, width = 15.92, height = 9.5, units = "cm", dpi = 330)
-
 
 ```
 
