@@ -1,0 +1,3 @@
+selectAnnotations();
+clearSelectedObjects(true)
+resetSelection();
