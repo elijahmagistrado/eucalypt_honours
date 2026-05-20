@@ -160,8 +160,11 @@ data_AU <- read_parquet("data/gbif_sample_occs.parquet") |>
   filter(
     countryCode == "AU" & 
       year >=1900 & 
-      coordinateUncertaintyInMeters <= 1000
-    )
+      coordinateUncertaintyInMeters <= 1000 &
+      basisOfRecord == "HUMAN_OBSERVATION"
+    ) |> 
+  distinct(species, decimalLatitude, decimalLongitude, .keep_all = T)
+
 
 # Create points once
 occurrence_points <- vect(data_AU, geom = c("decimalLongitude", "decimalLatitude"))
@@ -176,8 +179,6 @@ extracted <- terra::extract(raster_stack, occurrence_points, ID = FALSE)
 # Bind columns once instead of mutating in a loop
 data_AU <- cbind(data_AU, extracted)
 
-rm(extracted)
-gc()
 
 # Filter and summarise
 climate_preferences <- data_AU |>
@@ -186,14 +187,12 @@ climate_preferences <- data_AU |>
   summarise(
     MAP = mean(wc2.1_30s_bio_12, na.rm = TRUE),
     MAT = mean(wc2.1_30s_bio_1, na.rm = TRUE),
+    n_obs = n(),
     .groups = "drop"
   ) |>
-  distinct()
+  distinct() |> 
+  filter(n_obs >= 10)
 
-rm(data_AU)
-rm(occurrence_points)
-rm(raster_stack)
-gc()
 
 # write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
 
@@ -225,9 +224,13 @@ ggsave("figures/whittaker_plot.png", scale = 1, width = 7.96, height = 7.96, uni
 xylem_Dh <- vessel_areas |> 
   filter(Name == "vessel"|Classification == "vessel") |>
   group_by(scientificName, genus, other) |> 
-  summarise(sample_Dh = sum(radius^5)/ sum(radius^4)) |> 
+  summarise(sample_Dh = sum(radius^5)/ sum(radius^4),
+            n_vessels = n()) |> 
   group_by(scientificName) |> 
-  summarise(mean_Dh = mean(sample_Dh, na.rm=T)) |> 
+  summarise(mean_Dh = mean(sample_Dh, na.rm=T),
+            n_images = n(),
+            n_vessels = sum(n_vessels),
+            n_vessels_per_image = n_vessels/n_images) |> 
   left_join(climate_preferences, by = c("scientificName")) |> 
   # left_join(gbif_names %>% dplyr::select(scientificName, genus, family), by = c("scientificName")) |> 
   distinct() |> 
@@ -246,6 +249,11 @@ xylem_VLF <- vessel_areas |>
   left_join(climate_preferences, by = c("scientificName"))|> 
   distinct() |> 
   drop_na() 
+
+xylem_stats <- xylem_Dh |> left_join(xylem_VLF |> dplyr::select(scientificName, mean_VLF), by = "scientificName") |> 
+  dplyr::select(family, genus, species, mean_Dh, mean_VLF, MAP, MAT, n_vessels, n_images, n_vessels_per_image)
+
+write.csv(xylem_stats, "./data/xylem_stats.csv", row.names = F)
 
 # ggplot() +
 #   geom_density(data = xylem_Dh |> filter(family_n_samples > 5), aes(MAP, col = family)) +
@@ -1105,7 +1113,7 @@ VLF_genus <- ggplot() +
 
 # --- Combine with patchwork ---
 combined_plot <- Dh_genus + VLF_genus + plot_layout(guides = "collect") + plot_annotation(tag_levels = 'a', tag_suffix = ')')
-combined_plot & theme(legend.position = "bottom", legend.text = element_text(size = 7.5), legend.title = element_text(size = 8, face = "bold"))
+combined_plot & theme(legend.position = "bottom", legend.text = element_text(size = 7), legend.title = element_text(size = 7.5, face = "bold"))
 
 ggsave("figures/Dh_VLF_overall.png", scale = 1, width = 15.92, height = 9.5, units = "cm", dpi = 330)
 
@@ -1378,12 +1386,12 @@ ggplot() +
   ylab("Total vessel area"~ (mm^2)) +
   theme(legend.position = c(0.5, 0.15),
         legend.direction = "vertical",
-        axis.title = element_text(size = 14),
-        strip.text = element_text(size = 12)) +
+        axis.title = element_text(size = 10),
+        strip.text = element_text(size = 8)) +
   labs(fill = "Count")
 
 
-ggsave("figures/zanne_plot.png", scale = 1, width = 15.94, height = 15.94, units = "cm",dpi = 330)
+ggsave("figures/zanne_plot.png", scale = 1, width = 15.94, height = 14, units = "cm",dpi = 330)
 ```
 
 
