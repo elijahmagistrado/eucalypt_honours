@@ -263,44 +263,12 @@ write.csv(xylem_stats, "./data/xylem_stats.csv", row.names = F)
 selected_families <- xylem_Dh |> group_by(family) |> summarise(n = n()) |> filter(n >= 10)
 
 selected_genera <- xylem_Dh |> group_by(genus, family) |> summarise(n = n()) |> filter(n >= 10)
+
+sample_distribution <- xylem_Dh |> group_by(genus, family) |> summarise(n_species = n()) |> group_by(family) |> mutate(n_genus = n()) 
 ```
 
 # Dh
 ## Dh mixed model
-```{r}
-# Data preparation
-xylem_Dh_genus <- xylem_Dh |> 
-  group_by(genus) |> 
-  mutate(
-    log_Dh = log(mean_Dh),
-    log_MAP = log(MAP),
-    genus_mean_MAP = mean(log(MAP)),
-    genus_mean_Dh = mean(log(mean_Dh))
-  ) |> 
-  ungroup() |> 
-  mutate(
-    diff_from_genus_MAP = log_MAP - genus_mean_MAP,
-  )
-
-xylem_Dh_genus$genus <- as.factor(xylem_Dh_genus$genus)
-xylem_Dh_genus$family <- as.factor(xylem_Dh_genus$family)
-
-# Mixed model with genus-centering
-xylem_Dh_mixed_model <- glmmTMB(log_Dh ~ genus_mean_MAP + 
-                                  diff_from_genus_MAP +
-                                  (1 | family) + 
-                                  (diff_from_genus_MAP | genus),
-                                data = xylem_Dh_genus,
-                                family = gaussian())
-
-xylem_Dh_mixed_model <- glmmTMB(log_Dh ~ 
-                                  (1 | family) + 
-                                  (1 | genus),
-                                data = xylem_Dh_genus,
-                                family = gaussian())
-
-```
-
 ```{r}
 # Data preparation
 xylem_Dh_genus <- xylem_Dh |> 
@@ -342,51 +310,6 @@ r2(xylem_Dh_regular_model)
 compare_performance(xylem_Dh_regular_model, xylem_Dh_mixed_model)
 anova(xylem_Dh_regular_model, xylem_Dh_mixed_model)
 ``` 
-
-
-
-## Dh mixed model testing
-```{r}
-xylem_Dh_regular_model <- glmmTMB(log_Dh ~ log_MAP, data = xylem_Dh_genus,
-                                family = gaussian())
-
-
-parameters(xylem_Dh_mixed_model)
-summary(xylem_Dh_mixed_model)
-r2(xylem_Dh_mixed_model)
-
-parameters(xylem_Dh_regular_model)
-summary(xylem_Dh_regular_model)
-r2(xylem_Dh_regular_model)
-
-check_model(xylem_Dh_mixed_model)
-
-compare_performance(xylem_Dh_regular_model, xylem_Dh_mixed_model)
-anova(xylem_Dh_regular_model, xylem_Dh_mixed_model)
-```
-
-```{r}
-# 1. Align datasets to ensure identical N
-valid_data <- xylem_Dh_genus[complete.cases(xylem_Dh_genus$log_MAP, 
-                                            xylem_Dh_genus$genus_mean_MAP, 
-                                            xylem_Dh_genus$diff_from_genus_MAP), ]
-
-# 2. Refit both models on the aligned data
-xylem_Dh_mixed_model <- glmmTMB(log_Dh ~ genus_mean_MAP + diff_from_genus_MAP + 
-                                  (1 | family) + (diff_from_genus_MAP | genus),
-                                data = valid_data, family = gaussian())
-
-xylem_Dh_regular_model <- glmmTMB(log_Dh ~ log_MAP, 
-                                  data = valid_data, family = gaussian())
-
-# 3. Verify identical N
-all.equal(nobs(xylem_Dh_mixed_model), nobs(xylem_Dh_regular_model)) # Should return TRUE
-
-# 4. Compare AIC
-AIC(xylem_Dh_mixed_model, xylem_Dh_regular_model)
-
-```
-
 
 
 ## Colour palettes
@@ -658,35 +581,6 @@ ggsave("figures/Dh_mixed_model_Claude.png", scale = 1, width = 15.92, height = 2
 
 # VLF
 ## VLF mixed model
-```{r}
-# Data preparation
-xylem_VLF_genus <- xylem_VLF |> 
-  group_by(genus) |> 
-  mutate(
-    log_VLF = log(mean_VLF),
-    log_MAP = log(MAP),
-    genus_mean_MAP = mean(log(MAP)),
-    genus_mean_VLF = mean(log(mean_VLF))
-  ) |> 
-  ungroup() |> 
-  mutate(
-    diff_from_genus_MAP = log_MAP - genus_mean_MAP,
-  )
-
-xylem_VLF_genus$genus <- as.factor(xylem_VLF_genus$genus)
-xylem_VLF_genus$family <- as.factor(xylem_VLF_genus$family)
-
-# Mixed model with genus-centering
-xylem_VLF_mixed_model <- glmmTMB(log_VLF ~ genus_mean_MAP + 
-                                  diff_from_genus_MAP +
-                                  (1 | family) + 
-                                  (diff_from_genus_MAP | genus),
-                                data = xylem_VLF_genus,
-                                family = gaussian())
-
-```
-
-
 
 ```{r}
 # Data preparation
@@ -732,51 +626,6 @@ r2(xylem_VLF_regular_model)
 # Comparison
 compare_performance(xylem_VLF_regular_model, xylem_VLF_mixed_model)
 anova(xylem_VLF_regular_model, xylem_VLF_mixed_model)
-```
-
-
-# VLF
-## VLF mixed model testing
-```{r}
-xylem_VLF_regular_model <- glmmTMB(log_VLF ~ log_MAP,
-                                data = xylem_VLF_genus,
-                                family = gaussian())
-
-parameters(xylem_VLF_mixed_model)
-summary(xylem_VLF_mixed_model)
-r2(xylem_VLF_mixed_model)
-
-
-parameters(xylem_VLF_regular_model)
-summary(xylem_VLF_regular_model)
-r2(xylem_VLF_regular_model)
-
-check_model(xylem_VLF_mixed_model)
-
-compare_performance(xylem_VLF_regular_model, xylem_VLF_mixed_model)
-anova(xylem_VLF_regular_model, xylem_VLF_mixed_model)
-```
-
-```{r}
-# 1. Align datasets to ensure identical N
-valid_data <- xylem_VLF_genus[complete.cases(xylem_VLF_genus$log_MAP, 
-                                            xylem_VLF_genus$genus_mean_MAP, 
-                                            xylem_VLF_genus$diff_from_genus_MAP), ]
-
-# 2. Refit both models on the aligned data
-xylem_VLF_mixed_model <- glmmTMB(log_VLF ~ genus_mean_MAP + diff_from_genus_MAP + 
-                                  (1 | family) + (diff_from_genus_MAP | genus),
-                                data = valid_data, family = gaussian())
-
-xylem_VLF_regular_model <- glmmTMB(log_VLF ~ log_MAP, 
-                                  data = valid_data, family = gaussian())
-
-# 3. Verify identical N
-all.equal(nobs(xylem_VLF_mixed_model), nobs(xylem_VLF_regular_model)) # Should return TRUE
-
-# 4. Compare AIC
-AIC(xylem_VLF_mixed_model, xylem_VLF_regular_model)
-
 ```
 
 
@@ -1123,211 +972,6 @@ ggsave("figures/Dh_VLF_overall.png", scale = 1, width = 15.92, height = 9.5, uni
 
 
 # Other
-
-
-
-## Dh MAP Phylogenetic differences 
-```{r}
-common_genera <- xylem_Dh |> group_by(family, genus) |> summarise(n = n()) |> filter(n >10) |> pull("genus")
-
-plot_interaction <- function(model, data) {
-  model_p <- predict.lm(model, data, se.fit = T)
-  
-  pred_data <- bind_cols(data, model_p)
-  
-  return(pred_data)
-}
-
-
-## Family level
-Dh_MAP_family_lm <- lm(log(mean_Dh)~log(MAP)*family, data = xylem_Dh_family)
-summary(Dh_MAP_family_lm)
-anova(Dh_MAP_family_lm)
-
-Dh_family_pred <- plot_interaction(Dh_MAP_family_lm, xylem_Dh_family |> dplyr::select(mean_Dh, MAP, family))
-
-Dh_family_sma <- sma(log(mean_Dh)~log(MAP)*family, xylem_Dh_family, method = "OLS")
-print(Dh_family_sma, coefbygroup = T)
-
-## Manually adding r-squared values to facet labels
-
-# family_facet_labels <- xylem_Dh_family |> distinct(family, gbif_name) |> group_by(family) |> summarise(n = n())
-# family_facet_labels$n <- paste("n ==", family_facet_labels$n)
-# 
-# write.csv(family_facet_labels, "data/family_facet_labels.csv", row.names = F)
-
-# family_facet_labels <- read.csv("data/family_facet_labels.csv", header = T)
-
-
-ggplot(data = xylem_Dh_family, aes(MAP, mean_Dh)) +
-  stat_poly_eq(use_label("R2", "P"), label.y = 10) +
-  stat_poly_line() + 
-  # geom_line(data = Dh_family_pred, aes(MAP, exp(fit)), col = "red", linewidth = 1) +
-  geom_point(data = xylem_Dh_family, aes(MAP, mean_Dh), size = 1) +
-  xlab("Mean annual precipitation (mm)") +
-  ylab(D[h]~"(µm)") +
-  theme_bw() +
-  scale_x_log10() +
-  scale_y_log10() +
-  scale_color_brewer(palette = "Set1") +
-  facet_wrap(~family, nrow = 3) 
-
-  
-  
-  # geom_text(aes(180, 100, label = r_sq), data = family_facet_labels, size = 4, parse = T, hjust = 0, vjust = 0) +
-  # geom_text(aes(180, 100, label = n), data = family_facet_labels, size = 4, parse = T, hjust = 0, vjust = 1.5) +
-  # theme(axis.title = element_text(size = 14),
-  #       strip.text = element_text(size = 12))
-
-ggsave("figures/Dh_MAP_family.png", scale = 1.5, width = 15.92, height = 9, units = "cm")
-
-## Genus level
-xylem_Dh_genus <- xylem_Dh |> filter(genus_n_samples >= 10)
-
-Dh_MAP_genus_lm <- lm(log(mean_Dh)~log(MAP)*genus, data = xylem_Dh_genus)
-summary(Dh_MAP_genus_lm)
-
-Dh_genus_pred <- plot_interaction(Dh_MAP_genus_lm, xylem_Dh_genus |> dplyr::select(mean_Dh, MAP, genus, family))
-
-Dh_sma <- sma(log(mean_Dh)~log(MAP)*genus, xylem_Dh_genus, method = "OLS")
-print(Dh_sma, coefbygroup = T)
-
-# genus_facet_labels <- xylem_Dh |> filter(n_samples > 5) |> distinct(genus, apc_name) |> group_by(genus) |> summarise(n = n())
-# genus_facet_labels$n <- paste("n ==", genus_facet_labels$n)
-# 
-# write.csv(genus_facet_labels, "data/genus_facet_labels.csv", row.names = F)
-
-genus_facet_labels <- read.csv("data/genus_facet_labels.csv", header = T)
-
-ggplot(data = xylem_Dh_genus, mapping = aes(MAP, mean_Dh)) +
-  stat_poly_eq(use_label("R2", "P"), label.y = 10) +
-  stat_poly_line() + 
-  # geom_line(data = Dh_genus_pred, aes(MAP, exp(fit)), col = "red", linewidth = 1) +
-  geom_point(data = xylem_Dh_genus, aes(MAP, mean_Dh), size = 1) +
-  facet_wrap(~genus, nrow = 3) +
-  xlab("Mean annual precipitation (mm)") +
-  ylab(D[h]~"(µm)") +
-  theme_bw() +
-  scale_x_log10() +
-  scale_y_log10() +
-  scale_color_brewer(palette = "Set1") 
-
-  
-  # geom_text(aes(180, 90, label = r_sq), data = genus_facet_labels, size = 4, parse = T, hjust = 0, vjust = 0) +
-  # geom_text(aes(180, 90, label = n), data = genus_facet_labels, size = 4, parse = T, hjust = 0, vjust = 1.5) +
-  # theme(axis.title = element_text(size = 14),
-  #       strip.text = element_text(size = 12))
-
-ggsave("figures/Dh_MAP_genus.png", scale = 1.5, width = 15.92, height = 9, units = "cm")
-```
-
-
-## VLF MAP Phylogenetic differences
-```{r}
-## Family level
-VLF_family_lm <- lm(log(mean_VLF)~log(MAP)*family, data = xylem_VLF)
-summary(VLF_family_lm)
-
-VLF_family_pred <- plot_interaction(VLF_family_lm, xylem_VLF)
-
-VLF_family_sma <- sma(log(mean_VLF)~log(MAP)*family, xylem_VLF, method = "OLS")
-print(VLF_family_sma, coefbygroup = T)
-
-family_VLF_labels <- read.csv("data/family_VLF_labels.csv", header = T)
-
-ggplot() +
-  geom_line(data = VLF_family_pred, aes(MAP, exp(fit)), col = "red", linewidth = 1) +
-  geom_point(data = xylem_VLF, aes(MAP, mean_VLF), size = 1) +
-  facet_wrap(~family, nrow = 2) +
-  xlab("Mean annual precipitation (mm)") +
-  ylab("VLF (%)") +
-  theme_bw() +
-  scale_x_log10() +
-  scale_y_log10() +
-  scale_color_brewer(palette = "Set1") +
-  geom_text(aes(180, 40, label = r_sq), data = family_VLF_labels, size = 4, parse = T, hjust = 0, vjust = 0) +
-  geom_text(aes(180, 40, label = n), data = family_VLF_labels, size = 4, parse = T, hjust = 0, vjust = 1.5) +
-  theme(axis.title = element_text(size = 14),
-        strip.text = element_text(size = 12))
-
-ggsave("figures/VLF_MAP_family.png", scale = 1.5, width = 15.94, height = 9, units = "cm")
-
-## Genus level
-VLF_genus_lm <- lm(log(mean_VLF)~log(MAP)*genus, data = xylem_VLF |> filter(n_samples > 5))
-summary(VLF_genus_lm)
-anova(VLF_genus_lm)
-
-VLF_genus_pred <- plot_interaction(VLF_genus_lm, xylem_VLF |> filter(n_samples > 5) |> dplyr::select(mean_VLF, MAP, genus, family))
-
-VLF_genus_sma <- sma(log(mean_VLF)~log(MAP)*genus, xylem_VLF |> filter(n_samples > 5), method = "OLS")
-print(VLF_genus_sma, coefbygroup = T)
-
-genus_VLF_labels <- read.csv("data/genus_VLF_labels.csv", header = T)
-
-ggplot() +
-  geom_line(data = VLF_genus_pred, aes(MAP, exp(fit)), col = "red", linewidth = 1) +
-  geom_point(data = xylem_VLF |> filter(n_samples > 5), aes(MAP, mean_VLF), size = 1) +
-  facet_wrap(~genus, nrow = 2) +
-  xlab("Mean annual precipitation (mm)") +
-  ylab("VLF (%)") +
-  theme_bw() +
-  scale_x_log10() +
-  scale_y_log10() +
-  scale_color_brewer(palette = "Set1") +
-  geom_text(aes(180, 40, label = r_sq), data = genus_VLF_labels, size = 4, parse = T, hjust = 0, vjust = 0) +
-  geom_text(aes(180, 40, label = n), data = genus_VLF_labels, size = 4, parse = T, hjust = 0, vjust = 1.5) +
-  theme(axis.title = element_text(size = 14),
-        strip.text = element_text(size = 12))
-
-ggsave("figures/VLF_MAP_genus.png", scale = 1.5, width = 15.94, height = 9, units = "cm")
-
-```
-
-
-## Height analysis
-```{r}
-austraits <- read_rds("data/austraits-5.0.0.rds")
-
-height_data <- extract_trait(austraits, "plant_height")
-
-species_heights <- height_data$traits |> 
-  filter(taxon_name %in% xylem_Dh$apc_name) |> 
-  filter(value_type == "maximum") |> 
-  group_by(taxon_name) |> 
-  summarise(max_height = max(value),
-            mean_height = mean(value))
-
-xylem_Dh_height <- xylem_Dh |> left_join(species_heights, by = c("apc_name"= "taxon_name"))
-
-height_logged <- ggplot(data = xylem_Dh_height, aes(mean_height, mean_Dh)) +
-  geom_smooth(method = "lm", se = F, col = "black", linewidth = 1) +
-  geom_point(aes(col = MAP), size = 1) +
-  scale_x_log10() +
-  scale_y_log10() +
-  scale_colour_gradient2(low = "red", mid = "dark grey", high = "blue", midpoint = median(log(xylem_Dh_height$MAP)), trans = "log") +
-  theme_bw() +
-  xlab("Maximum plant height (m)") + 
-  ylab(D[h]~" (µm)") +
-  theme(legend.position = "none",
-        axis.title = element_text(size = 14)) 
-
-height_unlogged <- ggplot(data = xylem_Dh_height, aes(mean_height, mean_Dh)) +
-  # geom_smooth(method = "lm", se = F, col = "black", linewidth = 1) +
-  geom_point(aes(col = MAP), size = 1) +
-  # scale_x_log10() +
-  # scale_y_log10() +
-  scale_colour_gradient2(low = "red", mid = "dark grey", high = "blue", midpoint = mean(log(xylem_Dh_height$MAP)), trans = "log", breaks = c(222, 1037, 3368)) +
-  theme_bw() +
-  xlab("Maximum plant height (m)") + 
-  ylab(D[h]~" (µm)") +
-  labs(colour = "MAP (mm)") +
-  theme(axis.title = element_text(size = 14)) 
-
-height_logged + height_unlogged + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & theme(plot.tag = element_text(size = 10))
-
-ggsave("figures/Dh_height_MAP.png", scale = 1.5, width = 15.94, height = 7.34, units = "cm")
-```
-
 
 ## Sankey diagram for distribution of species in dataset
 ```{r}
