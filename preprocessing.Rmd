@@ -1,0 +1,198 @@
+---
+title: "preprocessing"
+output: html_notebook
+---
+
+## Loading all required packages
+```{r}
+library(tidyverse)
+library(patchwork)
+library(terra)
+library(APCalign)
+library(glmmTMB)
+library(easystats)
+library(ggeffects)
+library(scales)
+```
+
+## Importing and name-matching data
+```{r}
+vessel_areas_2023 <- read.csv("data/vessel_measurements.csv", header = T) 
+vessel_areas_2026 <- read.csv("data/2026_measurements.csv", header = T) 
+
+vessel_areas <- bind_rows(vessel_areas_2023, vessel_areas_2026) |>  
+  separate(Image, c("family_original", "other"), sep = " ", extra = "merge") |>
+  separate(other, c("species_name", "state", "other"), sep = "_", extra = "merge") |>
+  mutate(area_mm = Area.µm.2/1000000,
+         radius = sqrt(Area.µm.2/pi))
+
+rm(vessel_areas_2023, vessel_areas_2026)
+gc()
+
+resources <- load_taxonomic_resources()     # Used for ausflora functions
+
+apc_names <- align_taxa(unique(vessel_areas$species_name), resources = resources) %>% 
+  update_taxonomy(resources = resources)
+apc_names_native <- native_anywhere_in_australia(apc_names$accepted_name, resources = resources)
+apc_names <- apc_names %>% left_join(apc_names_native, by = c("accepted_name" = "species"), multiple = "first")
+
+# apc_names %>% group_by(family, native_anywhere_in_aus) %>% summarise (n = n()) %>% View()
+
+vessel_areas <- vessel_areas %>% left_join(apc_names %>% dplyr::select(original_name, accepted_name, genus, family, native_anywhere_in_aus), by = c("species_name" = "original_name")) %>% filter(native_anywhere_in_aus == "native")
+
+
+# Updated taxonomy used for GBIF occurrence species name
+# write.csv(apc_names %>% filter(native_anywhere_in_aus == "native") %>% 
+#           dplyr::select(accepted_name) %>% 
+#           rename(scientificName = accepted_name), "data/apc_names.csv", row.names = F)
+# apc_names <- read.csv("data/apc_names.csv", header = T)
+
+gbif_names <- read.csv("data/gbif_namematched.csv", header = T) |> filter(grepl("SPECIES|VARIETY", rank)) 
+
+vessel_areas <- vessel_areas |> 
+  left_join(gbif_names %>% dplyr::select(species, verbatimScientificName, scientificName), by = c("accepted_name" = "verbatimScientificName"), multiple = "first") %>% rename(apc_name = accepted_name, gbif_name = species) |> filter(!state %in% c("kb", "PNG", "1"))
+
+write.csv(vessel_areas, "./data/vessel_areas.csv", row.names = F)
+```
+
+
+## GBIF download
+```{r}
+# species_names <- gbif_names$scientificName
+# 
+# # # Requires free GBIF account — set credentials once:
+# # options(gbif_user = "",           # Use your own GBIF credentials
+# #         gbif_pwd  = "",           # Use your own GBIF credentials
+# #         gbif_email = "")          # Use your own GBIF credentials
+# 
+# # Get taxon keys for all species
+# keys <- sapply(species_names, function(sp) name_backbone(name = sp)$usageKey)
+# keys <- keys[!is.na(keys)]
+# 
+# # Submit download request
+# download_key <- occ_download(
+#   pred_in("taxonKey", keys),
+#   pred("hasCoordinate", TRUE),
+#   format = "SIMPLE_CSV"
+# )
+
+# # Wait for it to finish, then retrieve
+# occ_download_wait(download_key)
+# data <- occ_download_get(download_key) |> occ_download_import()
+# 
+# write_parquet(data, "data/gbif_sample_occs.parquet")
+
+# data_AU <- data |> filter(countryCode == "AU" & year >=1900 & coordinateUncertaintyInMeters <= 10000)
+```
+
+
+## Creating climate preference data for all native tracheophytes
+```{r}
+library(arrow)
+# Filtering columns from GBIF occurrences for RAM and processing time consideration
+
+## Converting very large CSV to parquet
+# gbif_occurrences <- fread("data/gbif_raw_occs.csv", header=T, sep="\t")
+# write_parquet(gbif_occurrences, "data/gbif_raw_occs.parquet")
+
+# gbif_occurrences <- read_parquet("data/gbif_raw_occs.parquet")
+# 
+# gbif_filtered <- gbif_occurrences |>
+#   filter(grepl("SPECIES|VARIETY", taxonRank)) |> 
+#   dplyr::select(family, genus, species, scientificName, decimalLatitude, decimalLongitude, coordinateUncertaintyInMeters) |>
+#   drop_na() |> 
+#   filter(coordinateUncertaintyInMeters <= 10000)
+
+# write_parquet(gbif_filtered, "data/gbif_filtered.parquet")
+
+# Loading and extracting rasters----
+
+library(data.table)
+
+# Creating point vector for each occurrence
+gbif_filtered <- read_parquet("data/gbif_filtered.parquet") |> filter(coordinateUncertaintyInMeters <= 1000)
+
+# Create points once
+occurrence_points <- vect(gbif_filtered, geom = c("decimalLongitude", "decimalLatitude"))
+
+# Load all rasters as a single stack (one read pass, shared memory)
+raster_stack <- list.files("rasters_30s/", full.names = TRUE) |>
+  rast()  # terra::rast() accepts a vector of paths → stacks them
+
+# Extract all layers at once (single pass over points)
+extracted <- terra::extract(raster_stack, occurrence_points, ID = FALSE)
+
+# Bind columns once instead of mutating in a loop
+gbif_filtered <- cbind(gbif_filtered, extracted)
+
+rm(extracted)
+gc()
+
+# Filter and summarise
+tracheophyte_climate_preferences <- gbif_filtered |>
+  group_by(family, genus, species, scientificName) |>
+  summarise(
+    MAP = mean(wc2.1_30s_bio_12, na.rm = TRUE),
+    MAT = mean(wc2.1_30s_bio_1, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  distinct()
+
+tracheophyte_taxa <- create_taxonomic_update_lookup(tracheophyte_climate_preferences$scientificName, resources = resources)
+tracheophyte_native_taxa <- native_anywhere_in_australia(tracheophyte_taxa$suggested_name, resources = resources) |> left_join(tracheophyte_taxa, by = c("species" = "suggested_name"), multiple = "first") |> filter(native_anywhere_in_aus == "native")
+
+
+tracheophyte_climate_preferences <- tracheophyte_climate_preferences |> filter(scientificName %in% tracheophyte_native_taxa$original_name)
+
+rm(gbif_filtered)
+gc()
+
+# write.csv(tracheophyte_climate_preferences, "data/tracheophyte_climate_preferences.csv", row.names = F)
+```
+
+
+## Creating climate preferences for sample species
+```{r}
+# Creating point vector for each occurrence
+data_AU <- read_parquet("data/gbif_sample_occs.parquet") |> 
+  filter(
+    countryCode == "AU" & 
+      year >=1900 & 
+      coordinateUncertaintyInMeters <= 1000 &
+      basisOfRecord == "HUMAN_OBSERVATION"
+    ) |> 
+  distinct(species, decimalLatitude, decimalLongitude, .keep_all = T)
+
+
+# Create points once
+occurrence_points <- vect(data_AU, geom = c("decimalLongitude", "decimalLatitude"))
+
+# Load all rasters as a single stack (one read pass, shared memory)
+raster_stack <- list.files("rasters_30s/", full.names = TRUE) |>
+  rast()  # terra::rast() accepts a vector of paths → stacks them
+
+# Extract all layers at once (single pass over points)
+extracted <- terra::extract(raster_stack, occurrence_points, ID = FALSE)
+
+# Bind columns once instead of mutating in a loop
+data_AU <- cbind(data_AU, extracted)
+
+
+# Filter and summarise
+climate_preferences <- data_AU |>
+  filter(scientificName %in% gbif_names$scientificName) |>
+  group_by(family, genus, species, scientificName) |>
+  summarise(
+    MAP = mean(wc2.1_30s_bio_12, na.rm = TRUE),
+    MAT = mean(wc2.1_30s_bio_1, na.rm = TRUE),
+    n_obs = n(),
+    .groups = "drop"
+  ) |>
+  distinct() |> 
+  filter(n_obs >= 10)
+
+
+# write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
+
+```
+
