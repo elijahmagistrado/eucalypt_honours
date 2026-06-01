@@ -1,7 +1,5 @@
 # Xylem Climate Analyses
 
-**Author:** Elijah Magistrado  
-**Project:** Eucalyptus Honours Research  
 
 ---
 
@@ -139,7 +137,3 @@ install.packages(c("tidyverse", "patchwork", "terra", "glmmTMB",
 
 ---
 
-## License
-
-This project is part of Elijah Magistrado's Honours research at the University of [Institution].  
-Contact: `[email]`
