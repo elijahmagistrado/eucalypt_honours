@@ -1,5 +1,6 @@
 # Xylem Climate Analyses
 
+Author: Elijah Magistrado
 
 ---
 
@@ -129,11 +130,6 @@ install.packages(c("tidyverse", "patchwork", "terra", "glmmTMB",
 
 ---
 
-## References
+## Acknowledgements
 
-- Zanne, A.E. et al. (2010). "Global wood density." *Nature*, 467, 1083–1086.
-- WorldClim v2.1: Fick, S.E. & Hijmans, R.J. (2017). *International Journal of Climatology*, 37, 2683–2696.
-- GBIF: https://www.gbif.org/
-
----
-
+Claude Sonnet 4.6 and Qwen 3.6 was used for code review. Qwen 3.6 was used to write the majority of this README.md file.
