@@ -1,9 +1,0 @@
-﻿genus,n,r_sq
-Acacia,n == 37,R^2 == 0.02^ns
-Allocasuarina,n == 7,R^2 == 0.17^ns
-Banksia,n == 13,"R^2 == ""<0.01""^ns"
-Corymbia,n == 17,R^2 == 0.06^ns
-Eucalyptus,n == 127,"R^2 == ""<0.01""^ns"
-Flindersia,n == 13,R^2 == 0.29^ns
-Melaleuca,n == 11,"R^2 == 0.52^""*"""
-Syzygium,n == 15,R^2 == 0.16^ns

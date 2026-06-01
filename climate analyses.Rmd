@@ -19,191 +19,17 @@ library(ggeffects)
 library(scales)
 ```
 
-## Importing and name-matching data
+
+## Loading all required data
 ```{r}
-vessel_areas_2023 <- read.csv("data/vessel_measurements.csv", header = T) 
-vessel_areas_2026 <- read.csv("data/2026_measurements.csv", header = T) 
-
-vessel_areas <- bind_rows(vessel_areas_2023, vessel_areas_2026) |>  
-  separate(Image, c("family_original", "other"), sep = " ", extra = "merge") |>
-  separate(other, c("species_name", "state", "other"), sep = "_", extra = "merge") |>
-  mutate(area_mm = Area.µm.2/1000000,
-         radius = sqrt(Area.µm.2/pi))
-
-rm(vessel_areas_2023, vessel_areas_2026)
-gc()
-
-resources <- load_taxonomic_resources()     # Used for ausflora functions
-
-apc_names <- align_taxa(unique(vessel_areas$species_name), resources = resources) %>% 
-  update_taxonomy(resources = resources)
-apc_names_native <- native_anywhere_in_australia(apc_names$accepted_name, resources = resources)
-apc_names <- apc_names %>% left_join(apc_names_native, by = c("accepted_name" = "species"), multiple = "first")
-
-# apc_names %>% group_by(family, native_anywhere_in_aus) %>% summarise (n = n()) %>% View()
-
-vessel_areas <- vessel_areas %>% left_join(apc_names %>% dplyr::select(original_name, accepted_name, genus, family, native_anywhere_in_aus), by = c("species_name" = "original_name")) %>% filter(native_anywhere_in_aus == "native")
-
-
-# Updated taxonomy used for GBIF occurrence species name
-# write.csv(apc_names %>% filter(native_anywhere_in_aus == "native") %>% 
-#           dplyr::select(accepted_name) %>% 
-#           rename(scientificName = accepted_name), "data/apc_names.csv", row.names = F)
-# apc_names <- read.csv("data/apc_names.csv", header = T)
-
-gbif_names <- read.csv("data/gbif_namematched.csv", header = T) |> filter(grepl("SPECIES|VARIETY", rank)) 
-
-vessel_areas <- vessel_areas |> 
-  left_join(gbif_names %>% dplyr::select(species, verbatimScientificName, scientificName), by = c("accepted_name" = "verbatimScientificName"), multiple = "first") %>% rename(apc_name = accepted_name, gbif_name = species) |> filter(!state %in% c("kb", "PNG", "1"))
-```
-
-
-## GBIF download
-```{r}
-# species_names <- gbif_names$scientificName
-# 
-# # # Requires free GBIF account — set credentials once:
-# # options(gbif_user = "",
-# #         gbif_pwd  = "",
-# #         gbif_email = "")
-# 
-# # Get taxon keys for all species
-# keys <- sapply(species_names, function(sp) name_backbone(name = sp)$usageKey)
-# keys <- keys[!is.na(keys)]
-# 
-# # Submit download request
-# download_key <- occ_download(
-#   pred_in("taxonKey", keys),
-#   pred("hasCoordinate", TRUE),
-#   format = "SIMPLE_CSV"
-# )
-
-# # Wait for it to finish, then retrieve
-# occ_download_wait(download_key)
-# data <- occ_download_get(download_key) |> occ_download_import()
-# 
-# write_parquet(data, "data/gbif_sample_occs.parquet")
-
-# data_AU <- data |> filter(countryCode == "AU" & year >=1900 & coordinateUncertaintyInMeters <= 10000)
-```
-
-
-## Creating climate preference data for all native tracheophytes
-```{r}
-library(arrow)
-# Filtering columns from GBIF occurrences for RAM and processing time consideration
-
-## Converting very large CSV to parquet
-# gbif_occurrences <- fread("data/gbif_raw_occs.csv", header=T, sep="\t")
-# write_parquet(gbif_occurrences, "data/gbif_raw_occs.parquet")
-
-# gbif_occurrences <- read_parquet("data/gbif_raw_occs.parquet")
-# 
-# gbif_filtered <- gbif_occurrences |>
-#   filter(grepl("SPECIES|VARIETY", taxonRank)) |> 
-#   dplyr::select(family, genus, species, scientificName, decimalLatitude, decimalLongitude, coordinateUncertaintyInMeters) |>
-#   drop_na() |> 
-#   filter(coordinateUncertaintyInMeters <= 10000)
-
-# write_parquet(gbif_filtered, "data/gbif_filtered.parquet")
-
-# Loading and extracting rasters----
-
-library(data.table)
-
-# Creating point vector for each occurrence
-gbif_filtered <- read_parquet("data/gbif_filtered.parquet") |> filter(coordinateUncertaintyInMeters <= 1000)
-
-# Create points once
-occurrence_points <- vect(gbif_filtered, geom = c("decimalLongitude", "decimalLatitude"))
-
-# Load all rasters as a single stack (one read pass, shared memory)
-raster_stack <- list.files("rasters_30s/", full.names = TRUE) |>
-  rast()  # terra::rast() accepts a vector of paths → stacks them
-
-# Extract all layers at once (single pass over points)
-extracted <- terra::extract(raster_stack, occurrence_points, ID = FALSE)
-
-# Bind columns once instead of mutating in a loop
-gbif_filtered <- cbind(gbif_filtered, extracted)
-
-rm(extracted)
-gc()
-
-# Filter and summarise
-tracheophyte_climate_preferences <- gbif_filtered |>
-  group_by(family, genus, species, scientificName) |>
-  summarise(
-    MAP = mean(wc2.1_30s_bio_12, na.rm = TRUE),
-    MAT = mean(wc2.1_30s_bio_1, na.rm = TRUE),
-    .groups = "drop"
-  ) |>
-  distinct()
-
-tracheophyte_taxa <- create_taxonomic_update_lookup(tracheophyte_climate_preferences$scientificName, resources = resources)
-tracheophyte_native_taxa <- native_anywhere_in_australia(tracheophyte_taxa$suggested_name, resources = resources) |> left_join(tracheophyte_taxa, by = c("species" = "suggested_name"), multiple = "first") |> filter(native_anywhere_in_aus == "native")
-
-
-tracheophyte_climate_preferences <- tracheophyte_climate_preferences |> filter(scientificName %in% tracheophyte_native_taxa$original_name)
-
-rm(gbif_filtered)
-gc()
-
-# write.csv(tracheophyte_climate_preferences, "data/tracheophyte_climate_preferences.csv", row.names = F)
-```
-
-
-## Creating climate preferences for sample species
-```{r}
-# Creating point vector for each occurrence
-data_AU <- read_parquet("data/gbif_sample_occs.parquet") |> 
-  filter(
-    countryCode == "AU" & 
-      year >=1900 & 
-      coordinateUncertaintyInMeters <= 1000 &
-      basisOfRecord == "HUMAN_OBSERVATION"
-    ) |> 
-  distinct(species, decimalLatitude, decimalLongitude, .keep_all = T)
-
-
-# Create points once
-occurrence_points <- vect(data_AU, geom = c("decimalLongitude", "decimalLatitude"))
-
-# Load all rasters as a single stack (one read pass, shared memory)
-raster_stack <- list.files("rasters_30s/", full.names = TRUE) |>
-  rast()  # terra::rast() accepts a vector of paths → stacks them
-
-# Extract all layers at once (single pass over points)
-extracted <- terra::extract(raster_stack, occurrence_points, ID = FALSE)
-
-# Bind columns once instead of mutating in a loop
-data_AU <- cbind(data_AU, extracted)
-
-
-# Filter and summarise
-climate_preferences <- data_AU |>
-  filter(scientificName %in% gbif_names$scientificName) |>
-  group_by(family, genus, species, scientificName) |>
-  summarise(
-    MAP = mean(wc2.1_30s_bio_12, na.rm = TRUE),
-    MAT = mean(wc2.1_30s_bio_1, na.rm = TRUE),
-    n_obs = n(),
-    .groups = "drop"
-  ) |>
-  distinct() |> 
-  filter(n_obs >= 10)
-
-
-# write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
-
-```
-
-
-## Creating whittaker plot
-```{r}
+vessel_areas <- read.csv("data/vessel_areas.csv", header = T)
 tracheophyte_climate_preferences <- read.csv("data/tracheophyte_climate_preferences.csv", header = T)
 climate_preferences <- read.csv("data/climate_preferences.csv", header = T)
+```
 
+
+## Fig. 2 Whittaker plot
+```{r}
 ggplot() +
   geom_hex(data = tracheophyte_climate_preferences, aes(x = MAT, y = MAP), bins = 10, col = "light grey", alpha = 1, linewidth = 0.1) +
   scale_fill_gradient(low = "white", high = "forestgreen") +
@@ -253,7 +79,7 @@ xylem_VLF <- vessel_areas |>
 xylem_stats <- xylem_Dh |> left_join(xylem_VLF |> dplyr::select(scientificName, mean_VLF), by = "scientificName") |> 
   dplyr::select(family, genus, species, mean_Dh, mean_VLF, MAP, MAT, n_vessels, n_images, n_vessels_per_image)
 
-write.csv(xylem_stats, "./data/xylem_stats.csv", row.names = F)
+# write.csv(xylem_stats, "./data/xylem_stats.csv", row.names = F)
 
 # ggplot() +
 #   geom_density(data = xylem_Dh |> filter(family_n_samples > 5), aes(MAP, col = family)) +
@@ -267,7 +93,9 @@ selected_genera <- xylem_Dh |> group_by(genus, family) |> summarise(n = n()) |> 
 sample_distribution <- xylem_Dh |> group_by(genus, family) |> summarise(n_species = n()) |> group_by(family) |> mutate(n_genus = n()) 
 ```
 
-# Dh
+
+
+# Statistical modelling
 ## Dh mixed model
 ```{r}
 # Data preparation
@@ -311,6 +139,57 @@ compare_performance(xylem_Dh_regular_model, xylem_Dh_mixed_model)
 anova(xylem_Dh_regular_model, xylem_Dh_mixed_model)
 ``` 
 
+## VLF mixed model
+```{r}
+# Data preparation
+xylem_VLF_genus <- xylem_VLF |> 
+  group_by(genus) |> 
+  mutate(
+    log_VLF = log(mean_VLF),
+    log_MAP = log(MAP),
+    genus_mean_MAP = mean(log(MAP)),
+    genus_mean_VLF = mean(log(mean_VLF))
+  ) |> 
+  ungroup() |> 
+  mutate(
+    diff_from_genus_MAP = log_MAP - genus_mean_MAP,
+  )
+
+xylem_VLF_genus$genus <- as.factor(xylem_VLF_genus$genus)
+xylem_VLF_genus$family <- as.factor(xylem_VLF_genus$family)
+
+# Mixed model with genus-centering
+xylem_VLF_mixed_model <- glmmTMB(log_VLF ~ genus_mean_MAP + 
+                                  diff_from_genus_MAP +
+                                  (1 | family) + 
+                                  (diff_from_genus_MAP | genus),
+                                data = xylem_VLF_genus,
+                                family = gaussian())
+
+# Mixed model testing
+parameters(xylem_VLF_mixed_model)
+summary(xylem_VLF_mixed_model)
+r2(xylem_VLF_mixed_model)
+
+# Simple model
+xylem_VLF_regular_model <- glmmTMB(log_VLF ~ log_MAP,
+                                data = xylem_VLF_genus,
+                                family = gaussian())
+
+# Simple model testing
+parameters(xylem_VLF_regular_model)
+summary(xylem_VLF_regular_model)
+r2(xylem_VLF_regular_model)
+
+# Comparison
+compare_performance(xylem_VLF_regular_model, xylem_VLF_mixed_model)
+anova(xylem_VLF_regular_model, xylem_VLF_mixed_model)
+```
+
+
+
+
+# Plotting Dh
 
 ## Colour palettes
 ```{r}
@@ -327,7 +206,7 @@ genus_colours <- selected_genera |>
 
 ```
 
-## Dh family plot, mainly by Claude Sonnet 4.6
+## Fig. 4a Dh family plot, mainly by Claude Sonnet 4.6
 ```{r}
 # ── 1. Across-genus marginal effect ──────────────────────────────────────────
 Dh_across_pred <- ggpredict(xylem_Dh_mixed_model, terms = "genus_mean_MAP [all]")
@@ -426,7 +305,7 @@ ggplot() +
 Dh_family_facet
 ```
 
-## Dh genus plot, mainly by Claude Sonnet 4.6
+## Fig 4b Dh genus plot, mainly by Claude Sonnet 4.6
 ```{r}
 # ── 1. Across-genus marginal effect ──────────────────────────────────────────
 Dh_across_pred <- ggpredict(xylem_Dh_mixed_model, terms = "genus_mean_MAP [all]")
@@ -577,59 +456,9 @@ ggsave("figures/Dh_mixed_model_Claude.png", scale = 1, width = 15.92, height = 2
 ```
 
 
+# Plotting VLF
 
-
-# VLF
-## VLF mixed model
-
-```{r}
-# Data preparation
-xylem_VLF_genus <- xylem_VLF |> 
-  group_by(genus) |> 
-  mutate(
-    log_VLF = log(mean_VLF),
-    log_MAP = log(MAP),
-    genus_mean_MAP = mean(log(MAP)),
-    genus_mean_VLF = mean(log(mean_VLF))
-  ) |> 
-  ungroup() |> 
-  mutate(
-    diff_from_genus_MAP = log_MAP - genus_mean_MAP,
-  )
-
-xylem_VLF_genus$genus <- as.factor(xylem_VLF_genus$genus)
-xylem_VLF_genus$family <- as.factor(xylem_VLF_genus$family)
-
-# Mixed model with genus-centering
-xylem_VLF_mixed_model <- glmmTMB(log_VLF ~ genus_mean_MAP + 
-                                  diff_from_genus_MAP +
-                                  (1 | family) + 
-                                  (diff_from_genus_MAP | genus),
-                                data = xylem_VLF_genus,
-                                family = gaussian())
-
-# Mixed model testing
-parameters(xylem_VLF_mixed_model)
-summary(xylem_VLF_mixed_model)
-r2(xylem_VLF_mixed_model)
-
-# Simple model
-xylem_VLF_regular_model <- glmmTMB(log_VLF ~ log_MAP,
-                                data = xylem_VLF_genus,
-                                family = gaussian())
-
-# Simple model testing
-parameters(xylem_VLF_regular_model)
-summary(xylem_VLF_regular_model)
-r2(xylem_VLF_regular_model)
-
-# Comparison
-compare_performance(xylem_VLF_regular_model, xylem_VLF_mixed_model)
-anova(xylem_VLF_regular_model, xylem_VLF_mixed_model)
-```
-
-
-## VLF family plot, mainly by Claude Sonnet 4.6
+## Fig. 5a VLF family plot, mainly by Claude Sonnet 4.6
 ```{r}
 # ── 1. Across-genus marginal effect ──────────────────────────────────────────
 VLF_across_pred <- ggpredict(xylem_VLF_mixed_model, terms = "genus_mean_MAP [all]")
@@ -721,7 +550,7 @@ ggplot() +
 VLF_family_facet
 ```
 
-## VLF genus plot, mainly by Claude Sonnet 4.6
+## Fig. 5b VLF genus plot, mainly by Claude Sonnet 4.6
 ```{r}
 # ── 1. Across-genus marginal effect ──────────────────────────────────────────
 VLF_across_pred <- ggpredict(xylem_VLF_mixed_model, terms = "genus_mean_MAP [all]")
@@ -859,7 +688,7 @@ VLF_family_facet / VLF_genus_facet + plot_annotation(tag_levels = 'a', tag_suffi
 ggsave("figures/VLF_mixed_model_Claude.png", scale = 1, width = 15.92, height = 23, units = "cm", dpi = 330)
 ```
 
-
+# Fig. 3 Overall plots
 ## Comparison of regular linear regression
 ```{r}
 Dh_simple_pred <- ggpredict(xylem_Dh_regular_model, terms = "log_MAP [all]")
@@ -872,7 +701,6 @@ Dh_simple_mixed_pred <- ggpredict(xylem_Dh_simple_mixed_model, terms = "log_MAP 
 
 
 ```
-
 
 
 ```{r}
@@ -969,33 +797,8 @@ ggsave("figures/Dh_VLF_overall.png", scale = 1, width = 15.92, height = 9.5, uni
 ```
 
 
-
-
 # Other
-
-## Sankey diagram for distribution of species in dataset
-```{r}
-## Code adapted from https://r-graph-gallery.com/sankey-diagram.html
-links <- read.csv("data/sankey_links.csv", header = T)
-
-nodes <- data.frame(
-  name=c(as.character(links$source), 
-  as.character(links$target)) %>% unique()
-)
-
-links$IDsource <- match(links$source, nodes$name)-1 
-links$IDtarget <- match(links$target, nodes$name)-1
- 
-sankey_plot <- sankeyNetwork(Links = links, Nodes = nodes,
-              Source = "IDsource", Target = "IDtarget",
-              Value = "value", NodeID = "name", 
-              sinksRight=FALSE, width = 600, height = 600, fontSize = 20, fontFamily = "Arial")
-
-sankey_plot
-```
-
-
-## Zanne et al. (2010) comparison
+## Fig. S1 Zanne et al. (2010) comparison
 ```{r}
 zanne_data <- read.csv("data/zanne_data.csv", header = T)
 
@@ -1036,76 +839,4 @@ ggplot() +
 
 
 ggsave("figures/zanne_plot.png", scale = 1, width = 15.94, height = 14, units = "cm",dpi = 330)
-```
-
-
-## Dataset statistics
-```{r}
-data_dir <- "/Users/elijahmagistrado/OneDrive - UNSW/images"
-
-all_image_names <- list.files(data_dir, pattern = "_x.jpg", recursive = T) |> 
-  as.data.frame() 
-
-names(all_image_names)[1] <- "file_name"
-
-# Correcting for strange formatting of image folders
-non_eucalypts <- all_image_names |>
-  separate(file_name, c("family", "other"), sep = " ", extra = "merge") |>
-  separate(other, c("species", "other"), sep = "_", extra = "merge") |> 
-  filter(!grepl("/", species)) |> 
-  distinct(family, species)
-
-eucalypts <- all_image_names |>
-  separate(file_name, c("family", "other"), sep = " ", extra = "merge") |>
-  separate(other, c("species", "other"), sep = "_", extra = "merge") |> 
-  filter(grepl("/", species)) |> 
-  separate(species, c("other", "species"), sep = "/", extra = "merge") |> 
-  separate(species, c("family2", "species"), sep = " ", extra = "merge") |> 
-  distinct(family, species)
-
-species_merged <- bind_rows(non_eucalypts, eucalypts)
-
-images_apc_names <- update_taxonomy(species_merged$species, resources = resources) |>
-  filter(grepl("accepted|synonym|variant", taxonomicStatusClean)) |> distinct(canonicalName)
-
-# Species names with typos
-apc_names |> filter(!canonicalName %in% images_apc_names$canonicalName)
-
-# Total number of species
-nrow(species_merged)
-
-# Number of native species
-nrow(apc_names |> distinct(canonicalName))
-
-# Number of species in selected families
-xylem_areas |> distinct(family, apc_name) |> group_by(family) |> summarise(n = n())
-xylem_areas |> distinct(apc_name, species_name) |> filter(apc_name != species_name) |> nrow()
-
-
-image_count <- vessel_areas |> filter(scientificName %in% xylem_Dh$scientificName) |> 
-  filter(Name == "vessel"|Classification == "vessel") |> 
-  group_by(family, genus, scientificName, other) |> summarise(n=n())
-
-```
-
-
-## Moving unprocessed images to new folder
-```{r}
-processed_images <- list.files("/Volumes/Extension/Elijah honours/QuPath images", recursive = T, full.names = T) |> basename()
-
-original_dataset <- list.files("/Users/elijahmagistrado/OneDrive - UNSW/images", recursive = T, full.names = T) |> as.data.frame()
-
-names(original_dataset)[1] <- "file_name"
-
-matching_files <- data.frame()
-
-for (image in processed_images) {
-  matching_file <- original_dataset |> filter(grepl(image, file_name, fixed = T))
-  
-  matching_files <- bind_rows(matching_files, matching_file)
-}
-
-for (image in matching_files) {
-  file.copy(from = image, to = "/Volumes/Extension/Elijah honours/Original images/")
-}
 ```

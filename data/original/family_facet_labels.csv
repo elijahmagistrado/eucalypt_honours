@@ -1,8 +1,0 @@
-family,n,r_sq
-Apocynaceae,n == 8,R^2 == 0.29^ns
-Casuarinaceae,n == 10,R^2 == 0.20^ns
-Cunoniaceae,n == 15,R^2 == 0.20^ns
-Fabaceae,n == 51,"R^2 == 0.47^""***"""
-Myrtaceae,n == 208,"R^2 == 0.07^""***"""
-Proteaceae,n == 38,"R^2 == 0.27^""***"""
-Rutaceae,n == 26,R^2 == 0.04^ns
