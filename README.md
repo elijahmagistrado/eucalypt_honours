@@ -1,135 +1,132 @@
-# Xylem Climate Analyses
+# eucalypt_honours
 
-Author: Elijah Magistrado
-
----
+Within- and across-genus scaling of vessel diameter reveals consistent hydraulic responses to rainfall.
 
 ## Overview
 
-This repository contains the analysis pipeline for investigating relationships between **xylem vessel traits** and **climate variables** (Mean Annual Temperature, Mean Annual Precipitation) in Australian native tracheophytes. The study computes hydraulic traits from histological images and correlates them with species' climatic niches derived from GBIF occurrence records.
+This repository contains the data, scripts, and analysis pipeline for a study examining how xylem hydraulic traits scale with precipitation across Australian native woody plant species. The project analyses **hydraulically weighted vessel diameter (Dh)** and **vessel lumen fraction (VLF)** across 480 native Australian species spanning 129 genera and 32 families, using historical wood collections curated by the Forestry Corporation of New South Wales.
 
-### Key Research Questions
-- How does hydraulic diameter (Dh) vary with Mean Annual Precipitation (MAP)?
-- How does Vessel Lumen Fraction (VLF) vary with MAP?
-- Do these relationships differ across plant families and genera?
+The key innovation is the use of a **within-subject centering** (genus-level centered) linear mixed-effects model to separate within- and across-genus trait-climate relationships, helping resolve inconsistencies in vessel size–rainfall scaling found across studies of varying phylogenetic scope.
 
----
+## Research Questions
+
+- Does Dh scale positively with mean annual precipitation (MAP) at both within- and across-genus levels?
+- Does separating within- and across-genus effects explain more variance than conventional linear models?
+- How does VLF relate to rainfall compared to Dh, and is it predominantly driven by phylogenetic grouping?
+
+## Key Findings
+
+- **Dh scales positively with MAP** at both within-genus (β = 0.33) and across-genus (β = 0.37) levels, with highly consistent slopes but divergent intercepts across lineages.
+- The within-genus centering model explained **78.6% of the variance** in Dh, compared to only **2.8%** for a conventional linear regression.
+- **VLF showed no significant relationship** with rainfall; its variation was primarily driven by phylogenetic grouping (45.6% conditional R²).
+- Differences in baseline intercepts across genera likely reflect divergent hydraulic strategies that have evolved along different evolutionary lineages.
 
 ## Repository Structure
 
 ```
-eucalypt_honours.Rproj          # RStudio project file
-climate analyses.Rmd            # Statistical modelling & plotting (main analysis)
-preprocessing.Rmd               # Data import, taxonomic matching, climate extraction
-.gitignore                      # Ignored files and directories
-
-data/                           # Input and intermediate data files
-├── vessel_areas.csv            # Processed vessel area measurements
-├── vessel_measurements.csv     # Raw vessel measurements (2023)
-├── 2026_measurements.csv       # Raw vessel measurements (2026)
-├── climate_preferences.csv     # Climate data for sample species
-├── tracheophyte_climate_preferences.csv  # Full dataset climate preferences
-├── zanne_data.csv              # Zanne et al. (2010) comparison data
-├── apc_names.csv               # APC taxonomic matching results
-├── gbif_namematched.csv        # GBIF name-matched species
-└── *.parquet, *.csv            # GBIF occurrence data files
-
-figures/                        # Output figures
-├── whittaker_plot.png          # Species distribution in climate space (Fig. 2)
-├── Dh_mixed_model_Claude.png   # Hydraulic diameter mixed model plots (Fig. 4)
-├── VLF_mixed_model_Claude.png  # Vessel lumen fraction mixed model plots (Fig. 5)
-└── Dh_VLF_overall.png          # Combined comparison plot (Fig. 3)
-
-QuPath scripts/                 # QuPath macro scripts for image analysis
-├── Automate vessel ID.groovy   # Automated vessel identification
-├── Remove all objects.groovy   # Clear selection/annotations
-└── Set Pixel Size.groovy       # Calibration script
-
-rasters_30s/                    # WorldClim 30-arc-second rasters
-├── wc2.1_30s_bio_1.tif         # Mean Annual Temperature (MAT)
-└── wc2.1_30s_bio_12.tif        # Mean Annual Precipitation (MAP)
+eucalypt_honours.Rproj       # RStudio project file
+preprocessing.Rmd            # Data preprocessing pipeline
+climate analyses.Rmd         # Climate data and statistical analysis
+QuPath scripts/              # Groovy scripts for QuPath image analysis
+  Automate vessel ID.groovy     # Automated vessel lumen identification
+  Remove all objects.groovy     # Clear annotations from images
+  Set Pixel Size.groovy         # Configure pixel scale for measurements
+data/                        # Raw and processed data files
+  vessel_measurements.csv       # Raw vessel measurements from image analysis
+  climate_preferences.csv       # Species-level MAP estimates from GBIF + WorldClim
+  gbif_filtered.csv             # Filtered GBIF occurrence records
+  gbif_raw_occs.csv             # Raw GBIF downloads (pre-1900, Australia, tracheophytes)
+  apc_names.csv                 # Taxonomic names aligned to Australian Plant Census
+  gbif_namematched.csv          # GBIF records with APC-matched names
+  native_sample_export.csv      # Native Australian species list
+  zanne_data.csv                # Reference data from Zanne et al. (2010) for validation
+  tracheophyte_climate_preferences.csv  # Full climate preference table for all Australian tracheophytes
+  genus_facet_labels.csv        # Labels for grouping genera in plots
 ```
 
----
+## Data Description
 
-## Analysis Pipeline
+### Vessel Measurements (`vessel_measurements.csv`)
+Raw measurements of vessel lumen areas extracted from digitised historical wood slides using QuPath. Images were taken at 4× magnification (~0.99 mm/pixel). On average, three images per species with ~80 vessels measured per image. Hydraulically weighted diameter (Dh) was calculated following Sperry & Saliendra (1994).
 
-### 1. Preprocessing (`preprocessing.Rmd`)
+### Climate Data
+- **GBIF occurrence data**: Filtered to records after 1900, within Australia, tracheophytes only, with coordinate accuracy ≤ 1000 m and marked as human observations.
+- **WorldClim 2.1**: Historical MAP data (1970–2000) at ~1 km resolution. Species-level MAP was derived by averaging raster values across all occurrence points for each species with ≥ 10 records.
 
-Handles data ingestion and preparation:
+### Taxonomic Alignment
+Species names were aligned to the Australian Plant Census (APC) using the [`APCalign`](https://github.com/ElizabethHWenk/APCalign) R package (Wenk et al. 2024).
 
-- **Import vessel measurements** from QuPath image analysis
-- **Taxonomic name matching** using APC (Australian Plant Census) via `ausflora`
-- **GBIF occurrence data** download and filtering (coordinates, quality thresholds)
-- **Climate extraction** from WorldClim rasters for occurrence points
-- Generate climate preference summaries per species (mean MAT and MAP)
+## QuPath Image Analysis Pipeline
 
-### 2. Statistical Analysis (`climate analyses.Rmd`)
+Vessel lumen areas were measured using semi-automated scripts in **QuPath v0.6.0** (Bankhead et al. 2017). The process involves:
 
-Core analysis workflow:
+1. **Image preprocessing**: Brightness, contrast, and white balance corrections applied to highlight vessel lumens (which appear distinctly brighter).
+2. **Pixel size calibration**: Run `Set Pixel Size.groovy` to ensure consistent scale across images.
+3. **Object cleanup**: Run `Remove all objects.groovy` to clear prior annotations before analysis.
+4. **Automated vessel ID**: Run `Automate vessel ID.groovy` to segment and measure vessel lumen areas based on pixel thresholding.
+5. **Manual verification**: Scripts highlight likely vessels; manual checks were conducted per image to ensure accuracy.
 
-- **Trait computation:**
-  - Hydraulic diameter (Dh): `Σ(r⁵) / Σ(r⁴)` — weighted mean vessel radius
-  - Vessel Lumen Fraction (VLF): proportion of cross-sectional area occupied by vessels
-- **Exploratory plotting:** Whittaker-style climate preference distribution (Fig. 2)
-- **Mixed-effects models** (`glmmTMB`):
-  - `log(Dh) ~ genus_mean_MAP + diff_from_genus_MAP + (1 | family) + (diff_from_genus_MAP | genus)`
-  - `log(VLF) ~ genus_mean_MAP + diff_from_genus_MAP + (1 | family) + (diff_from_genus_MAP | genus)`
-  - Compared against simpler fixed-effects models via ANOVA and model comparison
-- **Visualization:** Faceted plots of family-level and genus-level responses (Fig. 3–5)
-- **Supplementary analysis:** Comparison with Zanne et al. (2010) dataset (Fig. S1)
+## Statistical Analysis
 
----
+All analyses were conducted in **R v4.5.3** using the following packages:
 
-## Dependencies
+- [`easystats`](https://easystats.github.io/easystats/) — Model assessment and reporting
+- [`glmmTMB`](https://CRAN.R-project.org/package=glmmTMB) — Linear mixed-effects models
+- [`tidyverse`](https://www.tidyverse.org/) — Data manipulation and visualisation
+- [`APCalign`](https://doi.org/10.1071/BT24014) — Taxonomic name alignment
 
-### R Packages
-| Package       | Purpose                              |
-|---------------|--------------------------------------|
-| `tidyverse`   | Data manipulation & visualization    |
-| `patchwork`   | Combining multiple plots             |
-| `terra`       | Raster processing (climate data)     |
-| `APCalign`    | Taxonomic name alignment             |
-| `glmmTMB`     | Generalized linear mixed models      |
-| `easystats`   | Model diagnostics & comparison       |
-| `ggeffects`   | Marginal effects / predictions       |
-| `scales`      | Axis formatting utilities            |
+### Model: Genus-Level Centering
 
-### External Resources
-- **WorldClim v2.1** (30-arc-second resolution) — BIO1 and BIO12 rasters
-- **GBIF** (Global Biodiversity Information Facility) — occurrence records
-- **Australian Plant Census (APC)** via `ausflora` — taxonomic reference
+The primary statistical model partitions trait–climate relationships into within- and across-genus effects:
 
----
-
-## Reproduction Steps
-
-1. Open the project in RStudio: `eucalypt_honours.Rproj`
-2. Install required packages if not already installed:
-
-```r
-install.packages(c("tidyverse", "patchwork", "terra", "glmmTMB",
-                   "easystats", "ggeffects", "scales"))
-# APCalign may need to be installed from source/github
+```
+y_ijk = β₀ + β_across · x̄_j + β_within · (x_ijk − x̄_j) + u₀ₖ + u₀ⱼ + u₁ⱼ · (x_ijk − x̄_j) + ε_ijk
 ```
 
-3. Run `preprocessing.Rmd` first to prepare all data files in the `data/` directory
-4. Run `climate analyses.Rmd` for statistical models and figure generation
-5. Figures will be saved to the `figures/` directory
+Where:
+- `y_ijk` = trait value (Dh or VLF) for species *i* in genus *j*, family *k*
+- `x_ijk` = MAP for species *i*
+- `x̄_j` = genus-level mean MAP
+- `u₀ₖ`, `u₀ⱼ` = random intercepts for family and genus
+- `u₁ⱼ` = random slope for within-genus response
+
+This approach explicitly separates the **across-genus effect** (variation in mean trait values across genera) from the **within-genus effect** (variation among species within a single genus), avoiding ecological fallacies inherent in pooled analyses.
+
+## Software Dependencies
+
+| Tool/Package | Version / Purpose |
+|---|---|
+| R | ≥ 4.5.0 |
+| RStudio | Project workspace |
+| QuPath | ≥ 0.6.0 — Image analysis and vessel segmentation |
+| easystats | Model diagnostics and reporting |
+| glmmTMB | Mixed-effects modelling |
+| tidyverse | Data wrangling and plotting |
+| APCalign | Taxonomic name alignment to APC/APNI |
+
+## Key References
+
+- **Bourne et al. (2017)** — Species climate range influences hydraulic traits in *Eucalyptus*.
+- **Choat et al. (2012)** — Global convergence in forest vulnerability to drought. *Nature*.
+- **Isasa et al. (2023)** — Addressing controversies in the P50–Dh relationship. *New Phytologist*.
+- **Pfautsch et al. (2016)** — Climate determines vascular traits in *Eucalyptus*. *Ecology Letters*.
+- **Sperry & Saliendra (1994)** — Intra- and inter-plant variation in xylem cavitation.
+- **van de Pol & Wright (2009)** — Within- versus between-subject effects using mixed models. *Animal Behaviour*.
+- **Wenk et al. (2024)** — APCalign: aligning Australian plant names. *Australian Journal of Botany*.
+- **Zanne et al. (2010)** — Angiosperm wood structure and hydraulic conductivity. *American Journal of Botany*.
+
+## Data Availability
+
+All data and analysis scripts are published on GitHub:  
+https://github.com/elijahmagistrado/eucalypt_honours
+
+Historical wood slides were accessed through the **Australian Botanic Gardens Mount Annan** and are curated by the Forestry Corporation of New South Wales.
+
+## License
+
+[Specify license, e.g., MIT, CC BY 4.0]
 
 ---
 
-## Key Variables & Metrics
-
-| Variable | Description                                  | Formula / Unit                    |
-|----------|----------------------------------------------|-----------------------------------|
-| **Dh**   | Hydraulic diameter (weighted mean radius)    | Σ(r⁵)/Σ(r⁴), μm                   |
-| **VLF**  | Vessel Lumen Fraction (% of lumen area)      | vessel_area / total_lumen_area × 100, % |
-| **MAT**  | Mean Annual Temperature                      | °C                                |
-| **MAP**  | Mean Annual Precipitation                    | mm/year                           |
-
----
-
-## Acknowledgements
-
-Claude Sonnet 4.6 and Qwen 3.6 was used for code review. Qwen 3.6 was used to write the majority of this README.md file.
+*Prepared for: Honours research project — Plant hydraulics and macroecology.*  
+*For questions or collaboration, please open an issue on this repository.*
