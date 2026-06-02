@@ -50,7 +50,7 @@ ggsave("figures/whittaker_plot.png", scale = 1, width = 7.96, height = 7.96, uni
 xylem_Dh <- vessel_areas |> 
   filter(Name == "vessel"|Classification == "vessel") |>
   group_by(scientificName, genus, other) |> 
-  summarise(sample_Dh = sum(radius^5)/ sum(radius^4),
+  summarise(sample_Dh = sum((2*radius)^5)/ sum((2*radius)^4),
             n_vessels = n()) |> 
   group_by(scientificName) |> 
   summarise(mean_Dh = mean(sample_Dh, na.rm=T),
@@ -694,11 +694,6 @@ ggsave("figures/VLF_mixed_model_Claude.png", scale = 1, width = 15.92, height = 
 Dh_simple_pred <- ggpredict(xylem_Dh_regular_model, terms = "log_MAP [all]")
 
 VLF_simple_pred <- ggpredict(xylem_VLF_regular_model, terms = "log_MAP [all]")
-
-xylem_Dh_simple_mixed_model <- glmmTMB(log_Dh ~ log_MAP + (1|genus), data = xylem_Dh_genus,
-                                family = gaussian())
-Dh_simple_mixed_pred <- ggpredict(xylem_Dh_simple_mixed_model, terms = "log_MAP [all]")
-
 
 ```
 
