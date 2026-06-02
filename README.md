@@ -122,10 +122,6 @@ https://github.com/elijahmagistrado/eucalypt_honours
 
 Historical wood slides were accessed through the **Australian Botanic Gardens Mount Annan** and are curated by the Forestry Corporation of New South Wales.
 
-## License
-
-[Specify license, e.g., MIT, CC BY 4.0]
-
 ---
 
 *Prepared for: Honours research project — Plant hydraulics and macroecology.*  
