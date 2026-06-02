@@ -39,7 +39,6 @@ ggplot() +
   theme(legend.position = "none") +
   xlab("Mean annual temperature (ºC)") +
   ylab("Mean annual precipitation (mm)") 
-  # theme(axis.title = element_text(size = 14))
 
 ggsave("figures/whittaker_plot.png", scale = 1, width = 7.96, height = 7.96, units = "cm", dpi = 330)
 ```
@@ -58,7 +57,6 @@ xylem_Dh <- vessel_areas |>
             n_vessels = sum(n_vessels),
             n_vessels_per_image = n_vessels/n_images) |> 
   left_join(climate_preferences, by = c("scientificName")) |> 
-  # left_join(gbif_names %>% dplyr::select(scientificName, genus, family), by = c("scientificName")) |> 
   distinct() |> 
   drop_na() 
 
@@ -76,23 +74,18 @@ xylem_VLF <- vessel_areas |>
   distinct() |> 
   drop_na() 
 
-xylem_stats <- xylem_Dh |> left_join(xylem_VLF |> dplyr::select(scientificName, mean_VLF), by = "scientificName") |> 
-  dplyr::select(family, genus, species, mean_Dh, mean_VLF, MAP, MAT, n_vessels, n_images, n_vessels_per_image)
 
+## Exporting xylem statistics
+# xylem_stats <- xylem_Dh |> left_join(xylem_VLF |> dplyr::select(scientificName, mean_VLF), by = "scientificName") |> 
+#   dplyr::select(family, genus, species, mean_Dh, mean_VLF, MAP, MAT, n_vessels, n_images, n_vessels_per_image)
+# 
 # write.csv(xylem_stats, "./data/xylem_stats.csv", row.names = F)
 
-# ggplot() +
-#   geom_density(data = xylem_Dh |> filter(family_n_samples > 5), aes(MAP, col = family)) +
-#   theme_bw() +
-#   scale_color_brewer(palette = "Set1")
-
+# Filtering families and genera to plot later
 selected_families <- xylem_Dh |> group_by(family) |> summarise(n = n()) |> filter(n >= 10)
-
 selected_genera <- xylem_Dh |> group_by(genus, family) |> summarise(n = n()) |> filter(n >= 10)
-
 sample_distribution <- xylem_Dh |> group_by(genus, family) |> summarise(n_species = n()) |> group_by(family) |> mutate(n_genus = n()) 
 ```
-
 
 
 # Statistical modelling
@@ -187,10 +180,7 @@ anova(xylem_VLF_regular_model, xylem_VLF_mixed_model)
 ```
 
 
-
-
 # Plotting Dh
-
 ## Colour palettes
 ```{r}
 # ── 1. Create family-level colour palette ────────────────────────────────────
@@ -289,9 +279,7 @@ ggplot() +
     name = "Mean Annual Precipitation (mm)"
   ) +
   labs(
-    colour = "Family", fill = "Family",
-    # title = "Hydraulic diameter ~ MAP",
-    # subtitle = "Black = across-genus effect | Colour = family random effect"
+    colour = "Family", fill = "Family"
   ) +
   scale_colour_manual(values = selected_families$color) +
   scale_fill_manual(values = selected_families$color) +
@@ -299,7 +287,6 @@ ggplot() +
   theme(
     legend.position = "none",
     strip.background = element_rect(fill = "grey95"),
-    # strip.text = element_text(face = "italic")
   ) -> Dh_family_facet
 
 Dh_family_facet
@@ -349,7 +336,6 @@ family_background <- xylem_Dh_genus %>%
     xylem_Dh_genus %>% distinct(genus, family),
     by = "family"                       # rejoin by family so points appear in
   ) |>                                  # all genera panels within the same family
-  # mutate(genus = factor(genus, levels = ordered_levels)) |> 
   filter(genus %in% selected_genera$genus)
 
 # Compute n per family, optionally restrict to only the families you're plotting
@@ -373,12 +359,6 @@ ggplot() +
     aes(x = x, y = predicted),
     colour = "black", linewidth = 1.5, inherit.aes = FALSE
   ) +
- #  # Selected family points — coloured
- # geom_point(
- #    data = family_background,
- #    aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_Dh,
- #    colour = genus), size = 0.1, alpha = 1
- #  ) +
   # Selected genus points — coloured
  geom_point(
     data = xylem_Dh_genus |> filter(genus %in% selected_genera$genus),
@@ -424,28 +404,19 @@ ggplot() +
   ) +
   scale_colour_manual(values = genus_colours$color) +
   scale_fill_manual(values = genus_colours$color) +
-  # scale_colour_manual(values = selected_families$color) +
-  # scale_fill_manual(values = selected_families$color) +
   scale_x_continuous(
     breaks = Dh_x_breaks,
     labels = \(x) round(exp(x), 0),
     name = "Mean Annual Precipitation (mm)"
   ) +
-  labs(
-    # colour = "Genus", fill = "Genus",
-    # title = "Hydraulic diameter ~ MAP",
-    # subtitle = "Black = across-genus effect | Colour = within-genus effect"
-  ) +
   theme_classic() +
   theme(
     legend.position = "none",
     strip.background = element_rect(fill = "grey95"),
-    # strip.text = element_text(face = "italic")
   ) -> Dh_genus_facet
 
 Dh_genus_facet
 ```
-
 
 
 ## Combined graph
@@ -534,9 +505,7 @@ ggplot() +
     name = "Mean Annual Precipitation (mm)"
   ) +
   labs(
-    colour = "Family", fill = "Family",
-    # title = "Hydraulic diameter ~ MAP",
-    # subtitle = "Black = across-genus effect | Colour = family random effect"
+    colour = "Family", fill = "Family"
   ) +
   scale_colour_manual(values = selected_families$color) +
   scale_fill_manual(values = selected_families$color) +
@@ -544,7 +513,6 @@ ggplot() +
   theme(
     legend.position = "none",
     strip.background = element_rect(fill = "grey95"),
-    # strip.text = element_text(face = "italic")
   ) -> VLF_family_facet
 
 VLF_family_facet
@@ -595,7 +563,6 @@ family_background <- xylem_VLF_genus %>%
     xylem_VLF_genus %>% distinct(genus, family),
     by = "family"                       # rejoin by family so points appear in
   ) |>                                  # all genera panels within the same family
-  # mutate(genus = factor(genus, levels = ordered_levels)) |> 
   filter(genus %in% selected_genera$genus)
 
 # ── 5. Plot ───────────────────────────────────────────────────────────────────
@@ -612,12 +579,6 @@ ggplot() +
     aes(x = x, y = predicted),
     colour = "black", linewidth = 1.5, inherit.aes = FALSE
   ) +
- #  # Selected family points — coloured
- # geom_point(
- #    data = family_background,
- #    aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_VLF,
- #    colour = genus), size = 0.1, alpha = 1
- #  ) +
   # Selected genus points — coloured
  geom_point(
     data = xylem_VLF_genus |> filter(genus %in% selected_genera$genus),
@@ -672,7 +633,6 @@ ggplot() +
   theme(
     legend.position = "none",
     strip.background = element_rect(fill = "grey95"),
-    # strip.text = element_text(face = "italic")
   ) -> VLF_genus_facet
 
 VLF_genus_facet
@@ -710,21 +670,18 @@ line_labels <- c(
   "Simple regression" = "Simple regression",
   "Across-genus" = "Across-genus",
   "Average within-genus" = "Avg. within-genus"
-  # "Mixed model" = "green"
 )
 line_colors <- c(
   "Within-genus" = "grey50",
   "Simple regression" = "red",
   "Across-genus" = "black",
   "Average within-genus" = "blue"
-  # "Mixed model" = "green"
 )
 line_types <- c(
   "Within-genus" = "solid",
   "Simple regression" = "dashed",
   "Across-genus" = "solid",
   "Average within-genus" = "solid"
-  # "Mixed model" = "green"
 )
 
 # --- Dh_genus plot ---
@@ -735,8 +692,6 @@ Dh_genus <- ggplot() +
             linewidth = 1.5, alpha = 0.1, inherit.aes = FALSE) +
   geom_line(data = as_tibble(Dh_simple_pred), aes(x = x, y = predicted, color = "Simple regression"),
             linewidth = 0.5, inherit.aes = FALSE) +
-  # geom_line(data = as_tibble(Dh_simple_mixed_pred), aes(x = x, y = predicted, color = "Mixed model"),
-            # linewidth = 0.5, inherit.aes = FALSE) +
   geom_line(data = as_tibble(Dh_across_pred), aes(x = x, y = predicted, color = "Across-genus"),
             linewidth = 1.5, inherit.aes = FALSE) +
   geom_line(data = Dh_avg_within_scaled, aes(x = x_scaled, y = predicted, color = "Average within-genus"),
