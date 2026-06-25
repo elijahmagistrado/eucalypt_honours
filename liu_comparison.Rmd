@@ -1,0 +1,214 @@
+# Liu et al. (2019) data comparison
+
+Liu H, Gleason SM, Hao G, Hua L, He P, Goldstein G, Ye Q. 2019. Hydraulic traits are coordinated with maximum plant height at the global scale. Science Advances 5: eaav1332.
+https://www.science.org/doi/10.1126/sciadv.aav1332
+
+
+## Loading all required packages
+```{r}
+library(tidyverse)
+library(patchwork)
+library(terra)
+library(APCalign)
+library(glmmTMB)
+library(easystats)
+library(ggeffects)
+library(scales)
+```
+
+
+## Loading all required data
+```{r}
+Liu2019 <- read.csv("./data/Liu2019.csv", header = T) |> drop_na(Vdia, MAP)
+
+
+Liu2019 <- Liu2019 |> 
+  mutate(log_Vdia = log(Vdia),
+    log_MAP = log(MAP)) |> # Switch to MAP or AI depending on what you are looking for
+  group_by(Genus) |> 
+  mutate(
+    genus_mean_MAP = mean(log_MAP),
+    genus_mean_Vdia = mean(log_Vdia)
+  ) |> 
+  ungroup() |> 
+  mutate(
+    diff_from_genus_MAP = log_MAP - genus_mean_MAP,
+  )
+
+
+```
+
+
+## Model comparison
+```{r}
+# Mixed model with genus-centering
+Liu_mixed_model <- glmmTMB(log_Vdia ~ genus_mean_MAP + 
+                                  diff_from_genus_MAP +
+                                  (1 | Family) + 
+                                  (diff_from_genus_MAP | Genus),
+                                data = Liu2019,
+                                family = gaussian())
+
+# Mixed model testing
+parameters(Liu_mixed_model)
+summary(Liu_mixed_model)
+r2(Liu_mixed_model)
+
+# Simple model
+Liu_regular_model <- glmmTMB(log_Vdia ~ log_MAP,
+                                data = Liu2019,
+                                family = gaussian())
+
+# Simple model testing
+parameters(Liu_regular_model)
+summary(Liu_regular_model)
+r2(Liu_regular_model)
+
+# Comparison
+compare_performance(Liu_regular_model, Liu_mixed_model)
+anova(Liu_regular_model, Liu_mixed_model)
+```
+
+## Quick plot
+```{r}
+# ==========================================
+# 📊 LIU MIXED MODEL PREDICTIONS
+# ==========================================
+
+# --- Simple prediction ---
+Liu_simple_pred <- ggpredict(Liu_regular_model, terms = "log_MAP [all]")
+
+# --- Within-genus predictions (per genus, including genus-level random slopes) ---
+Liu_within_pred_list <- lapply(unique(Liu2019$Genus), function(g) {
+  genus_data <- Liu2019[Liu2019$Genus == g, ]
+  if (nrow(genus_data) < 2) return(NULL)
+
+  genus_mean <- unique(genus_data$genus_mean_MAP)[1]
+  fam        <- unique(genus_data$Family)[1]
+  diff_range <- seq(min(genus_data$diff_from_genus_MAP),
+                    max(genus_data$diff_from_genus_MAP),
+                    length.out = 50)
+
+  pred_data <- data.frame(
+    genus_mean_MAP      = genus_mean,
+    diff_from_genus_MAP = diff_range,
+    Genus               = g,
+    Family              = fam
+  )
+
+  pred_vals <- predict(Liu_mixed_model,
+                       newdata          = pred_data,
+                       re.form          = NULL,   # ✅ include all REs (genus slope + family intercept)
+                       type             = "response",
+                       allow.new.levels = TRUE)
+
+  data.frame(x_scaled  = genus_mean + diff_range,
+             predicted = pred_vals,
+             genus     = g)
+})
+Liu_within_pred_scaled <- do.call(rbind, Filter(Negate(is.null), Liu_within_pred_list))
+
+# --- Across-genus prediction (vary genus_mean_MAP; diff_from_genus_MAP = 0; no random effects) ---
+Liu_map_range <- seq(min(Liu2019$genus_mean_MAP),
+                     max(Liu2019$genus_mean_MAP),
+                     length.out = 100)
+
+Liu_across_pred <- data.frame(
+  x         = Liu_map_range,
+  predicted = predict(Liu_mixed_model,
+                      newdata = data.frame(genus_mean_MAP      = Liu_map_range,
+                                           diff_from_genus_MAP = 0),
+                      re.form = NA,
+                      type    = "response")
+)
+
+# --- Average within-genus prediction (fixed diff_from_genus_MAP slope only; genus_mean_MAP held at mean) ---
+Liu_diff_range      <- seq(min(Liu2019$diff_from_genus_MAP),
+                            max(Liu2019$diff_from_genus_MAP),
+                            length.out = 100)
+Liu_mean_genus_MAP  <- mean(Liu2019$genus_mean_MAP)
+
+Liu_avg_within_pred <- data.frame(
+  x_scaled  = Liu_mean_genus_MAP + Liu_diff_range,
+  predicted = predict(Liu_mixed_model,
+                      newdata = data.frame(genus_mean_MAP      = Liu_mean_genus_MAP,
+                                           diff_from_genus_MAP = Liu_diff_range),
+                      re.form = NA,
+                      type    = "response")
+)
+
+# ==========================================
+# 📝 MODIFIABLE LEGEND TEXT & PROPERTIES
+# ==========================================
+line_labels <- c(
+  "Within-genus"       = "Within-genus",
+  "Simple regression"  = "Simple regression",
+  "Across-genus"       = "Across-genus",
+  "Average within-genus" = "Avg. within-genus"
+)
+line_colors <- c(
+  "Within-genus"         = "grey50",
+  "Simple regression"    = "red",
+  "Across-genus"         = "black",
+  "Average within-genus" = "blue"
+)
+line_types <- c(
+  "Within-genus"         = "solid",
+  "Simple regression"    = "dashed",
+  "Across-genus"         = "solid",
+  "Average within-genus" = "solid"
+)
+
+# ==========================================
+# 🎨 OPTIONAL: define axis breaks manually
+# ==========================================
+# Liu_Vdia_y_breaks <- log(c(...))  # e.g. log(c(10, 50, 200, 1000))
+# Liu_Vdia_x_breaks <- log(c(...))  # e.g. log(c(200, 500, 1000, 2500))
+
+# ==========================================
+# 📈 LIU Vdia PLOT
+# ==========================================
+Liu_Vdia_plot <- ggplot() +
+  geom_point(data = Liu2019,
+             aes(x = genus_mean_MAP + diff_from_genus_MAP, y = log_Vdia),
+             colour = "grey40", size = 1, alpha = 1, shape = 1) +
+  geom_line(data = Liu_within_pred_scaled,
+            aes(x = x_scaled, y = predicted, group = genus, color = "Within-genus"),
+            linewidth = 1.5, alpha = 0.1, inherit.aes = FALSE) +
+  geom_line(data = as_tibble(Liu_simple_pred),
+            aes(x = x, y = predicted, color = "Simple regression"),
+            linewidth = 0.5, linetype = "dashed", inherit.aes = FALSE) +
+  geom_line(data = Liu_across_pred,
+            aes(x = x, y = predicted, color = "Across-genus"),
+            linewidth = 1.5, inherit.aes = FALSE) +
+  geom_line(data = Liu_avg_within_pred,
+            aes(x = x_scaled, y = predicted, color = "Average within-genus"),
+            linewidth = 0.5, inherit.aes = FALSE) +
+  scale_color_manual(
+    name   = "Response type",
+    values = line_colors,
+    labels = line_labels
+  ) +
+  # Uncomment and supply breaks once you inspect the data range:
+  # scale_y_continuous(breaks = Liu_Vdia_y_breaks,
+  #                    labels = \(x) round(exp(x), 1),
+  #                    name   = expression(italic(V)[dia] ~ "(μm²)")) +
+  # scale_x_continuous(breaks = Liu_Vdia_x_breaks,
+  #                    labels = \(x) round(exp(x), 0),
+  #                    name   = "Mean Annual Precipitation (mm)") +
+  scale_y_continuous(labels = \(x) round(exp(x), 1),
+                     name   = expression(italic(V)[dia] ~ "(μm²)")) +
+  scale_x_continuous(labels = \(x) round(exp(x), 0),
+                     name   = "Mean Annual Precipitation (mm)") +
+  theme_classic() +
+  theme(
+    legend.position   = "bottom",
+    legend.text       = element_text(size = 7),
+    legend.title      = element_text(size = 7.5, face = "bold"),
+    strip.background  = element_rect(fill = "grey95"),
+    strip.text        = element_text(face = "italic")
+  )
+
+Liu_Vdia_plot
+```
+
