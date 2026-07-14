@@ -421,7 +421,7 @@ Dh_genus_facet
 
 ## Combined graph
 ```{r}
-Dh_family_facet / Dh_genus_facet + plot_annotation(tag_levels = 'a', tag_suffix = ')')
+Dh_genus_facet / Dh_family_facet + plot_annotation(tag_levels = 'a', tag_suffix = ')')
 
 ggsave("figures/Dh_mixed_model_Claude.png", scale = 1, width = 15.92, height = 23, units = "cm", dpi = 330)
 ```
@@ -643,7 +643,7 @@ VLF_genus_facet
 
 ## Combined graph
 ```{r}
-VLF_family_facet / VLF_genus_facet + plot_annotation(tag_levels = 'a', tag_suffix = ')')
+VLF_genus_facet / VLF_family_facet  + plot_annotation(tag_levels = 'a', tag_suffix = ')')
 
 ggsave("figures/VLF_mixed_model_Claude.png", scale = 1, width = 15.92, height = 23, units = "cm", dpi = 330)
 ```
