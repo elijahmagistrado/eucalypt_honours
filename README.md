@@ -16,11 +16,11 @@ The historical slides are curated by the Forestry Corporation of New South Wales
 ## Repository contents
 
 | Path | Description |
-|---|---|
-| [`climate analyses.Rmd`](<climate analyses.Rmd>) | Primary analysis: trait calculation, model fitting, model comparison, and manuscript figures. |
+|------------------------------------|------------------------------------|
+| [`climate analyses.Rmd`](climate%20analyses.Rmd) | Primary analysis: trait calculation, model fitting, model comparison, and manuscript figures. |
 | [`preprocessing.Rmd`](preprocessing.Rmd) | Upstream workflow for taxonomic alignment, GBIF filtering, WorldClim extraction, and assembly of vessel measurements. |
 | [`liu_comparison.Rmd`](liu_comparison.Rmd) | Supporting reanalysis of the Liu *et al.* (2019) dataset. |
-| [`QuPath scripts/`](<QuPath scripts/>) | Groovy scripts used to calibrate images and assist vessel-lumen segmentation in QuPath. |
+| [`QuPath scripts/`](QuPath%20scripts/) | Groovy scripts used to calibrate images and assist vessel-lumen segmentation in QuPath. |
 | [`data/`](data/) | Tracked measurement, climate-summary, taxonomic, and comparison datasets. |
 | [`eucalypt_honours.Rproj`](eucalypt_honours.Rproj) | RStudio project file. |
 
@@ -31,7 +31,7 @@ Generated figures are written to `figures/`, which is not tracked.
 ### Files used directly in the primary analysis
 
 | File | Rows | Role |
-|---|---:|---|
+|----------------------|----------------------------:|----------------------|
 | [`data/vessel_areas.csv`](data/vessel_areas.csv) | 150,303 | Combined, taxonomically aligned vessel and image-area measurements used to calculate Dh and VLF. |
 | [`data/climate_preferences.csv`](data/climate_preferences.csv) | 565 | Species-level MAP and mean annual temperature (MAT) summaries derived from occurrence records and WorldClim 2.1. |
 | [`data/tracheophyte_climate_preferences.csv`](data/tracheophyte_climate_preferences.csv) | 23,589 | Climate summaries for Australian native tracheophytes, used to show the climatic coverage of the study sample. |
@@ -39,7 +39,7 @@ Generated figures are written to `figures/`, which is not tracked.
 ### Measurement and derived files
 
 | File | Description |
-|---|---|
+|------------------------------------|------------------------------------|
 | [`data/vessel_measurements.csv`](data/vessel_measurements.csv) | QuPath measurement export from the earlier image-analysis phase. |
 | [`data/2026_measurements.csv`](data/2026_measurements.csv) | Additional QuPath measurements incorporated in the current analysis. |
 | [`data/xylem_stats.csv`](data/xylem_stats.csv) | Analysis-ready species-level summary for the 480 study species. |
@@ -50,7 +50,7 @@ Generated figures are written to `figures/`, which is not tracked.
 ### External comparison and plotting files
 
 | File | Description |
-|---|---|
+|------------------------------------|------------------------------------|
 | [`data/Liu2019.csv`](data/Liu2019.csv) | Data used for the supporting reanalysis of Liu *et al.* (2019). |
 | [`data/zanne_data.csv`](data/zanne_data.csv) | Wood-anatomy data from Zanne *et al.* (2010), used to compare trait measurements. |
 | [`data/genus_facet_labels.csv`](data/genus_facet_labels.csv) | Genus labels used in exploratory or supporting figures. |
@@ -58,10 +58,10 @@ Generated figures are written to `figures/`, which is not tracked.
 ### Key variables and units
 
 | Variable | Meaning | Unit or scale |
-|---|---|---|
+|------------------------|------------------------|------------------------|
 | `Area.µm.2` / `Area µm^2` | Detected lumen or image-annotation area | µm² |
 | `mean_Dh` | Species mean hydraulically weighted vessel diameter, calculated as `sum(d^5) / sum(d^4)` | µm |
-| `mean_VLF` | Mean vessel lumen area divided by sampled image area | % |
+| `mean_VLF` | Mean vessel lumen area divided by sampled image area | \% |
 | `MAP` | Mean annual precipitation across retained occurrence records | mm yr⁻¹ |
 | `MAT` | Mean annual temperature across retained occurrence records | °C |
 | `n_vessels` | Number of complete vessels contributing to Dh | count |
@@ -93,34 +93,35 @@ The multi-gigabyte occurrence downloads, intermediate Parquet files, and WorldCl
 
 The shortest reproducible route starts from the processed CSV files already in `data/`.
 
-1. Clone this repository and open `eucalypt_honours.Rproj`, or set the repository root as the R working directory.
-2. Use R 4.5.3 where possible. Install the required packages:
+1.  Clone this repository and open `eucalypt_honours.Rproj`, or set the repository root as the R working directory.
 
-   ```r
-   install.packages(c(
-     "APCalign", "easystats", "ggeffects", "glmmTMB",
-     "patchwork", "rmarkdown", "scales", "terra", "tidyverse"
-   ))
-   ```
+2.  Use R 4.5.3 where possible. Install the required packages:
 
-3. Create the ignored output directory and supply the family lookup expected by the final Zanne *et al.* comparison chunk. This lookup is reconstructed from the tracked processed data because `climate analyses.Rmd` currently refers to `apc_names` without loading it:
+    ``` r
+    install.packages(c(
+      "APCalign", "easystats", "ggeffects", "glmmTMB",
+      "patchwork", "rmarkdown", "scales", "terra", "tidyverse"
+    ))
+    ```
 
-   ```r
-   dir.create("figures", showWarnings = FALSE)
+3.  Create the ignored output directory and supply the family lookup expected by the final Zanne *et al.* comparison chunk. This lookup is reconstructed from the tracked processed data because `climate analyses.Rmd` currently refers to `apc_names` without loading it:
 
-   analysis_env <- new.env(parent = globalenv())
-   analysis_env$apc_names <- read.csv("data/vessel_areas.csv") |>
-     dplyr::distinct(apc_name, family) |>
-     dplyr::rename(accepted_name = apc_name)
+    ``` r
+    dir.create("figures", showWarnings = FALSE)
 
-   rmarkdown::render("climate analyses.Rmd", envir = analysis_env)
-   ```
+    analysis_env <- new.env(parent = globalenv())
+    analysis_env$apc_names <- read.csv("data/vessel_areas.csv") |>
+      dplyr::distinct(apc_name, family) |>
+      dplyr::rename(accepted_name = apc_name)
+
+    rmarkdown::render("climate analyses.Rmd", envir = analysis_env)
+    ```
 
 The notebook fits the Dh and VLF genus-centered mixed models, fits the pooled comparison models, reports model summaries and performance measures, and writes the manuscript figures to `figures/`. The `analysis_env` setup affects only the supplementary comparison; it is not used by the primary models.
 
 To run the supporting Liu *et al.* comparison:
 
-```r
+``` r
 rmarkdown::render("liu_comparison.Rmd")
 ```
 
@@ -173,4 +174,4 @@ GBIF, WorldClim, APC/APNI, Liu *et al.* (2019), and Zanne *et al.* (2010) materi
 
 ## Contact
 
-For questions about the data or analysis, contact Elijah Magistrado at [e.magistrado@student.unsw.edu.au](mailto:e.magistrado@student.unsw.edu.au) or open a GitHub issue.
+For questions about the data or analysis, contact Elijah Magistrado at [e.magistrado\@student.unsw.edu.au](mailto:e.magistrado@student.unsw.edu.au) or open a GitHub issue.
