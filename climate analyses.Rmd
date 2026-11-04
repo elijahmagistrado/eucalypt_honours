@@ -184,6 +184,34 @@ anova(xylem_VLF_regular_model, xylem_VLF_mixed_model)
 ```
 
 
+## Table 2 Variance partitioning
+```{r}
+# Random-slope variance is weighted by the mean squared predictor (Johnson 2014);
+# the covariance term drops out because diff_from_genus_MAP has mean 0.
+variance_table <- function(model, data) {
+  vc <- VarCorr(model)$cond
+  sd_genus <- attr(vc$genus, "stddev")
+  sd_family <- attr(vc$family, "stddev")
+  variance <- c(
+    var(predict(model, re.form = NA)),
+    sd_genus[2]^2 * mean(data$diff_from_genus_MAP^2),
+    sd_genus[1]^2,
+    sd_family^2,
+    sigma(model)^2
+  )
+  tibble(
+    source = c("Fixed (MAP)", "Genus (slope)", "Genus (intercept)", "Family (intercept)", "Residual"),
+    SD = c(NA, sd_genus[2], sd_genus[1], sd_family, sigma(model)),
+    variance = variance,
+    percent = 100 * variance / sum(variance)
+  )
+}
+
+variance_table(xylem_Dh_mixed_model, xylem_Dh_genus)
+variance_table(xylem_VLF_mixed_model, xylem_VLF_genus)
+```
+
+
 ## Within-genus prediction helper
 ```{r}
 # Predicts each genus line at its own genus mean MAP and family, over its own MAP range
