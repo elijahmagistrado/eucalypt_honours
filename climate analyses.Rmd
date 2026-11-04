@@ -846,24 +846,25 @@ ggsave("figures/Dh_VLF_overall.png", scale = 1, width = 15.92, height = 9.5, uni
 ```{r}
 zanne_data <- read.csv("data/zanne_data.csv", header = T)
 
-# Calculating same variables on our data
-comparison_data <- vessel_areas |> 
-  group_by(apc_name, other) |> 
+# Calculating same variables on our data (study taxa only, one value per image)
+taxon_vessel_metrics <- vessel_areas |>
+  filter(scientificName %in% xylem_stats$scientificName) |>
+  group_by(scientificName, image_id) |> 
   mutate(area_mm = Area.µm.2/1000000, 
          total_area = max(area_mm)) |> 
-  filter(Name == "vessel") |> 
-  group_by(apc_name, other, total_area) |>
-  mutate(n=n(),
-         mean_area = mean(area_mm, na.rm=T)) |> 
-  mutate(n_per_area = n/total_area,
-         area_n_ratio = mean_area/n_per_area) |> 
-  distinct() |> 
-  group_by(apc_name) |> 
+  filter(Name == "vessel"|Classification == "vessel") |> 
+  group_by(scientificName, image_id, total_area) |>
+  summarise(n = n(),
+            mean_area = mean(area_mm, na.rm=T), .groups = "drop") |> 
+  mutate(n_per_area = n/total_area) |> 
+  group_by(scientificName) |> 
   summarise(N = mean(n_per_area, na.rm = T),         # Vessel density
             A = mean(mean_area, na.rm = T)) |>       # Mean area 
-  drop_na() |> 
-  left_join(apc_names[c("accepted_name", "family")], by = c("apc_name" = "accepted_name")) |>
-  distinct()
+  left_join(xylem_stats |> dplyr::select(scientificName, family, species), by = "scientificName")
+
+comparison_data <- taxon_vessel_metrics |>
+  filter(family %in% zanne_data$Family,              # Families present in both datasets
+         family %in% selected_families$family)       # with >= 10 taxa, as in Figs 5-6
 
 ggplot() +
   geom_hex(data = zanne_data, aes(x = N, y = A), bins = 10, col = "light grey", linewidth = 0.1) +
@@ -874,8 +875,8 @@ ggplot() +
   theme_classic() +
   facet_wrap(~family) +
   xlab("Vessel density"~ (mm^-2)) +
-  ylab("Total vessel area"~ (mm^2)) +
-  theme(legend.position = c(0.5, 0.15),
+  ylab("Mean vessel area"~ (mm^2)) +
+  theme(legend.position = "right",
         legend.direction = "vertical",
         axis.title = element_text(size = 10),
         strip.text = element_text(size = 8)) +
@@ -883,4 +884,44 @@ ggplot() +
 
 
 ggsave("figures/zanne_plot.png", scale = 1, width = 15.94, height = 14, units = "cm",dpi = 330)
+```
+
+## Fig. S1b Direct comparison with Zanne et al. (2010) for shared species
+```{r}
+# Species in both datasets; infraspecific taxa of one species are averaged
+matched_zanne <- taxon_vessel_metrics |>
+  group_by(species) |>
+  summarise(A_this_study = mean(A), N_this_study = mean(N)) |>
+  inner_join(zanne_data |> group_by(Binomial) |> summarise(A_zanne = mean(A), N_zanne = mean(N)),
+             by = c("species" = "Binomial"))
+write.csv(matched_zanne, "tables/zanne_matched_species.csv", row.names = F)
+
+matched_summary <- tibble(
+  variable = c("Mean vessel area (A)", "Vessel density (N)"),
+  n = nrow(matched_zanne),
+  r_log10 = c(cor(log10(matched_zanne$A_this_study), log10(matched_zanne$A_zanne)),
+              cor(log10(matched_zanne$N_this_study), log10(matched_zanne$N_zanne))),
+  median_ratio = c(median(matched_zanne$A_this_study / matched_zanne$A_zanne),
+                   median(matched_zanne$N_this_study / matched_zanne$N_zanne))
+)
+matched_summary
+
+matched_long <- bind_rows(
+  matched_zanne |> transmute(species, variable = "Mean vessel area (A)", zanne = A_zanne, this_study = A_this_study),
+  matched_zanne |> transmute(species, variable = "Vessel density (N)", zanne = N_zanne, this_study = N_this_study)
+)
+matched_labels <- matched_summary |> mutate(label = sprintf("n = %d, r = %.2f", n, r_log10))
+
+ggplot(matched_long, aes(x = zanne, y = this_study)) +
+  geom_abline(slope = 1, intercept = 0, linetype = 2, colour = "grey50") +
+  geom_point(size = 1, shape = 1) +
+  geom_text(data = matched_labels, aes(x = -Inf, y = Inf, label = label), hjust = -0.1, vjust = 1.5, size = 2.5, inherit.aes = FALSE) +
+  scale_x_log10() +
+  scale_y_log10() +
+  facet_wrap(~ variable, scales = "free") +
+  labs(x = "Zanne et al. (2010), log scale", y = "This study, log scale") +
+  theme_classic() +
+  theme(strip.background = element_rect(fill = "grey95"))
+
+ggsave("figures/zanne_matched_species.png", scale = 1, width = 15.92, height = 8, units = "cm", dpi = 330)
 ```
