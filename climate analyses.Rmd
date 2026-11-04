@@ -28,22 +28,6 @@ climate_preferences <- read.csv("data/climate_preferences.csv", header = T)
 ```
 
 
-## Fig. 2 Whittaker plot
-```{r}
-ggplot() +
-  geom_hex(data = tracheophyte_climate_preferences, aes(x = MAT, y = MAP), bins = 10, col = "light grey", alpha = 1, linewidth = 0.1) +
-  scale_fill_gradient(low = "white", high = "forestgreen") +
-  geom_point(data = climate_preferences, aes(x = MAT, y =  MAP), size = 0.05, alpha = 1) +
-  theme_classic() +
-  xlim(0, 30) +
-  theme(legend.position = "none") +
-  xlab("Mean annual temperature (ºC)") +
-  ylab("Mean annual precipitation (mm)") 
-
-ggsave("figures/whittaker_plot.png", scale = 1, width = 7.96, height = 7.96, units = "cm", dpi = 330)
-```
-
-
 ## Calculating Dh and VLF
 ```{r}
 # Unique image key: the same tree code can appear under two original names
@@ -79,16 +63,32 @@ xylem_VLF <- vessel_areas |>
   drop_na() 
 
 
-## Exporting xylem statistics
-# xylem_stats <- xylem_Dh |> left_join(xylem_VLF |> dplyr::select(scientificName, mean_VLF), by = "scientificName") |> 
-#   dplyr::select(family, genus, species, mean_Dh, mean_VLF, MAP, MAT, n_vessels, n_images, n_vessels_per_image)
-# 
-# write.csv(xylem_stats, "./data/xylem_stats.csv", row.names = F)
+## Exporting xylem statistics (single source for all models and figures below)
+xylem_stats <- xylem_Dh |> left_join(xylem_VLF |> dplyr::select(scientificName, mean_VLF), by = "scientificName") |> 
+  dplyr::select(family, genus, species, scientificName, mean_Dh, mean_VLF, MAP, MAT, n_obs, n_vessels, n_images, n_vessels_per_image)
+
+write.csv(xylem_stats, "./data/xylem_stats.csv", row.names = F)
 
 # Filtering families and genera to plot later
-selected_families <- xylem_Dh |> group_by(family) |> summarise(n = n()) |> filter(n >= 10)
-selected_genera <- xylem_Dh |> group_by(genus, family) |> summarise(n = n()) |> filter(n >= 10)
-sample_distribution <- xylem_Dh |> group_by(genus, family) |> summarise(n_species = n()) |> group_by(family) |> mutate(n_genus = n()) 
+selected_families <- xylem_stats |> group_by(family) |> summarise(n = n()) |> filter(n >= 10)
+selected_genera <- xylem_stats |> group_by(genus, family) |> summarise(n = n()) |> filter(n >= 10)
+sample_distribution <- xylem_stats |> group_by(genus, family) |> summarise(n_species = n()) |> group_by(family) |> mutate(n_genus = n())
+```
+
+
+## Fig. 2 Whittaker plot
+```{r}
+ggplot() +
+  geom_hex(data = tracheophyte_climate_preferences, aes(x = MAT, y = MAP), bins = 10, col = "light grey", alpha = 1, linewidth = 0.1) +
+  scale_fill_gradient(low = "white", high = "forestgreen") +
+  geom_point(data = xylem_stats, aes(x = MAT, y =  MAP), size = 0.05, alpha = 1) +
+  theme_classic() +
+  xlim(0, 30) +
+  theme(legend.position = "none") +
+  xlab("Mean annual temperature (ºC)") +
+  ylab("Mean annual precipitation (mm)") 
+
+ggsave("figures/whittaker_plot.png", scale = 1, width = 7.96, height = 7.96, units = "cm", dpi = 330)
 ```
 
 
@@ -96,7 +96,7 @@ sample_distribution <- xylem_Dh |> group_by(genus, family) |> summarise(n_specie
 ## Dh mixed model
 ```{r}
 # Data preparation
-xylem_Dh_genus <- xylem_Dh |> 
+xylem_Dh_genus <- xylem_stats |> 
   group_by(genus) |> 
   mutate(
     log_Dh = log(mean_Dh),
@@ -139,7 +139,7 @@ anova(xylem_Dh_regular_model, xylem_Dh_mixed_model)
 ## VLF mixed model
 ```{r}
 # Data preparation
-xylem_VLF_genus <- xylem_VLF |> 
+xylem_VLF_genus <- xylem_stats |> 
   group_by(genus) |> 
   mutate(
     log_VLF = log(mean_VLF),

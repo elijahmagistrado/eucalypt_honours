@@ -1,566 +1,495 @@
-"family","genus","species","scientificName","MAP","MAT"
-"Akaniaceae","Akania","Akania bidwillii","Akania bidwillii (Hend. ex Hogg) Mabb.",1632.45454545455,17.233608841699
-"Anacardiaceae","Blepharocarya","Blepharocarya involucrigera","Blepharocarya involucrigera F.Muell.",1774.5,24.1567625318255
-"Anacardiaceae","Euroschinus","Euroschinus falcatus","Euroschinus falcatus Hook.fil.",1383.8277027027,19.4249858823982
-"Anacardiaceae","Melanococca","Melanococca tomentosa","Rhus taitensis Guill.",2231.74324324324,24.5442005105921
-"Anacardiaceae","Rhodosphaera","Rhodosphaera rhodanthema","Rhodosphaera rhodanthema (F.Muell.) Engl.",1223.8800856531,18.4108047914199
-"Anacardiaceae","Spondias","Spondias dulcis","Spondias dulcis Parkinson",1782,27.345832824707
-"Annonaceae","Cananga","Cananga odorata","Cananga odorata (Lam.) Hook.f. & Thomson",2421.33720930233,24.279748073844
-"Annonaceae","Hubera","Hubera nitidissima","Huberantha nitidissima (Dunal) Chaowasku",1437.92901618929,22.6694011581345
-"Annonaceae","Polyalthia","Polyalthia australis","Monoon australe (Benth.) B.Xue & R.M.K.Saunders",1625.25915492958,26.6051878539609
-"Annonaceae","Polyalthia","Polyalthia michaelii","Monoon michaelii (C.T.White) B.Xue & R.M.K.Saunders",3171.5935483871,21.8187365255048
-"Apocynaceae","Alstonia","Alstonia actinophylla","Alstonia actinophylla (A.Cunn.) Schumann",1459.1981981982,26.8430461926503
-"Apocynaceae","Alstonia","Alstonia mollis","Alstonia constricta F.Muell.",690.472506082725,18.9960563520445
-"Apocynaceae","Alstonia","Alstonia muelleriana","Alstonia muelleriana Domin",2292.54857142857,22.4859523337228
-"Apocynaceae","Alstonia","Alstonia scholaris","Alstonia scholaris (L.) R.Br.",2147.73869346734,22.8574330219671
-"Apocynaceae","Carissa","Carissa ovata","Carissa ovata R.Br.",944.641449960599,20.721854466167
-"Apocynaceae","Cerbera","Cerbera inflata","Cerbera inflata S.T.Blake",2551.95238095238,21.222949618385
-"Apocynaceae","Cerbera","Cerbera manghas","Cerbera manghas L.",1902.31617647059,24.9767462786506
-"Apocynaceae","Ochrosia","Ochrosia poweri","Neisosperma poweri (F.M.Bailey) Fosberg & Sachet",1981.67391304348,19.9939311172651
-"Apocynaceae","Wrightia","Wrightia laevis","Wrightia laevis Hook.fil.",2390.86956521739,24.2959237306014
-"Apocynaceae","Wrightia","Wrightia saligna","Wrightia saligna (R.Br.) F.Muell. ex Benth.",1125.3833157339,26.9367652780277
-"Araliaceae","Polyscias","Polyscias australiana","Polyscias australiana (F.Muell.) Philipson",2050.78277153558,22.2052122537563
-"Araliaceae","Polyscias","Polyscias elegans","Polyscias elegans (C.Moore & F.Muell.) Harms",1390.98181276088,18.6253664813442
-"Araliaceae","Polyscias","Polyscias murrayi","Polyscias murrayi (F.Muell.) Harms",1439.55055055055,16.3973890720784
-"Asteraceae","Bedfordia","Bedfordia salicina","Bedfordia salicina (Labill.) DC.",967.138140517697,10.1683130809635
-"Asteraceae","Olearia","Olearia argophylla","Olearia argophylla (Labill.) F.Muell.",1140.31921568627,12.0628202715107
-"Balanopaceae","Balanops","Balanops australiana","Balanops australiana F.Muell.",2351.2511627907,20.0116085141204
-"Bignoniaceae","Deplanchea","Deplanchea tetraphylla","Deplanchea tetraphylla (R.Br.) F.Muell. ex Steenis",2009.3164556962,24.631540081169
-"Burseraceae","Canarium","Canarium acutifolium","Canarium acutifolium var. acutifolium",3123.71428571429,23.8066965511867
-"Burseraceae","Canarium","Canarium australasicum","Canarium australasicum (F.M.Bailey) Leenh.",1762.52985074627,19.3625933020862
-"Burseraceae","Canarium","Canarium australianum","Canarium australianum F.Muell.",1386.9706601467,26.652057841238
-"Burseraceae","Canarium","Canarium muelleri","Canarium muelleri F.M.Bailey",2119.25316455696,21.4489453472669
-"Burseraceae","Garuga","Garuga floribunda","Garuga floribunda Decne.",1246.84615384615,25.7766023782583
-"Casuarinaceae","Allocasuarina","Allocasuarina corniculata","Allocasuarina corniculata (F.Muell.) L.A.S.Johnson",318.514285714286,17.4588604790824
-"Casuarinaceae","Allocasuarina","Allocasuarina distyla","Allocasuarina distyla (Vent.) L.A.S.Johnson",1201.57164404223,16.1822712257197
-"Casuarinaceae","Allocasuarina","Allocasuarina huegeliana","Allocasuarina huegeliana (Miq.) L.A.S.Johnson",438.35,16.8533531257084
-"Casuarinaceae","Allocasuarina","Allocasuarina inophloia","Allocasuarina inophloia (F.Muell. & F.M.Bailey) L.A.S.Johnson",798.762523191095,18.605735968128
-"Casuarinaceae","Allocasuarina","Allocasuarina littoralis","Allocasuarina littoralis (Salisb.) L.A.S.Johnson",1007.42948833302,15.472111378053
-"Casuarinaceae","Allocasuarina","Allocasuarina muelleriana","Allocasuarina muelleriana (Miq.) L.A.S.Johnson",568.741355463348,15.237756462018
-"Casuarinaceae","Allocasuarina","Allocasuarina paludosa","Allocasuarina paludosa (Sieber ex Spreng.) L.A.S.Johnson",863.995394202113,13.9920752989635
-"Casuarinaceae","Allocasuarina","Allocasuarina torulosa","Allocasuarina torulosa (Aiton) L.A.S.Johnson",1217.48112872273,17.1535130582204
-"Casuarinaceae","Allocasuarina","Allocasuarina trichodon","Allocasuarina trichodon (Miq.) L.A.S.Johnson",598.36,15.5988887659709
-"Casuarinaceae","Allocasuarina","Allocasuarina verticillata","Allocasuarina verticillata (Lam.) L.A.S.Johnson",613.518301292493,14.8406785203849
-"Casuarinaceae","Casuarina","Casuarina cristata","Casuarina cristata Miq.",547.881256656018,18.9154008846567
-"Casuarinaceae","Casuarina","Casuarina cunninghamiana","Casuarina cunninghamiana Miq.",937.85691318328,18.9776192432048
-"Casuarinaceae","Casuarina","Casuarina glauca","Casuarina glauca Sieber",1209.8275862069,18.8152388580914
-"Casuarinaceae","Casuarina","Casuarina obesa","Casuarina obesa Miq.",436.927835051546,17.8714088990516
-"Celastraceae","Celastrus","Celastrus australis","Celastrus australis Harv. & F.Muell.",1016.45038167939,14.8621909870576
-"Celastraceae","Denhamia","Denhamia bilocularis","Denhamia bilocularis (F.Muell.) M.P.Simmons",1146.9207135778,17.4324207164133
-"Celastraceae","Denhamia","Denhamia cunninghamii","Denhamia cunninghamii (Hook.) M.P.Simmons",740.535757575757,21.6965631421406
-"Celastraceae","Denhamia","Denhamia disperma","Denhamia disperma (F.Muell.) M.P.Simmons",1150.78215767635,20.9733834781093
-"Celastraceae","Denhamia","Denhamia pittosporoides","Denhamia pittosporoides F.Muell.",907.7875,20.0464322566986
-"Celastraceae","Elaeodendron","Elaeodendron australe","Elaeodendron australe Vent.",1219.99145299145,17.5130291299506
-"Celastraceae","Elaeodendron","Elaeodendron melanocarpum","Elaeodendron melanocarpum F.Muell.",1341.5,23.525172224195
-"Celastraceae","Siphonodon","Siphonodon australis","Siphonodon australis Benth.",1087.26633165829,20.1127617706606
-"Celastraceae","Siphonodon","Siphonodon pendulum","Siphonodon pendulum F.M.Bailey",1248.30275229358,25.0160550633702
-"Cochlospermaceae","Cochlospermum","Cochlospermum fraseri","Cochlospermum fraseri subsp. heteronemum (F.Muell.) Poppend., 1980",953.90303030303,27.3953030904134
-"Cochlospermaceae","Cochlospermum","Cochlospermum gillivraei","Cochlospermum gillivraei Benth.",1321.62365591398,24.9758423548873
-"Combretaceae","Lumnitzera","Lumnitzera racemosa","Lumnitzera racemosa Willd.",1480.18827160494,25.3805426903713
-"Combretaceae","Macropteranthes","Macropteranthes fitzalanii","Macropteranthes fitzalanii F.Muell.",1552.7375,22.4090625047684
-"Combretaceae","Terminalia","Terminalia canescens","Terminalia bursarina F.Muell.",756.153191489362,27.2274113837709
-"Combretaceae","Terminalia","Terminalia complanata","Terminalia complanata K.Schum.",1941.60294117647,25.494362522574
-"Combretaceae","Terminalia","Terminalia grandiflora","Terminalia grandiflora Benth.",1184.24242424242,27.2429625254118
-"Combretaceae","Terminalia","Terminalia hadleyana","Terminalia carpentariae C.T.White",1128.49475890985,27.0949947968969
-"Combretaceae","Terminalia","Terminalia microcarpa","Terminalia microcarpa Decne.",1699.088091354,25.5211392102389
-"Combretaceae","Terminalia","Terminalia muelleri","Terminalia muelleri Benth.",1696.97324414716,25.0012681061608
-"Combretaceae","Terminalia","Terminalia platyphylla","Terminalia platyphylla F.Muell.",918.442105263158,26.9212171027535
-"Cornaceae","Alangium","Alangium polyosmoides","Alangium villosum subsp. polyosmoides (F.Muell.) Bloemb.",1569.46891891892,17.4380799525493
-"Cornaceae","Alangium","Alangium villosum","Alangium villosum (Blume) Wangerin",1509.66666666667,18.1648148430718
-"Cunoniaceae","Ackama","Ackama australiensis","Ackama australiensis (Schltr.) C.T.White",2123.85098039216,20.4821242986941
-"Cunoniaceae","Ackama","Ackama paniculosa","Ackama paniculosa (F.Muell.) Heslewood",1479.39119683482,15.9737162222141
-"Cunoniaceae","Anodopetalum","Anodopetalum biglandulosum","Anodopetalum biglandulosum (A.Cunn. ex Hook.) Hook.fil.",1715.31777661248,9.89858199491136
-"Cunoniaceae","Callicoma","Callicoma serratifolia","Callicoma serratifolia Andrews",1325.74566361333,16.2138358433793
-"Cunoniaceae","Ceratopetalum","Ceratopetalum apetalum","Ceratopetalum apetalum D.Don",1325.74138873701,15.8437500226817
-"Cunoniaceae","Ceratopetalum","Ceratopetalum gummiferum","Ceratopetalum gummiferum Sm.",1166.56422505308,16.6936405266926
-"Cunoniaceae","Ceratopetalum","Ceratopetalum tetrapterum","Ceratopetalum succirubrum C.T.White",2032.21359223301,20.1711164678185
-"Cunoniaceae","Ceratopetalum","Ceratopetalum virchowii","Ceratopetalum virchowii F.Muell.",3295.67777777778,20.6708796183268
-"Cunoniaceae","Eucryphia","Eucryphia lucida","Eucryphia lucida (Labill.) Baill.",1710.4022556391,10.0945535855186
-"Cunoniaceae","Eucryphia","Eucryphia moorei","Eucryphia moorei F.Muell.",1063.03467153285,13.0989431342939
-"Cunoniaceae","Gillbeea","Gillbeea adenopetala","Gillbeea adenopetala F.Muell.",2784.39583333333,21.2437500456969
-"Cunoniaceae","Karrabina","Karrabina benthamiana","Karrabina benthamiana (F.Muell.) Rozefelds & H.C.Hopkins",1662.35162950257,16.9740423068379
-"Cunoniaceae","Karrabina","Karrabina biagiana","Karrabina biagiana (F.Muell.) Rozefelds & H.C.Hopkins",2469.53125,20.3095052599907
-"Cunoniaceae","Pseudoweinmannia","Pseudoweinmannia lachnocarpa","Pseudoweinmannia lachnocarpa (F.Muell.) Engl.",1593.14114114114,18.4089089413663
-"Cunoniaceae","Pullea","Pullea stutzeri","Pullea stutzeri (F.Muell.) Gibbs",2507.11570247934,20.5384642467026
-"Cunoniaceae","Schizomeria","Schizomeria ovata","Schizomeria ovata D.Don",1426.57359061672,16.4371389915129
-"Cunoniaceae","Schizomeria","Schizomeria whitei","Schizomeria whitei Mattf.",1921.29896907216,20.8656788462216
-"Cunoniaceae","Vesselowskya","Vesselowskya rubifolia","Vesselowskya rubifolia (F.Muell.) Pamp.",1352.86554621849,13.319292709607
-"Cyperaceae","Gahnia","Gahnia aspera","Gahnia aspera (R.Br.) Spreng.",998.63534361851,17.2832306508573
-"Dilleniaceae","Dillenia","Dillenia alata","Dillenia alata (R.Br. ex DC.) Martelli",1943.87006960557,25.3225927153762
-"Dilleniaceae","Hibbertia","Hibbertia cuneiformis","Hibbertia cuneiformis (Labill.) Sm.",969.311621966795,16.3448009490967
-"Dilleniaceae","Hibbertia","Hibbertia saligna","Hibbertia saligna R.Br. ex DC.",1150.92277992278,14.7323359301652
-"Ebenaceae","Diospyros","Diospyros australis","Diospyros australis (R.Br.) F.M.Bailey",1260.84255319149,17.9148936048467
-"Ebenaceae","Diospyros","Diospyros hebecarpa","Diospyros hebecarpa A.Cunn. ex Benth.",1843.59178082192,24.4117579839001
-"Ebenaceae","Diospyros","Diospyros pentamera","Diospyros pentamera (Woolls & F.Muell.) F.Muell.",1444.24972067039,17.7857798160787
-"Ehretiaceae","Ehretia","Ehretia acuminata","Ehretia acuminata R.Br.",1242.35,16.7483927931104
-"Ehretiaceae","Ehretia","Ehretia saligna","Ehretia saligna var. membranifolia (R.Br.) Randell",722.067741935484,20.0864314971432
-"Elaeocarpaceae","Aceratium","Aceratium megalospermum","Aceratium megalospermum (F.Muell.) Balgooy",2723.32824427481,22.8111323436708
-"Elaeocarpaceae","Elaeocarpus","Elaeocarpus angustifolius","Elaeocarpus grandis F.Muell.",1794.80941176471,20.1221911699632
-"Elaeocarpaceae","Elaeocarpus","Elaeocarpus coorangooloo","Elaeocarpus coorangooloo J.F.L.H.Bailey & C.T.White",1994.45762711864,20.5164549229509
-"Elaeocarpaceae","Elaeocarpus","Elaeocarpus eumundi","Elaeocarpus eumundi F.M.Bailey",1690.56402439024,20.2779344233071
-"Elaeocarpaceae","Elaeocarpus","Elaeocarpus foveolatus","Elaeocarpus foveolatus F.Muell.",2458.73595505618,20.6550561176257
-"Elaeocarpaceae","Elaeocarpus","Elaeocarpus holopetalus","Elaeocarpus holopetalus F.Muell.",1003.86565836299,11.3325585903222
-"Elaeocarpaceae","Elaeocarpus","Elaeocarpus kirtonii","Elaeocarpus kirtonii F.Muell. ex F.M.Bailey",1432.81818181818,16.4175157068665
-"Elaeocarpaceae","Elaeocarpus","Elaeocarpus largiflorens","Elaeocarpus largiflorens C.T.White",2292.95238095238,20.5396827516102
-"Elaeocarpaceae","Elaeocarpus","Elaeocarpus obovatus","Elaeocarpus obovatus G.Don",1376.65027027027,18.6942567418073
-"Elaeocarpaceae","Elaeocarpus","Elaeocarpus reticulatus","Elaeocarpus reticulatus Sm.",1191.79644072604,16.0480989432781
-"Elaeocarpaceae","Elaeocarpus","Elaeocarpus ruminatus","Elaeocarpus ruminatus F.Muell.",1961.59633027523,19.7440367532433
-"Elaeocarpaceae","Peripentadenia","Peripentadenia mearsii","Peripentadenia mearsii (C.T.White) L.S.Sm.",3289.85365853659,20.7533536073638
-"Elaeocarpaceae","Sloanea","Sloanea australis","Sloanea australis (Benth.) F.Muell.",1556.31309436723,17.4178676102924
-"Elaeocarpaceae","Sloanea","Sloanea langii","Sloanea langii F.Muell.",2099.9880952381,21.0122273081825
-"Elaeocarpaceae","Sloanea","Sloanea macbrydei","Sloanea macbrydei F.Muell.",2275.16384180791,20.7947034243136
-"Elaeocarpaceae","Sloanea","Sloanea woollsii","Sloanea woollsii F.Muell.",1552.58670988655,16.8409407011307
-"Ericaceae","Monotoca","Monotoca scoparia","Monotoca scoparia (Sm.) R.Br.",951.441791675476,14.0768264195173
-"Ericaceae","Trochocarpa","Trochocarpa laurina","Trochocarpa laurina (Rudge) R.Br.",1400.15,17.2314456727568
-"Erythroxylaceae","Erythroxylum","Erythroxylum australe","Erythroxylum australe F.Muell.",704.379220779221,21.8949242455619
-"Erythroxylaceae","Erythroxylum","Erythroxylum ellipticum","Erythroxylum ellipticum R.Br. ex Benth.",995.318246110325,26.7728489116361
-"Escalloniaceae","Anopterus","Anopterus macleayanus","Anopterus macleayanus F.Muell.",1612.89078498293,16.0923848445098
-"Escalloniaceae","Polyosma","Polyosma alangiacea","Polyosma alangiacea F.Muell.",2017.35922330097,19.3928802453198
-"Escalloniaceae","Polyosma","Polyosma cunninghamii","Polyosma cunninghamii Benn.",1443.60784313725,15.7205156133758
-"Escalloniaceae","Polyosma","Polyosma hirsuta","Polyosma hirsuta C.T.White",2547.00598802395,21.0477544019322
-"Euphorbiaceae","Alchornea","Alchornea ilicifolia","Alchornea ilicifolia (Js.Sm.) Müll.Arg.",1191.28822055138,18.6298767665873
-"Euphorbiaceae","Claoxylon","Claoxylon australe","Claoxylon australe Baill.",1260.34725274725,16.6223504293532
-"Euphorbiaceae","Croton","Croton insularis","Croton insularis Baill.",1072.61950059453,19.4035473584278
-"Euphorbiaceae","Croton","Croton phebalioides","Croton phebalioides F.Muell. ex Müll.Arg.",798.993788819876,20.5189009798733
-"Euphorbiaceae","Croton","Croton verreauxii","Croton verreauxii Baill.",1308.90358467244,17.4214822771523
-"Euphorbiaceae","Endospermum","Endospermum myrmecophilum","Endospermum myrmecophilum L.S.Sm.",1958.43529411765,25.9656861473532
-"Euphorbiaceae","Excoecaria","Excoecaria agallocha","Excoecaria agallocha L.",1433.48377581121,22.7231625244681
-"Euphorbiaceae","Excoecaria","Excoecaria dallachyana","Excoecaria dallachyana (Baill.) Benth.",945.455263157895,19.5890679886467
-"Euphorbiaceae","Fontainea","Fontainea picrosperma","Fontainea picrosperma C.T.White",2958.78504672897,20.3400311336339
-"Euphorbiaceae","Homalanthus","Homalanthus novoguineensis","Homalanthus novoguineensis (Warb.) K.Schum.",1931.58466453674,24.0960463502537
-"Euphorbiaceae","Homalanthus","Homalanthus populifolius","Homalanthus populifolius Graham",1295.31446126838,17.3790514696735
-"Euphorbiaceae","Macaranga","Macaranga involucrata","Macaranga involucrata Baill.",1884.1484375,24.5603081782659
-"Euphorbiaceae","Macaranga","Macaranga tanarius","Macaranga tanarius (L.) Müll.Arg.",1523.95901639344,21.1600607138857
-"Euphorbiaceae","Mallotus","Mallotus discolor","Mallotus discolor F.Muell. ex Benth.",1422.23552123552,20.1342985528777
-"Euphorbiaceae","Mallotus","Mallotus mollissimus","Mallotus mollissimus (Geiseler) Airy Shaw",2020.46153846154,21.881341609326
-"Euphorbiaceae","Mallotus","Mallotus polyadenos","Mallotus polyadenos F.Muell.",1932.75914634146,23.7036203465811
-"Euphorbiaceae","Pimelodendron","Pimelodendron amboinicum","Pimelodendron amboinicum Hassk.",1958.13333333333,25.8557636578878
-"Euphorbiaceae","Rockinghamia","Rockinghamia angustifolia","Rockinghamia angustifolia (Benth.) Airy Shaw",2524.69270833333,20.8473306993643
-"Fabaceae","Acacia","Acacia acuminata","Acacia acuminata Benth.",357.868613138686,18.0903323105652
-"Fabaceae","Acacia","Acacia anceps","Acacia anceps DC.",389.895591647332,16.5698182776467
-"Fabaceae","Acacia","Acacia aneura","Acacia aneura F.Muell. ex Benth.",268.603260869564,20.519744611637
-"Fabaceae","Acacia","Acacia aspera","Acacia aspera Lindl.",639.02103250478,14.1558476971395
-"Fabaceae","Acacia","Acacia aulacocarpa","Acacia aulacocarpa A.Cunn. ex Benth.",1197.95252918288,21.0431744081965
-"Fabaceae","Acacia","Acacia auriculiformis","Acacia auriculiformis A.Cunn. ex Benth.",1513.24948453608,26.6986884153176
-"Fabaceae","Acacia","Acacia binervata","Acacia binervata DC.",1298.82305630027,16.1979762495789
-"Fabaceae","Acacia","Acacia brachybotrya","Acacia brachybotrya Benth.",391.626622172785,16.1763548951791
-"Fabaceae","Acacia","Acacia burrowii","Acacia burrowii Maiden",634.820930232558,18.5941957651183
-"Fabaceae","Acacia","Acacia carneorum","Acacia carneorum Maiden",221.120921305182,18.7898912173544
-"Fabaceae","Acacia","Acacia cheelii","Acacia cheelii Blakely",725.940088105727,16.8053891110525
-"Fabaceae","Acacia","Acacia cincinnata","Acacia cincinnata F.Muell.",1852.93534482759,21.2607758538476
-"Fabaceae","Acacia","Acacia colletioides","Acacia colletioides Benth.",294.474057484136,17.8022723028846
-"Fabaceae","Acacia","Acacia cyperophylla","Acacia cyperophylla F.Muell. ex Benth.",278.191176470588,22.619056224823
-"Fabaceae","Acacia","Acacia dealbata","Acacia dealbata Link",934.349063116377,12.3471531881736
-"Fabaceae","Acacia","Acacia deanei","Acacia deanei (R.T.Baker) M.B.Welch, Coombs & McGlynn",615.103300471496,17.0319599375621
-"Fabaceae","Acacia","Acacia decurrens","Acacia decurrens Willd.",895.807065750737,15.5732024955563
-"Fabaceae","Acacia","Acacia doratoxylon","Acacia doratoxylon A.Cunn.",604.218009478673,16.2818299313104
-"Fabaceae","Acacia","Acacia elata","Acacia elata A.Cunn. ex Benth.",1116.63747703613,14.9152454304973
-"Fabaceae","Acacia","Acacia excelsa","Acacia excelsa Benth.",446.967095851217,20.1969361284772
-"Fabaceae","Acacia","Acacia falcata","Acacia falcata Willd.",996.325740318907,17.521600547666
-"Fabaceae","Acacia","Acacia falciformis","Acacia falciformis DC.",910.405632347242,13.7260356233373
-"Fabaceae","Acacia","Acacia flavescens","Acacia flavescens A.Cunn. ex Benth.",1348.55197505198,22.2485230311039
-"Fabaceae","Acacia","Acacia floribunda","Acacia floribunda (Vent.) Willd.",1035.52635864034,16.0298951824692
-"Fabaceae","Acacia","Acacia hakeoides","Acacia hakeoides A.Cunn. ex Benth.",435.634782608695,16.6669650316848
-"Fabaceae","Acacia","Acacia harpophylla","Acacia harpophylla F.Muell. ex Benth.",588.581380208332,20.2004015333951
-"Fabaceae","Acacia","Acacia homalophylla","Acacia homalophylla A.Cunn. ex Benth.",466.320289855072,18.1647524488145
-"Fabaceae","Acacia","Acacia implexa","Acacia implexa Benth.",842.640595140596,15.3385684038816
-"Fabaceae","Acacia","Acacia irrorata","Acacia irrorata Sieber ex Spreng.",1148.32065868263,16.5213373538263
-"Fabaceae","Acacia","Acacia leptocarpa","Acacia leptocarpa A.Cunn. ex Benth.",1373.72630078403,25.6520996610352
-"Fabaceae","Acacia","Acacia ligulata","Acacia ligulata A.Cunn. ex Benth.",308.64563771518,18.6235088252686
-"Fabaceae","Acacia","Acacia longifolia","Acacia longifolia (Andrews) Willd.",1012.12942392147,15.6732828238312
-"Fabaceae","Acacia","Acacia longifolia","Acacia longifolia subsp. sophorae (Labill.) Court",830.469193727631,15.1811149598109
-"Fabaceae","Acacia","Acacia melanoxylon","Acacia melanoxylon R.Br.",977.334333773778,13.0382080551895
-"Fabaceae","Acacia","Acacia oshanesii","Acacia oshanesii F.Muell. & Maiden",1408.35423197492,19.1507444680671
-"Fabaceae","Acacia","Acacia parramattensis","Acacia parramattensis Tindale",962.711899791231,16.2856898882467
-"Fabaceae","Acacia","Acacia penninervis","Acacia penninervis Sieber ex DC.",853.244565217391,16.0916213663468
-"Fabaceae","Acacia","Acacia pruinosa","Acacia pruinosa A.Cunn. ex Benth.",818.947368421053,15.1685032656318
-"Fabaceae","Acacia","Acacia pycnantha","Acacia pycnantha Benth.",648.825627573142,14.6253277473764
-"Fabaceae","Acacia","Acacia rigens","Acacia rigens A.Cunn. ex G.Don",343.958721291124,16.9488283896728
-"Fabaceae","Acacia","Acacia salicina","Acacia salicina Lindl.",520.105733082705,18.9533570418904
-"Fabaceae","Acacia","Acacia torulosa","Acacia torulosa Benth.",962.215178571429,26.2053831594331
-"Fabaceae","Acacia","Acacia trinervata","Acacia trinervata Sieber ex DC.",1005.41013824885,16.542607496411
-"Fabaceae","Acacia","Acacia verniciflua","Acacia verniciflua A.Cunn.",807.64247407937,14.2411437933045
-"Fabaceae","Albizia","Albizia canescens","Albizia canescens Benth.",1079.50943396226,24.6994497191231
-"Fabaceae","Albizia","Albizia lebbeck","Albizia lebbeck (L.) Benth.",1166.45591939547,24.108196935966
-"Fabaceae","Archidendron","Archidendron grandiflorum","Archidendron grandiflorum (Benth.) I.C.Nielsen",1616.66367713005,19.5136833590064
-"Fabaceae","Archidendron","Archidendron vaillantii","Archidendron vaillantii (F.Muell.) F.Muell.",2407.06818181818,20.8955493117824
-"Fabaceae","Archidendropsis","Archidendropsis thozetiana","Archidendropsis thozetiana (F.Muell.) I.C.Nielsen",887.901639344262,21.2288934520034
-"Fabaceae","Archidendropsis","Archidendropsis xanthoxylon","Archidendropsis xanthoxylon (C.T.White & W.D.Francis) I.C.Nielsen",2732.34615384615,22.7979166324322
-"Fabaceae","Barklya","Barklya syringifolia","Barklya syringifolia F.Muell.",1064.13274336283,20.5286134534178
-"Fabaceae","Callistachys","Callistachys lanceolata","Callistachys lanceolata Vent.",939.203931203931,15.2534602490924
-"Fabaceae","Cassia","Cassia marksiana","Cassia marksiana (F.M.Bailey) Domin",1738.08582089552,19.3208333769841
-"Fabaceae","Castanospermum","Castanospermum australe","Castanospermum australe A.Cunn. ex Mudie",1598.81798084009,19.9205784618459
-"Fabaceae","Cynometra","Cynometra ramiflora","Cynometra ramiflora L.",1854.72,25.5230000305176
-"Fabaceae","Daviesia","Daviesia corymbosa","Daviesia corymbosa Sm.",1118.23545966229,15.1538109940391
-"Fabaceae","Falcataria","Falcataria toona","Falcataria toona (F.M.Bailey) Gill.K.Br., D.J.Murphy & Ladiges",1649.54838709677,23.4934364134266
-"Fabaceae","Intsia","Intsia bijuga","Intsia bijuga (Colebr.) Kuntze",1961.17857142857,25.4415675799052
-"Fabaceae","Jacksonia","Jacksonia scoparia","Jacksonia scoparia R.Br.",1038.23859788887,17.5768721317822
-"Fabaceae","Pongamia","Pongamia pinnata","Pongamia pinnata (L.) Pierre",1636.38303341902,24.7895993671564
-"Lauraceae","Cinnamomum","Cinnamomum baileyanum","Cinnamomum baileyanum (F.Muell. ex F.M.Bailey) Francis",1761.59183673469,22.5890306161374
-"Lauraceae","Cinnamomum","Cinnamomum laubatii","Cinnamomum laubatii F.Muell.",2445.4269005848,20.5971002857587
-"Lauraceae","Cinnamomum","Cinnamomum oliveri","Cinnamomum oliveri F.M.Bailey",1590.435546875,17.9102742429823
-"Lauraceae","Cinnamomum","Cinnamomum virens","Cinnamomum virens R.Baker",1518.44063324538,16.2299692360267
-"Lauraceae","Cryptocarya","Cryptocarya angulata","Cryptocarya angulata C.T.White",2271.74874371859,20.4207077218061
-"Lauraceae","Cryptocarya","Cryptocarya corrugata","Cryptocarya corrugata C.T.White & Francis",2329.24309392265,20.1891345661648
-"Lauraceae","Cryptocarya","Cryptocarya cunninghamii","Cryptocarya cunninghamii Meisn.",1746.35326086957,25.9528757955717
-"Lauraceae","Cryptocarya","Cryptocarya densiflora","Cryptocarya densiflora Blume",2009.64666666667,19.9674722544352
-"Lauraceae","Cryptocarya","Cryptocarya erythroxylon","Cryptocarya erythroxylon Maiden & Betche",1400.92931937173,16.4058464609516
-"Lauraceae","Cryptocarya","Cryptocarya foveolata","Cryptocarya foveolata C.T.White & Francis",1393.65573770492,14.2031830709489
-"Lauraceae","Cryptocarya","Cryptocarya glaucescens","Cryptocarya glaucescens R.Br.",1416.19595448799,16.9388379851726
-"Lauraceae","Cryptocarya","Cryptocarya hypospodia","Cryptocarya hypospodia F.Muell.",1769.83160621762,22.2642810875888
-"Lauraceae","Cryptocarya","Cryptocarya laevigata","Cryptocarya laevigata Blume",1745.8710106383,19.9895167997543
-"Lauraceae","Cryptocarya","Cryptocarya mackinnoniana","Cryptocarya mackinnoniana F.Muell.",2295.05,21.5447454187605
-"Lauraceae","Cryptocarya","Cryptocarya microneura","Cryptocarya microneura Meisn.",1373.55837245696,17.4360081062257
-"Lauraceae","Cryptocarya","Cryptocarya oblata","Cryptocarya oblata F.M.Bailey",2594.07482993197,21.670974952023
-"Lauraceae","Cryptocarya","Cryptocarya obovata","Cryptocarya obovata R.Br.",1500.50835322196,17.8699217866884
-"Lauraceae","Cryptocarya","Cryptocarya pleurosperma","Cryptocarya pleurosperma C.T.White & W.D.Francis",3011.56,22.1648332595825
-"Lauraceae","Cryptocarya","Cryptocarya rigida","Cryptocarya rigida Meisn.",1483.22174101343,16.9332647744894
-"Lauraceae","Cryptocarya","Cryptocarya triplinervis","Cryptocarya triplinervis R.Br.",1423.20359848485,20.0108901578369
-"Lauraceae","Endiandra","Endiandra compressa","Endiandra compressa C.T.White",2952.93333333333,21.7513636849143
-"Lauraceae","Endiandra","Endiandra crassiflora","Endiandra crassiflora C.T.White & Francis",1625.46583850932,15.472955484568
-"Lauraceae","Endiandra","Endiandra dichrophylla","Endiandra dichrophylla F.Muell.",2851.21621621622,20.3388890103177
-"Lauraceae","Endiandra","Endiandra discolor","Endiandra discolor Benth.",1560.4487704918,18.673817489968
-"Lauraceae","Endiandra","Endiandra glauca","Endiandra glauca R.Br.",1913.18421052632,25.5142856397127
-"Lauraceae","Endiandra","Endiandra hypotephra","Endiandra hypotephra F.Muell.",2405.72727272727,22.6231459476161
-"Lauraceae","Endiandra","Endiandra introrsa","Endiandra introrsa C.T.White",1839.04918032787,16.4200477990948
-"Lauraceae","Endiandra","Endiandra montana","Endiandra montana C.T.White",2679.625,21.8780381361643
-"Lauraceae","Endiandra","Endiandra muelleri","Endiandra muelleri Meisn.",1493.16714285714,17.2663393170493
-"Lauraceae","Endiandra","Endiandra palmerstonii","Endiandra palmerstonii (F.M.Bailey) C.T.White",2397.82352941176,21.4418198361116
-"Lauraceae","Endiandra","Endiandra pubens","Endiandra pubens Meisn.",1622.02769230769,18.6569422589816
-"Lauraceae","Endiandra","Endiandra sieberi","Endiandra sieberi Nees",1392.37325905292,17.7027942370571
-"Lauraceae","Endiandra","Endiandra virens","Endiandra virens F.Muell.",1464.59731543624,18.2553133100471
-"Lauraceae","Litsea","Litsea breviumbellata","Litsea breviumbellata C.K.Allen",1917.44881889764,25.0369915323933
-"Lauraceae","Litsea","Litsea leefeana","Litsea leefeana (F.Muell.) Merr.",1949.7030162413,20.6141144604251
-"Lauraceae","Litsea","Litsea reticulata","Litsea reticulata Benth. & Hook.fil. ex F.Muell.",1457.87675675676,16.6090315463092
-"Lauraceae","Neolitsea","Neolitsea brassii","Neolitsea brassii C.K.Allen",1540.446875,23.5976302027702
-"Lauraceae","Neolitsea","Neolitsea dealbata","Neolitsea dealbata (R.Br.) Merr.",1556.32651963421,18.0828369054953
-"Malvaceae","Camptostemon","Camptostemon schultzii","Camptostemon schultzii Mast.",1676.688,27.0967333374023
-"Myrtaceae","Agonis","Agonis flexuosa","Agonis flexuosa (Muhl. ex Willd.) Sweet",931.947593582887,16.3926247928232
-"Myrtaceae","Angophora","Angophora costata","Angophora costata subsp. costata",1084.81272084806,16.5634863890523
-"Myrtaceae","Angophora","Angophora floribunda","Angophora floribunda (Sm.) Sweet",959.692471048875,15.7287479169407
-"Myrtaceae","Angophora","Angophora subvelutina","Angophora subvelutina F.Muell.",1068.42257658414,17.4381871737705
-"Myrtaceae","Angophora","Angophora woodsiana","Angophora woodsiana F.M.Bailey",1209.06239737274,18.91282159276
-"Myrtaceae","Archirhodomyrtus","Archirhodomyrtus beckleri","Archirhodomyrtus beckleri (F.Muell.) A.J.Scott",1660.41657638136,17.881380939277
-"Myrtaceae","Backhousia","Backhousia bancroftii","Backhousia bancroftii F.M.Bailey & F.Muell. ex F.M.Bailey",3487,23.0271506360782
-"Myrtaceae","Backhousia","Backhousia citriodora","Backhousia citriodora F.Muell.",1495.87425149701,20.180713539352
-"Myrtaceae","Backhousia","Backhousia hughesii","Backhousia hughesii C.T.White",1988.64835164835,21.6591578892299
-"Myrtaceae","Backhousia","Backhousia leptopetala","Backhousia leptopetala (F.Muell.) M.G.Harr.",1249.50727650728,17.5789761156649
-"Myrtaceae","Backhousia","Backhousia myrtifolia","Backhousia myrtifolia Hook. & Harv.",1078.33022190912,16.5121668160235
-"Myrtaceae","Backhousia","Backhousia subargentea","Backhousia subargentea (C.T.White) M.G.Harr.",1363.85608856089,19.5936193079086
-"Myrtaceae","Callistemon","Callistemon citrinus","Callistemon citrinus (Curtis) Skeels",1082.80484114977,15.892470378378
-"Myrtaceae","Callistemon","Callistemon paludosus","Callistemon sieberi DC.",773.040169133192,14.2947145771023
-"Myrtaceae","Callistemon","Callistemon salignus","Callistemon salignus (Sm.) Colvill ex Sweet",1285.57383868731,18.0861682770625
-"Myrtaceae","Callistemon","Callistemon viminalis","Callistemon viminalis (Sol. ex Gaertn.) G.Don",1077.29526627219,18.9534886726966
-"Myrtaceae","Corymbia","Corymbia abbreviata","Corymbia abbreviata (Blakely & Jacobs) K.D.Hill & L.A.S.Johnson",882.603773584906,27.3410901243582
-"Myrtaceae","Corymbia","Corymbia abergiana","Corymbia abergiana (F.Muell.) K.D.Hill & L.A.S.Johnson",1562.36947791165,20.2124329838887
-"Myrtaceae","Corymbia","Corymbia calophylla","Corymbia calophylla (Lindl.) K.D.Hill & L.A.S.Johnson",777.127323605838,18.0573457688921
-"Myrtaceae","Corymbia","Corymbia citriodora","Corymbia citriodora (Hook.) K.D.Hill & L.A.S.Johnson",992.625039519443,18.8213220696415
-"Myrtaceae","Corymbia","Corymbia clavigera","Corymbia clavigera (A.Cunn. ex Schauer) K.D.Hill & L.A.S.Johnson",1302.8125,27.2480466961861
-"Myrtaceae","Corymbia","Corymbia confertiflora","Corymbia confertiflora (F.Muell.) K.D.Hill & L.A.S.Johnson",1021.21884816754,26.5269219243714
-"Myrtaceae","Corymbia","Corymbia dichromophloia","Corymbia dichromophloia (F.Muell.) K.D.Hill & L.A.S.Johnson",885.462445930005,26.7106386837976
-"Myrtaceae","Corymbia","Corymbia eximia","Corymbia eximia (Schauer) K.D.Hill & L.A.S.Johnson",995.67815049864,16.5773080741938
-"Myrtaceae","Corymbia","Corymbia ferruginea","Corymbia ferruginea (Schauer) K.D.Hill & L.A.S.Johnson",944.736247174077,26.950593446733
-"Myrtaceae","Corymbia","Corymbia foelscheana","Corymbia foelscheana (F.Muell.) K.D.Hill & L.A.S.Johnson",1166.6371257485,27.1749126845491
-"Myrtaceae","Corymbia","Corymbia grandifolia","Corymbia grandifolia (R.Br. ex Benth.) K.D.Hill & L.A.S.Johnson",989.926229508197,27.1214438071016
-"Myrtaceae","Corymbia","Corymbia gummifera","Corymbia gummifera (Gaertn.) K.D.Hill & L.A.S.Johnson",1137.65309323265,16.4119469529351
-"Myrtaceae","Corymbia","Corymbia haematoxylon","Corymbia haematoxylon (Maiden) K.D.Hill & L.A.S.Johnson",859.983957219251,17.2289884485663
-"Myrtaceae","Corymbia","Corymbia intermedia","Corymbia intermedia (R.T.Baker) K.D.Hill & L.A.S.Johnson",1387.52862254025,19.0169206382123
-"Myrtaceae","Corymbia","Corymbia maculata","Corymbia maculata (Hook.) K.D.Hill & L.A.S.Johnson",1023.85896750034,16.9707722804182
-"Myrtaceae","Corymbia","Corymbia papuana","Corymbia papuana (F.Muell.) K.D.Hill & L.A.S.Johnson",1290.09045226131,25.7594641009767
-"Myrtaceae","Corymbia","Corymbia pauciseta","Corymbia pauciseta K.D.Hill & L.A.S.Johnson",1263.6,26.8655553605821
-"Myrtaceae","Corymbia","Corymbia peltata","Corymbia peltata (Benth.) K.D.Hill & L.A.S.Johnson",735.824701195219,22.2316898254759
-"Myrtaceae","Corymbia","Corymbia polycarpa","Corymbia polycarpa (F.Muell.) K.D.Hill & L.A.S.Johnson",1101.7853712597,26.7365072156655
-"Myrtaceae","Corymbia","Corymbia ptychocarpa","Corymbia ptychocarpa (F.Muell.) K.D.Hill & L.A.S.Johnson",1239.75634517767,26.9906302805479
-"Myrtaceae","Corymbia","Corymbia setosa","Corymbia setosa (Schauer) K.D.Hill & L.A.S.Johnson",754.864904552129,25.5130017066317
-"Myrtaceae","Corymbia","Corymbia terminalis","Corymbia terminalis (F.Muell.) K.D.Hill & L.A.S.Johnson",572.333581811406,24.7908342676379
-"Myrtaceae","Corymbia","Corymbia tessellaris","Corymbia tessellaris (F.Muell.) K.D.Hill & L.A.S.Johnson",1111.76698540513,22.0517111122158
-"Myrtaceae","Corymbia","Corymbia torelliana","Corymbia torelliana (F.Muell.) K.D.Hill & L.A.S.Johnson",1437.96157840083,20.2638888888889
-"Myrtaceae","Corymbia","Corymbia trachyphloia","Corymbia trachyphloia (F.Muell.) K.D.Hill & L.A.S.Johnson",794.554124608425,17.9774611626109
-"Myrtaceae","Eucalyptus","Eucalyptus accedens","Eucalyptus accedens Fitzg.",536.35421686747,17.7158934627671
-"Myrtaceae","Eucalyptus","Eucalyptus acmenoides","Eucalyptus acmenoides Schauer",1227.25993555317,17.9032850086241
-"Myrtaceae","Eucalyptus","Eucalyptus alba","Eucalyptus alba Reinw. ex Blume",1323.2972972973,26.7567566794318
-"Myrtaceae","Eucalyptus","Eucalyptus albens","Eucalyptus albens Miq.",704.08275862069,15.3776150012838
-"Myrtaceae","Eucalyptus","Eucalyptus amplifolia","Eucalyptus amplifolia Naudin",943.734934497816,16.5660789747946
-"Myrtaceae","Eucalyptus","Eucalyptus amygdalina","Eucalyptus amygdalina Labill.",898.163949553984,11.3352156660318
-"Myrtaceae","Eucalyptus","Eucalyptus andrewsii","Eucalyptus andrewsii Maiden",895.560240963855,14.171080753438
-"Myrtaceae","Eucalyptus","Eucalyptus andrewsii","Eucalyptus campanulata R.T.Baker & H.G.Sm.",1128.56951627624,13.9181535855448
-"Myrtaceae","Eucalyptus","Eucalyptus angophoroides","Eucalyptus angophoroides R.T.Baker",864.656546489564,13.9575308396196
-"Myrtaceae","Eucalyptus","Eucalyptus apodophylla","Eucalyptus apodophylla Blakely & Jacobs",1140.51094890511,26.7474755892788
-"Myrtaceae","Eucalyptus","Eucalyptus astringens","Eucalyptus astringens (Maiden) Maiden",443.664335664336,16.0414335344221
-"Myrtaceae","Eucalyptus","Eucalyptus badjensis","Eucalyptus badjensis Beuzev. & Welch",901.770186335404,10.7828157199836
-"Myrtaceae","Eucalyptus","Eucalyptus baileyana","Eucalyptus baileyana F.Muell.",1082.98381294964,19.1094274006302
-"Myrtaceae","Eucalyptus","Eucalyptus bancroftii","Eucalyptus bancroftii (Maiden) Maiden",1257.34397163121,19.0945995969975
-"Myrtaceae","Eucalyptus","Eucalyptus baueriana","Eucalyptus baueriana Schauer",873.598746081504,15.4776613054604
-"Myrtaceae","Eucalyptus","Eucalyptus baxteri","Eucalyptus baxteri (Benth.) Maiden & Blakely",916.616,13.6325999717712
-"Myrtaceae","Eucalyptus","Eucalyptus benthamii","Eucalyptus benthamii Maiden & Cambage",852.533972125436,16.7931546575101
-"Myrtaceae","Eucalyptus","Eucalyptus blakelyi","Eucalyptus blakelyi Maiden",753.009654400447,14.8776730286153
-"Myrtaceae","Eucalyptus","Eucalyptus blaxlandii","Eucalyptus blaxlandii Maiden & Cambage",990.660859465738,12.3998887198312
-"Myrtaceae","Eucalyptus","Eucalyptus bosistoana","Eucalyptus bosistoana F.Muell.",920.897341405633,14.8748289006859
-"Myrtaceae","Eucalyptus","Eucalyptus botryoides","Eucalyptus botryoides Sm.",1031.58924339107,15.6213400349578
-"Myrtaceae","Eucalyptus","Eucalyptus bridgesiana","Eucalyptus bridgesiana F.Muell. ex R.T.Baker",789.297163548581,13.0457377764138
-"Myrtaceae","Eucalyptus","Eucalyptus brockwayi","Eucalyptus brockwayi C.A.Gardner",328.404624277457,16.9391859418395
-"Myrtaceae","Eucalyptus","Eucalyptus camaldulensis","Eucalyptus camaldulensis Denham",533.997849462366,16.4929540244482
-"Myrtaceae","Eucalyptus","Eucalyptus cameronii","Eucalyptus cameronii Blakely & Mc Kie",1098.77194298575,14.0175262409677
-"Myrtaceae","Eucalyptus","Eucalyptus campaspe","Eucalyptus campaspe S.Moore",303.05625,17.8178124606609
-"Myrtaceae","Eucalyptus","Eucalyptus camphora","Eucalyptus camphora R.T.Baker",975.021052631579,12.4280262746309
-"Myrtaceae","Eucalyptus","Eucalyptus capitellata","Eucalyptus capitellata Sm.",1156.58734602464,17.4196225339328
-"Myrtaceae","Eucalyptus","Eucalyptus carnea","Eucalyptus carnea F.Muell. ex R.T.Baker",1277.27250803858,17.8924755720464
-"Myrtaceae","Eucalyptus","Eucalyptus cinerea","Eucalyptus cinerea F.Muell. ex Benth.",779.611494252874,13.5929693441281
-"Myrtaceae","Eucalyptus","Eucalyptus cladocalyx","Eucalyptus cladocalyx F.Muell.",612.500629722922,14.4126067011422
-"Myrtaceae","Eucalyptus","Eucalyptus cloeziana","Eucalyptus cloeziana F.Muell.",1073.5520661157,20.5430784619544
-"Myrtaceae","Eucalyptus","Eucalyptus cneorifolia","Eucalyptus cneorifolia A.Cunn. ex DC.",540.464017185822,15.6298827827937
-"Myrtaceae","Eucalyptus","Eucalyptus conica","Eucalyptus conica H.Deane & Maiden",703.826633165829,16.7016750452307
-"Myrtaceae","Eucalyptus","Eucalyptus consideniana","Eucalyptus consideniana Maiden",940.475205440635,14.1343381067753
-"Myrtaceae","Eucalyptus","Eucalyptus coolabah","Eucalyptus coolabah Blakely & Jacobs",431.167730629613,20.5586190930982
-"Myrtaceae","Eucalyptus","Eucalyptus cornuta","Eucalyptus cornuta Labill.",710.881720430107,15.4757019234387
-"Myrtaceae","Eucalyptus","Eucalyptus crebra","Eucalyptus crebra F.Muell.",816.656416675737,17.9276479952249
-"Myrtaceae","Eucalyptus","Eucalyptus dalrympleana","Eucalyptus dalrympleana Maiden",991.738745671412,10.7801141471026
-"Myrtaceae","Eucalyptus","Eucalyptus dawsonii","Eucalyptus dawsonii R.T.Baker",680.793427230047,16.7607786118145
-"Myrtaceae","Eucalyptus","Eucalyptus dealbata","Eucalyptus dealbata A.Cunn. ex Schauer",748.368944099379,16.0471107693785
-"Myrtaceae","Eucalyptus","Eucalyptus deanei","Eucalyptus deanei Maiden",1009.20207253886,15.1230114122609
-"Myrtaceae","Eucalyptus","Eucalyptus delegatensis","Eucalyptus delegatensis F.Muell. ex R.T.Baker",1241.37267080745,9.13928572879815
-"Myrtaceae","Eucalyptus","Eucalyptus diversicolor","Eucalyptus diversicolor F.Muell.",1039.20375335121,15.2790996485038
-"Myrtaceae","Eucalyptus","Eucalyptus dives","Eucalyptus dives Schauer",855.937773271654,11.5574210949644
-"Myrtaceae","Eucalyptus","Eucalyptus elaeophloia","Eucalyptus elaeophloia Chappill, Crisp & Prober",1163.60273972603,8.21552520908721
-"Myrtaceae","Eucalyptus","Eucalyptus erythronema","Eucalyptus erythronema Turcz.",338.375,17.8947915434837
-"Myrtaceae","Eucalyptus","Eucalyptus eugenioides","Eucalyptus eugenioides Sieber ex Spreng.",989.408091123331,15.9060945141905
-"Myrtaceae","Eucalyptus","Eucalyptus fastigata","Eucalyptus fastigata H.Deane & Maiden",957.440207626273,11.5592707969824
-"Myrtaceae","Eucalyptus","Eucalyptus fibrosa","Eucalyptus fibrosa F.Muell.",894.582514358646,17.149195922798
-"Myrtaceae","Eucalyptus","Eucalyptus foecunda","Eucalyptus leptophylla F.Muell. ex Miq.",372.471069409359,16.3444213895868
-"Myrtaceae","Eucalyptus","Eucalyptus fraxinoides","Eucalyptus fraxinoides H.Deane & Maiden",960.568333333333,11.0650208155314
-"Myrtaceae","Eucalyptus","Eucalyptus globulus","Eucalyptus globulus Labill.",836.70093457944,12.0686294328044
-"Myrtaceae","Eucalyptus","Eucalyptus globulus","Eucalyptus globulus subsp. bicostata (Maiden, Blakely & Simmonds) J.B.Kirkp.",962.713554987212,12.4398358586499
-"Myrtaceae","Eucalyptus","Eucalyptus globulus","Eucalyptus globulus subsp. maidenii (F.Muell.) J.B.Kirkp.",856.455776173285,13.3737627891857
-"Myrtaceae","Eucalyptus","Eucalyptus gomphocephala","Eucalyptus gomphocephala A.Cunn. ex DC.",718.995433789954,17.4490486933216
-"Myrtaceae","Eucalyptus","Eucalyptus goniocalyx","Eucalyptus goniocalyx F.Muell.",800.735537190083,13.9180785013624
-"Myrtaceae","Eucalyptus","Eucalyptus grandis","Eucalyptus grandis W.Hill ex Maiden",1455.10223642173,18.674201237127
-"Myrtaceae","Eucalyptus","Eucalyptus gunnii","Eucalyptus gunnii Hook.fil.",1335.81379310345,7.53702584792828
-"Myrtaceae","Eucalyptus","Eucalyptus haemastoma","Eucalyptus haemastoma Sm.",1214.9379660006,16.9744954881404
-"Myrtaceae","Eucalyptus","Eucalyptus jacksonii","Eucalyptus jacksonii Maiden",1143.36170212766,14.9468379392692
-"Myrtaceae","Eucalyptus","Eucalyptus laevopinea","Eucalyptus laevopinea R.T.Baker",939.957867017775,13.9408753105023
-"Myrtaceae","Eucalyptus","Eucalyptus largeana","Eucalyptus largeana Blakely & Beuzev.",1190.3556638246,16.2908495602161
-"Myrtaceae","Eucalyptus","Eucalyptus largiflorens","Eucalyptus largiflorens F.Muell.",332.572229219145,17.3084196588555
-"Myrtaceae","Eucalyptus","Eucalyptus leucoxylon","Eucalyptus leucoxylon F.Muell.",586.783595275738,14.8177392216025
-"Myrtaceae","Eucalyptus","Eucalyptus longicornis","Eucalyptus longicornis (F.Muell.) Maiden",339.806748466258,17.2889314838714
-"Myrtaceae","Eucalyptus","Eucalyptus longifolia","Eucalyptus longifolia Link & Otto",960.390091116173,15.2653726982907
-"Myrtaceae","Eucalyptus","Eucalyptus macrorhyncha","Eucalyptus macrorhyncha F.Muell.",788.565714285714,13.607714238848
-"Myrtaceae","Eucalyptus","Eucalyptus major","Eucalyptus major (Maiden) Blakely",973.946902654867,18.8588372711587
-"Myrtaceae","Eucalyptus","Eucalyptus malacoxylon","Eucalyptus malacoxylon Blakely",853.495967741935,13.5458838093665
-"Myrtaceae","Eucalyptus","Eucalyptus mannifera","Eucalyptus mannifera Mudie",761.384637068358,11.9087062268462
-"Myrtaceae","Eucalyptus","Eucalyptus mannifera","Eucalyptus mannifera subsp. mannifera",933.755969714618,11.8534653324267
-"Myrtaceae","Eucalyptus","Eucalyptus marginata","Eucalyptus marginata Sm.",821.216819973719,16.8225032528189
-"Myrtaceae","Eucalyptus","Eucalyptus megacarpa","Eucalyptus megacarpa F.Muell.",995.502702702703,15.2385585939562
-"Myrtaceae","Eucalyptus","Eucalyptus melliodora","Eucalyptus melliodora A.Cunn. ex Schauer",722.906664841935,14.4358010997053
-"Myrtaceae","Eucalyptus","Eucalyptus microcarpa","Eucalyptus microcarpa (Maiden) Maiden",580.456466111147,15.3533678367674
-"Myrtaceae","Eucalyptus","Eucalyptus microcorys","Eucalyptus microcorys F.Muell.",1379.62632150973,17.7769246396782
-"Myrtaceae","Eucalyptus","Eucalyptus microtheca","Eucalyptus microtheca F.Muell.",673.451242829827,26.1926704793314
-"Myrtaceae","Eucalyptus","Eucalyptus miniata","Eucalyptus miniata A.Cunn. ex Schauer",1296.42429106474,27.0614677906802
-"Myrtaceae","Eucalyptus","Eucalyptus moluccana","Eucalyptus moluccana Roxb.",906.617683557395,17.3867498260743
-"Myrtaceae","Eucalyptus","Eucalyptus muelleriana","Eucalyptus muelleriana Howitt",946.070749972057,14.7328089627391
-"Myrtaceae","Eucalyptus","Eucalyptus nitens","Eucalyptus nitens (H.Deane & Maiden) Maiden",1203.06865284974,10.1391839678423
-"Myrtaceae","Eucalyptus","Eucalyptus notabilis","Eucalyptus notabilis Maiden",1150.44424460432,15.7168390064788
-"Myrtaceae","Eucalyptus","Eucalyptus nova-anglica","Eucalyptus nova-anglica H.Deane & Maiden",894.473524962179,13.2780635649065
-"Myrtaceae","Eucalyptus","Eucalyptus obliqua","Eucalyptus obliqua L'Hér.",997.412268332001,12.3118147529081
-"Myrtaceae","Eucalyptus","Eucalyptus occidentalis","Eucalyptus occidentalis Endl.",496.476482617587,15.7560497861211
-"Myrtaceae","Eucalyptus","Eucalyptus odorata","Eucalyptus odorata Behr",478.783108715184,15.8241352105291
-"Myrtaceae","Eucalyptus","Eucalyptus oligantha","Eucalyptus oligantha Schauer",1306.04330708661,26.7973260654239
-"Myrtaceae","Eucalyptus","Eucalyptus oreades","Eucalyptus oreades F.Muell. ex R.T.Baker",1185.98144329897,12.3382431620175
-"Myrtaceae","Eucalyptus","Eucalyptus ovata","Eucalyptus ovata Labill.",856.222658610272,13.5220317250652
-"Myrtaceae","Eucalyptus","Eucalyptus paniculata","Eucalyptus paniculata Sm.",1102.45159136434,16.7385841142938
-"Myrtaceae","Eucalyptus","Eucalyptus patens","Eucalyptus patens Benth.",915.066901408451,16.3521126894884
-"Myrtaceae","Eucalyptus","Eucalyptus pauciflora","Eucalyptus pauciflora Sieber ex Spreng.",999.060071019928,10.116473913428
-"Myrtaceae","Eucalyptus","Eucalyptus pellita","Eucalyptus pellita F.Muell.",2027.63800904977,23.3177035534544
-"Myrtaceae","Eucalyptus","Eucalyptus phoenicea","Eucalyptus phoenicea F.Muell.",1159.35786290322,26.9213751804444
-"Myrtaceae","Eucalyptus","Eucalyptus pilularis","Eucalyptus pilularis Sm.",1303.60425415373,17.6005359638863
-"Myrtaceae","Eucalyptus","Eucalyptus piperita","Eucalyptus piperita Sm.",1157.40404040404,15.9540403539484
-"Myrtaceae","Eucalyptus","Eucalyptus planchoniana","Eucalyptus planchoniana F.Muell.",1312.76945812808,18.5608251543468
-"Myrtaceae","Eucalyptus","Eucalyptus platyphylla","Eucalyptus platyphylla F.Muell.",1304.2505050505,23.3558627793283
-"Myrtaceae","Eucalyptus","Eucalyptus propinqua","Eucalyptus propinqua H.Deane & Maiden",1293.40062527914,17.9286325916002
-"Myrtaceae","Eucalyptus","Eucalyptus pruinosa","Eucalyptus pruinosa Schauer",748.005586592179,26.9679887995374
-"Myrtaceae","Eucalyptus","Eucalyptus punctata","Eucalyptus punctata DC.",987.91614345919,16.095376778502
-"Myrtaceae","Eucalyptus","Eucalyptus quadrangulata","Eucalyptus quadrangulata H.Deane & Maiden",1235.60807860262,15.0164892965009
-"Myrtaceae","Eucalyptus","Eucalyptus racemosa","Eucalyptus racemosa Cav.",1150.44835646457,16.3661382973325
-"Myrtaceae","Eucalyptus","Eucalyptus radiata","Eucalyptus radiata A.Cunn. ex DC.",992.361599139477,12.5648223719489
-"Myrtaceae","Eucalyptus","Eucalyptus radiata","Eucalyptus radiata subsp. radiata",925.60534448282,12.3765254831167
-"Myrtaceae","Eucalyptus","Eucalyptus regnans","Eucalyptus regnans F.Muell.",1258.85471088935,10.8407494301736
-"Myrtaceae","Eucalyptus","Eucalyptus resinifera","Eucalyptus resinifera Sm.",1247.52727272727,18.600302921642
-"Myrtaceae","Eucalyptus","Eucalyptus robertsonii","Eucalyptus radiata subsp. robertsonii (Blakely) L.A.S.Johnson & Blaxell",1064.71908602151,11.291120620184
-"Myrtaceae","Eucalyptus","Eucalyptus robusta","Eucalyptus robusta Sm.",1340.82470193741,18.4144855915345
-"Myrtaceae","Eucalyptus","Eucalyptus rubida","Eucalyptus rubida H.Deane & Maiden",826.378479497155,11.5113482680802
-"Myrtaceae","Eucalyptus","Eucalyptus rudderi","Eucalyptus rudderi Maiden",1153.68115942029,17.6565819615903
-"Myrtaceae","Eucalyptus","Eucalyptus rummeryi","Eucalyptus rummeryi Maiden",1328.03461538462,17.7976283000066
-"Myrtaceae","Eucalyptus","Eucalyptus saligna","Eucalyptus saligna Sm.",1221.76874697629,16.38216821418
-"Myrtaceae","Eucalyptus","Eucalyptus salmonophloia","Eucalyptus salmonophloia F.Muell.",326.424541607899,17.6508051128414
-"Myrtaceae","Eucalyptus","Eucalyptus salubris","Eucalyptus salubris F.Muell.",310.058055152395,17.9079644780374
-"Myrtaceae","Eucalyptus","Eucalyptus sargentii","Eucalyptus sargentii Maiden",363,17.5463234396542
-"Myrtaceae","Eucalyptus","Eucalyptus seeana","Eucalyptus seeana Maiden",1215.68508863399,18.528653787249
-"Myrtaceae","Eucalyptus","Eucalyptus siderophloia","Eucalyptus siderophloia Benth.",1258.33502024292,18.2687732002191
-"Myrtaceae","Eucalyptus","Eucalyptus sideroxylon","Eucalyptus sideroxylon A.Cunn. ex Woolls",698.630467955239,16.1072842478146
-"Myrtaceae","Eucalyptus","Eucalyptus sieberi","Eucalyptus sieberi L.A.S.Johnson",979.586712983067,13.8557245937369
-"Myrtaceae","Eucalyptus","Eucalyptus smithii","Eucalyptus smithii F.Muell. ex R.T.Baker",950.855908912446,13.9212504721268
-"Myrtaceae","Eucalyptus","Eucalyptus stellulata","Eucalyptus stellulata Sieber ex DC.",949.989851678375,10.4737412181336
-"Myrtaceae","Eucalyptus","Eucalyptus stricta","Eucalyptus stricta Sieber ex Spreng.",1113.60911094783,13.1731814872159
-"Myrtaceae","Eucalyptus","Eucalyptus tereticornis","Eucalyptus tereticornis Sm.",1054.05400095261,17.678411540658
-"Myrtaceae","Eucalyptus","Eucalyptus tetrodonta","Eucalyptus tetrodonta F.Muell.",1245.15845464726,26.9145537604588
-"Myrtaceae","Eucalyptus","Eucalyptus thozetiana","Eucalyptus thozetiana F.Muell. ex R.T.Baker",498.072368421053,21.6056103685446
-"Myrtaceae","Eucalyptus","Eucalyptus tintinnans","Eucalyptus tintinnans (Blakely & Jacobs) L.A.S.Johnson & K.D.Hill",1103.24186046512,27.2397190093994
-"Myrtaceae","Eucalyptus","Eucalyptus todtiana","Eucalyptus todtiana F.Muell.",640.616438356164,18.8771309700186
-"Myrtaceae","Eucalyptus","Eucalyptus torquata","Eucalyptus torquata Luehm.",361.118811881188,17.3819856265984
-"Myrtaceae","Eucalyptus","Eucalyptus umbra","Eucalyptus umbra F.Muell. ex R.T.Baker",1165.6887791108,17.5539461359981
-"Myrtaceae","Eucalyptus","Eucalyptus viminalis","Eucalyptus viminalis Labill.",846.44018186985,12.5274601516889
-"Myrtaceae","Eucalyptus","Eucalyptus viridis","Eucalyptus viridis R.T.Baker",528.560165975104,16.6322589336094
-"Myrtaceae","Eucalyptus","Eucalyptus wandoo","Eucalyptus wandoo subsp. wandoo",539.992941176471,16.8100980040606
-"Myrtaceae","Eucalyptus","Eucalyptus willisii","Eucalyptus willisii Ladiges, Humphries & Brooker",779.096028880866,13.5602768130251
-"Myrtaceae","Gossia","Gossia hillii","Gossia hillii (Benth.) N.Snow & Guymer",1459.41304347826,19.2728908550665
-"Myrtaceae","Leptospermum","Leptospermum brachyandrum","Leptospermum brachyandrum (F.Muell.) Druce",1042.85793871866,18.284366249042
-"Myrtaceae","Leptospermum","Leptospermum erubescens","Leptospermum erubescens Schauer",443.878172588832,17.0618513594626
-"Myrtaceae","Leptospermum","Leptospermum laevigatum","Leptospermum laevigatum (Gaertn.) F.Muell.",931.738259552261,15.6823935157983
-"Myrtaceae","Leptospermum","Leptospermum lanigerum","Leptospermum lanigerum (Aiton) Sm.",1021.92654468311,11.9083344377469
-"Myrtaceae","Leptospermum","Leptospermum myrtifolium","Leptospermum myrtifolium Sieber ex DC.",972.660264900662,10.5000800154857
-"Myrtaceae","Leptospermum","Leptospermum nitidum","Leptospermum nitidum Hook.fil.",1962.88725065048,9.97147296308334
-"Myrtaceae","Lindsayomyrtus","Lindsayomyrtus racemoides","Lindsayomyrtus racemoides (Greves) Craven",3026.52866242038,23.5039278018247
-"Myrtaceae","Lophostemon","Lophostemon confertus","Lophostemon confertus (R.Br.) Paul G.Wilson & J.T.Waterh.",1410.0363238512,18.3199530617152
-"Myrtaceae","Lophostemon","Lophostemon grandiflorus","Lophostemon grandiflorus (Benth.) Paul G.Wilson & J.T.Waterh.",970.559241706161,26.7277119894163
-"Myrtaceae","Lophostemon","Lophostemon suaveolens","Lophostemon suaveolens (Sol. ex Gaertn.) Paul G.Wilson & J.T.Waterh.",1330.13138204226,20.2355954947186
-"Myrtaceae","Melaleuca","Melaleuca acuminata","Melaleuca acuminata F.Muell.",410.305921052632,16.0685991958568
-"Myrtaceae","Melaleuca","Melaleuca armillaris","Melaleuca armillaris (Gaertn.) Sm.",895.161538461539,15.2146580745012
-"Myrtaceae","Melaleuca","Melaleuca bracteata","Melaleuca bracteata F.Muell.",762.650505050505,20.8369051345671
-"Myrtaceae","Melaleuca","Melaleuca cajuputi","Melaleuca cajuputi Powell",1440.82973621103,27.0925060702171
-"Myrtaceae","Melaleuca","Melaleuca cordata","Melaleuca cordata Turcz.",333.524934383202,18.1775590390984
-"Myrtaceae","Melaleuca","Melaleuca decora","Melaleuca decora (Salisb.) Britten",939.510821133036,17.4465123033311
-"Myrtaceae","Melaleuca","Melaleuca ericifolia","Melaleuca ericifolia Sm.",920.583874778505,14.4697750571629
-"Myrtaceae","Melaleuca","Melaleuca halmaturorum","Melaleuca halmaturorum F.Muell. ex Miq.",472.449777337951,15.8074694930298
-"Myrtaceae","Melaleuca","Melaleuca leucadendra","Melaleuca leucadendra (L.) L.",1220.14209591474,25.9113405441094
-"Myrtaceae","Melaleuca","Melaleuca linariifolia","Melaleuca linariifolia Sm.",1121.78427860696,17.4430630531121
-"Myrtaceae","Melaleuca","Melaleuca macronychia","Melaleuca macronychia Turcz.",380.75,17.4677083492279
-"Myrtaceae","Melaleuca","Melaleuca quadrifida","Calothamnus quadrifidus R.Br. ex W.T.Aiton",469,18.3033330917358
-"Myrtaceae","Melaleuca","Melaleuca quinquenervia","Melaleuca quinquenervia (Cav.) S.T.Blake",1407.18016509152,19.1863371079754
-"Myrtaceae","Melaleuca","Melaleuca radula","Melaleuca radula Lindl.",569.813838550247,18.656926175515
-"Myrtaceae","Melaleuca","Melaleuca saligna","Melaleuca saligna Schauer",1555.88066825776,25.599622114177
-"Myrtaceae","Melaleuca","Melaleuca styphelioides","Melaleuca styphelioides Sm.",1100.60643715624,17.3667040395746
-"Myrtaceae","Melaleuca","Melaleuca viridiflora","Melaleuca viridiflora Sol. ex Gaertn.",1235.23313659359,26.3456207704786
-"Myrtaceae","Osbornia","Osbornia octodonta","Osbornia octodonta F.Muell.",1440.50184501845,24.7891605349045
-"Myrtaceae","Rhodamnia","Rhodamnia argentea","Rhodamnia argentea Benth.",1466.69888475836,18.085672240275
-"Myrtaceae","Rhodamnia","Rhodamnia glauca","Rhodamnia spongiosa (F.M.Bailey) Domin",1866.2044198895,21.6857504660253
-"Myrtaceae","Rhodamnia","Rhodamnia rubescens","Rhodamnia rubescens (Benth.) Miq.",1358.0058514247,17.2995395825385
-"Myrtaceae","Rhodamnia","Rhodamnia sessiliflora","Rhodamnia sessiliflora Benth.",2421.64315352697,22.009664575094
-"Myrtaceae","Rhodomyrtus","Rhodomyrtus macrocarpa","Rhodomyrtus macrocarpa Benth.",1950.91911764706,24.1901501136668
-"Myrtaceae","Rhodomyrtus","Rhodomyrtus psidioides","Rhodomyrtus psidioides (G.Don) Benth.",1465.42342342342,18.598308175994
-"Myrtaceae","Ristantia","Ristantia pachysperma","Ristantia pachysperma (F.Muell. & F.M.Bailey) Paul G.Wilson & J.T.Waterh.",3126.6875,23.6255858838558
-"Myrtaceae","Syncarpia","Syncarpia glomulifera","Syncarpia glomulifera (Sm.) Nied.",1252.86204710145,17.1794444547183
-"Myrtaceae","Syncarpia","Syncarpia hillii","Syncarpia hillii F.M.Bailey",1478.1914893617,20.6780139030294
-"Myrtaceae","Syzygium","Syzygium angophoroides","Syzygium angophoroides (F.Muell.) B.Hyland",1564.59334565619,25.8883702918033
-"Myrtaceae","Syzygium","Syzygium australe","Syzygium australe (J.C.Wendl. ex Link) B.Hyland",1325.1322815534,18.0772173335251
-"Myrtaceae","Syzygium","Syzygium cormiflorum","Syzygium cormiflorum (F.Muell.) B.Hyland",2427.78072289157,22.2820080125188
-"Myrtaceae","Syzygium","Syzygium corynanthum","Syzygium corynanthum (F.Muell.) L.A.S.Johnson",1621.97388059701,18.1869092912816
-"Myrtaceae","Syzygium","Syzygium crebrinerve","Syzygium crebrinerve (C.T.White) L.A.S.Johnson",1541.82386363636,16.8968868607824
-"Myrtaceae","Syzygium","Syzygium cryptophlebium","Syzygium cryptophlebium (F.Muell.) Craven & Biffin",2530.26046511628,21.3087403230889
-"Myrtaceae","Syzygium","Syzygium floribundum","Syzygium floribundum F.Muell.",1251.49563318777,18.7447507162802
-"Myrtaceae","Syzygium","Syzygium forte","Syzygium forte (F.Muell.) B.Hyland",1526.52941176471,26.8435049337499
-"Myrtaceae","Syzygium","Syzygium forte","Syzygium forte subsp. forte",1855.14285714286,25.5749999182565
-"Myrtaceae","Syzygium","Syzygium francisii","Syzygium francisii (F.M.Bailey) L.A.S.Johnson",1495.20824295011,18.5784165202408
-"Myrtaceae","Syzygium","Syzygium graveolens","Syzygium graveolens (F.M.Bailey) Craven & Biffin",3353.54761904762,23.6162202017648
-"Myrtaceae","Syzygium","Syzygium gustavioides","Syzygium gustavioides (F.M.Bailey) B.Hyland",2740.64429530201,21.8061241559534
-"Myrtaceae","Syzygium","Syzygium hemilamprum","Syzygium hemilamprum (F.Muell.) Craven & Biffin",1660.24324324324,20.4147521096307
-"Myrtaceae","Syzygium","Syzygium ingens","Syzygium ingens (C.Moore) Craven & Biffin",1595.06913580247,17.2899794425493
-"Myrtaceae","Syzygium","Syzygium johnsonii","Syzygium johnsonii (F.Muell.) B.Hyland",2113.13852813853,20.8589646805933
-"Myrtaceae","Syzygium","Syzygium kuranda","Syzygium kuranda (F.M.Bailey) B.Hyland",2295.12781954887,21.702756810009
-"Myrtaceae","Syzygium","Syzygium luehmannii","Syzygium luehmannii (F.Muell.) L.A.S.Johnson",1645.57676348548,19.5316448132527
-"Myrtaceae","Syzygium","Syzygium nervosum","Syzygium nervosum DC.",1514.28729281768,27.1030156994393
-"Myrtaceae","Syzygium","Syzygium oleosum","Syzygium oleosum (F.Muell.) B.Hyland",1499.31287246722,18.5696662583425
-"Myrtaceae","Syzygium","Syzygium smithii","Syzygium smithii (Poir.) Nied.",1229.78626176385,16.2244922706965
-"Myrtaceae","Syzygium","Syzygium suborbiculare","Syzygium suborbiculare (Benth.) T.G.Hartley & L.M.Perry",1511.94636015326,26.8727224186767
-"Myrtaceae","Taxandria","Taxandria juniperina","Taxandria juniperina (Schauer) J.R.Wheeler & N.G.Marchant",987.287671232877,15.4694064153384
-"Myrtaceae","Tristania","Tristania neriifolia","Tristania neriifolia (Sieber ex Sims) R.Br.",1185.83680555556,15.6696180303892
-"Myrtaceae","Tristaniopsis","Tristaniopsis exiliflora","Tristaniopsis exiliflora (F.Muell.) Paul G.Wilson & J.T.Waterh.",1840.61574074074,23.5537615793723
-"Myrtaceae","Tristaniopsis","Tristaniopsis laurina","Tristaniopsis laurina (Sm.) Paul G.Wilson & J.T.Waterh.",1138.81368454867,16.2578715466243
-"Myrtaceae","Xanthostemon","Xanthostemon whitei","Xanthostemon whitei Gugerli",2461.03658536585,21.579979733723
-"Paracryphiaceae","Quintinia","Quintinia sieberi","Quintinia sieberi A.DC.",1356.11588541667,14.2445800838371
-"Paracryphiaceae","Sphenostemon","Sphenostemon lobosporus","Sphenostemon lobosporus (F.Muell.) L.S.Sm.",2323.55905511811,19.6797899711789
-"Phyllanthaceae","Actephila","Actephila grandifolia","Actephila grandifolia (Müll.Arg.) Baill.",1721.30136986301,18.7112443479773
-"Phyllanthaceae","Antidesma","Antidesma bunius","Antidesma bunius var. bunius",1300.66666666667,18.5763893127441
-"Phyllanthaceae","Bischofia","Bischofia javanica","Bischofia javanica Blume",2605.375,22.863169670105
-"Phyllanthaceae","Bridelia","Bridelia exaltata","Bridelia exaltata F.Muell.",1342.1815920398,18.7954808989568
-"Phyllanthaceae","Cleistanthus","Cleistanthus cunninghamii","Cleistanthus cunninghamii (Müll.Arg.) Müll.Arg.",1322.12735849057,18.3900039744827
-"Phyllanthaceae","Glochidion","Glochidion ferdinandi","Glochidion ferdinandi (Müll.Arg.) F.M.Bailey",1288.42410958904,18.0973707945314
-"Phyllanthaceae","Glochidion","Glochidion harveyanum","Glochidion harveyanum Domin",2134.16733067729,22.0873173945454
-"Phyllanthaceae","Glochidion","Glochidion lobocarpum","Glochidion lobocarpum (Benth.) F.M.Bailey",1179.50570342205,22.1956906409318
-"Picrodendraceae","Austrobuxus","Austrobuxus swainii","Austrobuxus swainii (Beuzev. & C.T.White) Airy Shaw",1778.296875,17.4661329030991
-"Picrodendraceae","Dissiliaria","Dissiliaria baloghioides","Dissiliaria baloghioides F.Muell. ex Baill.",1381.60869565217,19.7156400956969
-"Proteaceae","Banksia","Banksia aemula","Banksia aemula R.Br.",1336.89393166752,18.7826895200738
-"Proteaceae","Banksia","Banksia attenuata","Banksia attenuata R.Br.",752.580014224751,18.1821642247576
-"Proteaceae","Banksia","Banksia dentata","Banksia dentata L.fil.",1464.29633401222,26.8601663612785
-"Proteaceae","Banksia","Banksia grandis","Banksia grandis Willd.",886.570093457944,16.3160857649236
-"Proteaceae","Banksia","Banksia ilicifolia","Banksia ilicifolia R.Br.",834.619893428064,17.46825783799
-"Proteaceae","Banksia","Banksia integrifolia","Banksia integrifolia L.fil.",1185.34900849858,17.3622450395391
-"Proteaceae","Banksia","Banksia marginata","Banksia marginata Cav.",848.056217999378,13.5276090258615
-"Proteaceae","Banksia","Banksia menziesii","Banksia menziesii R.Br.",735.131115459883,18.6202461957465
-"Proteaceae","Banksia","Banksia nobilis","Banksia nobilis (Lindl.) A.R.Mast & K.R.Thiele",485.58064516129,16.2323253077845
-"Proteaceae","Banksia","Banksia robur","Banksia robur Cav.",1358.60316066725,17.5649382136599
-"Proteaceae","Banksia","Banksia serrata","Banksia serrata L.fil.",1126.77551196752,15.8926448827791
-"Proteaceae","Banksia","Banksia sessilis","Banksia sessilis var. sessilis",651.428571428571,16.925390618188
-"Proteaceae","Banksia","Banksia verticiliata","Banksia verticillata R.Br.",934.834782608696,15.1518841536149
-"Proteaceae","Cardwellia","Cardwellia sublimis","Cardwellia sublimis F.Muell.",2518.73684210526,21.3029858245541
-"Proteaceae","Carnarvonia","Carnarvonia araliifolia","Carnarvonia araliifolia F.Muell.",2312.60975609756,21.7323172499494
-"Proteaceae","Cenarrhenes","Cenarrhenes nitida","Cenarrhenes nitida Labill.",1806.84585847504,9.74125297554757
-"Proteaceae","Darlingia","Darlingia darlingiana","Darlingia darlingiana (F.Muell.) L.A.S.Johnson",2411.31875,21.112369787693
-"Proteaceae","Darlingia","Darlingia ferruginea","Darlingia ferruginea J.F.L.H.Bailey",2233.41666666667,19.6736690468258
-"Proteaceae","Floydia","Floydia praealta","Floydia praealta (F.Muell.) L.A.S.Johnson & B.G.Briggs",1613.44210526316,19.0193419707449
-"Proteaceae","Grevillea","Grevillea heliosperma","Grevillea heliosperma R.Br.",1167.65037194474,26.9819252589811
-"Proteaceae","Grevillea","Grevillea hilliana","Grevillea hilliana F.Muell.",1635.97227722772,20.0929205828374
-"Proteaceae","Grevillea","Grevillea huegelii","Grevillea huegelii Meisn.",310.474167233175,17.1870425458995
-"Proteaceae","Grevillea","Grevillea robusta","Grevillea robusta A.Cunn. ex R.Br.",1002.37752161383,17.393698597504
-"Proteaceae","Hakea","Hakea cycloptera","Hakea cycloptera R.Br.",425.864077669903,16.2958535654259
-"Proteaceae","Hakea","Hakea laurina","Hakea laurina R.Br.",628.915451895044,15.3120019387226
-"Proteaceae","Hakea","Hakea leucoptera","Hakea leucoptera R.Br.",338.781609195402,19.4319205569125
-"Proteaceae","Hakea","Hakea lorea","Hakea lorea (R.Br.) R.Br.",541.354128440367,22.1182339572032
-"Proteaceae","Hakea","Hakea mitchellii","Hakea mitchellii Meisn.",471.31147050015,15.3965833254937
-"Proteaceae","Hakea","Hakea vittata","Hakea vittata R.Br.",521.273219116321,15.401841007126
-"Proteaceae","Helicia","Helicia ferruginea","Helicia ferruginea F.Muell.",1800.50557620818,17.8728469827361
-"Proteaceae","Helicia","Helicia lamingtoniana","Helicia lamingtoniana (F.M.Bailey) C.T.White ex L.S.Sm.",2255.08571428571,19.8554165158953
-"Proteaceae","Hicksbeachia","Hicksbeachia pinnatifolia","Hicksbeachia pinnatifolia F.Muell.",1783.49293119698,18.6074733033032
-"Proteaceae","Macadamia","Macadamia ternifolia","Macadamia ternifolia F.Muell.",1497.67785234899,19.0978747886299
-"Proteaceae","Musgravea","Musgravea stenostachya","Musgravea stenostachya F.Muell.",2610.80198019802,20.1426978913864
-"Proteaceae","Opisthiolepis","Opisthiolepis heterophylla","Opisthiolepis heterophylla L.S.Sm.",2532.16806722689,20.3527311036567
-"Proteaceae","Persoonia","Persoonia lanceolata","Persoonia lanceolata Andrews",1203.78861047836,16.8226575369172
-"Proteaceae","Persoonia","Persoonia linearis","Persoonia linearis Andrews",982.343336144041,15.3428246439121
-"Proteaceae","Persoonia","Persoonia longifolia","Persoonia longifolia R.Br.",946.359649122807,15.7884502628393
-"Proteaceae","Persoonia","Persoonia media","Persoonia media R.Br.",1459.43529411765,15.6275891227518
-"Proteaceae","Petrophile","Petrophile diversifolia","Petrophile diversifolia R.Br.",948.328947368421,15.3142132633611
-"Proteaceae","Placospermum","Placospermum coriaceum","Placospermum coriaceum C.T.White & W.D.Francis",2500.21,20.9981666374207
-"Proteaceae","Xylomelum","Xylomelum occidentale","Xylomelum occidentale R.Br.",889.184931506849,17.1425798657822
-"Proteaceae","Xylomelum","Xylomelum pyriforme","Xylomelum pyriforme (Gaertn.) Knight",1111.16875522139,16.2657912277438
-"Proteaceae","Xylomelum","Xylomelum salicinum","Xylomelum salicinum A.Cunn. ex R.Br.",1128.13888888889,19.8102623091804
-"Putranjivaceae","Drypetes","Drypetes deplanchei","Drypetes deplanchei (Brongn. & Gris) Merr.",1300.07013782542,20.8074502296505
-"Rousseaceae","Abrophyllum","Abrophyllum ornans","Abrophyllum ornans (F.Muell.) Benth.",1732.68266666667,18.6689222043355
-"Rousseaceae","Cuttsia","Cuttsia viburnea","Cuttsia viburnea F.Muell.",1488.39097744361,16.7141055720193
-"Rutaceae","Acradenia","Acradenia frankliniae","Acradenia frankliniae Kippist",1881.18367346939,11.3657100516923
-"Rutaceae","Acronychia","Acronychia octandra","Acronychia octandra (F.Muell.) T.G.Hartley",1703.32748538012,16.8609892527262
-"Rutaceae","Acronychia","Acronychia vestita","Acronychia vestita F.Muell.",2606.73758865248,21.3496453711327
-"Rutaceae","Bosistoa","Bosistoa pentacocca","Bosistoa pentacocca (F.Muell.) Baill.",1435.92307692308,20.0234432954055
-"Rutaceae","Bosistoa","Bosistoa transversa","Bosistoa transversa J.F.Bailey & C.T.White",1426.95665634675,19.1424278017168
-"Rutaceae","Brombya","Brombya platynema","Brombya platynema F.Muell.",2682.93991416309,22.1376073698118
-"Rutaceae","Flindersia","Flindersia acuminata","Flindersia acuminata C.T.White",2439.0652173913,20.7322464486827
-"Rutaceae","Flindersia","Flindersia australis","Flindersia australis R.Br.",1155.24810126582,19.2659652311591
-"Rutaceae","Flindersia","Flindersia bennettii","Flindersia bennettii F.Muell. ex C.Moore",1561.66540642722,19.6133506428767
-"Rutaceae","Flindersia","Flindersia bourjotiana","Flindersia bourjotiana F.Muell.",2180.4683908046,21.2211686222033
-"Rutaceae","Flindersia","Flindersia brayleyana","Flindersia brayleyana F.Muell.",2243.18316831683,20.5474628599563
-"Rutaceae","Flindersia","Flindersia collina","Flindersia collina (F.M.Bailey) F.M.Bailey",896.751091703057,19.7999544934935
-"Rutaceae","Flindersia","Flindersia dissosperma","Flindersia dissosperma (F.Muell.) Domin",650.305970149254,22.653948926214
-"Rutaceae","Flindersia","Flindersia ifflana","Flindersia ifflana F.Muell.",1971.0447761194,22.3893862292541
-"Rutaceae","Flindersia","Flindersia laevicarpa","Flindersia laevicarpa C.T.White",2191.45454545455,21.0840911865234
-"Rutaceae","Flindersia","Flindersia maculosa","Flindersia maculosa (Lindl.) F.Muell.",370.3,20.9734724362691
-"Rutaceae","Flindersia","Flindersia pimenteliana","Flindersia pimenteliana F.Muell.",2225.26315789474,20.9915119915186
-"Rutaceae","Flindersia","Flindersia schottiana","Flindersia schottiana F.Muell.",1615.83913452493,19.8129311505064
-"Rutaceae","Flindersia","Flindersia xanthoxyla","Flindersia xanthoxyla (A.Cunn. ex Hook.) Domin",1315.76616915423,18.6319652006994
-"Rutaceae","Halfordia","Halfordia kendack","Halfordia kendack (Montrouz.) Guillaumin",1740.50630914826,21.2855152617494
-"Rutaceae","Melicope","Melicope vitiflora","Melicope vitiflora (F.Muell.) T.G.Hartley",1947.49233128834,19.1179319627446
-"Rutaceae","Melicope","Melicope xanthoxyloides","Melicope xanthoxyloides (F.Muell.) T.G.Hartley",2534.48905109489,22.1660584637718
-"Rutaceae","Microcitrus","Microcitrus australasica","Citrus australasica F.Muell.",1577.10652920962,18.2088774094467
-"Rutaceae","Nematolepis","Nematolepis squamea","Nematolepis squamea (Labill.) Paul G.Wilson",1421.15072933549,10.816524849783
-"Rutaceae","Pentaceras","Pentaceras australe","Pentaceras australe (F.Muell.) Hook.fil.",1288.65,19.2282812833786
-"Rutaceae","Pitaviaster","Pitaviaster haplophyllus","Pitaviaster haplophyllus (F.Muell.) T.G.Hartley",2383.41150442478,20.9311208556184
-"Rutaceae","Zanthoxylum","Zanthoxylum brachyacanthum","Zanthoxylum brachyacanthum F.Muell.",1511.41825095057,18.6877534960613
-"Rutaceae","Zanthoxylum","Zanthoxylum ovalifolium","Zanthoxylum ovalifolium Wight",1996.37037037037,20.550740785952
-"Tetramelaceae","Tetrameles","Tetrameles nudiflora","Tetrameles nudiflora R.Br.",1759.27906976744,25.5729649565941
-"Thymelaeaceae","Pimelea","Pimelea linifolia","Pimelea linifolia subsp. collina (R.Br.) Threlfall",946.406914893617,15.6991688317441
+"family","genus","species","scientificName","MAP","MAT","n_obs"
+"Akaniaceae","Akania","Akania bidwillii","Akania bidwillii (Hend. ex Hogg) Mabb.",1643.36673773987,17.170175928551,469
+"Anacardiaceae","Blepharocarya","Blepharocarya involucrigera","Blepharocarya involucrigera F.Muell.",2011.42424242424,22.7332071246523,34
+"Anacardiaceae","Euroschinus","Euroschinus falcatus","Euroschinus falcatus Hook.fil.",1390.98418972332,19.4135374853262,264
+"Anacardiaceae","Melanococca","Melanococca tomentosa","Rhus taitensis Guill.",2295.41176470588,24.6544119890998,17
+"Anacardiaceae","Rhodosphaera","Rhodosphaera rhodanthema","Rhodosphaera rhodanthema (F.Muell.) Engl.",1250.82971014493,18.1994565466176,277
+"Annonaceae","Cananga","Cananga odorata","Cananga odorata (Lam.) Hook.f. & Thomson",2893.5,23.9370834350586,10
+"Annonaceae","Hubera","Hubera nitidissima","Huberantha nitidissima (Dunal) Chaowasku",1369.45833333333,21.1222965319951,185
+"Annonaceae","Polyalthia","Polyalthia australis","Monoon australe (Benth.) B.Xue & R.M.K.Saunders",1516.17708333333,27.0612413287163,98
+"Apocynaceae","Alstonia","Alstonia actinophylla","Alstonia actinophylla (A.Cunn.) Schumann",1521.04444444444,27.0336852433946,228
+"Apocynaceae","Alstonia","Alstonia mollis","Alstonia constricta F.Muell.",697.880513231756,18.4517107568173,1247
+"Apocynaceae","Alstonia","Alstonia muelleriana","Alstonia muelleriana Domin",2190.1746031746,22.6246693626283,64
+"Apocynaceae","Alstonia","Alstonia scholaris","Alstonia scholaris (L.) R.Br.",2250.58620689655,22.9621408396754,59
+"Apocynaceae","Carissa","Carissa ovata","Carissa ovata R.Br.",1070.85934065934,19.6700915619567,458
+"Apocynaceae","Cerbera","Cerbera inflata","Cerbera inflata S.T.Blake",2515.05,20.481666469574,20
+"Apocynaceae","Cerbera","Cerbera manghas","Cerbera manghas L.",2159.65079365079,24.492857130747,66
+"Apocynaceae","Ochrosia","Ochrosia poweri","Neisosperma poweri (F.M.Bailey) Fosberg & Sachet",1789.82352941176,18.6227940952077,17
+"Apocynaceae","Wrightia","Wrightia saligna","Wrightia saligna (R.Br.) F.Muell. ex Benth.",1131.17801857585,27.1716654071867,648
+"Araliaceae","Polyscias","Polyscias australiana","Polyscias australiana (F.Muell.) Philipson",2311.34482758621,22.3612070083618,59
+"Araliaceae","Polyscias","Polyscias elegans","Polyscias elegans (C.Moore & F.Muell.) Harms",1408.35315533981,18.0436556200379,2570
+"Araliaceae","Polyscias","Polyscias murrayi","Polyscias murrayi (F.Muell.) Harms",1407.75382653061,16.2450308410489,784
+"Asteraceae","Bedfordia","Bedfordia salicina","Bedfordia salicina (Labill.) DC.",939.793258426966,10.6473970113176,476
+"Asteraceae","Olearia","Olearia argophylla","Olearia argophylla (Labill.) F.Muell.",1142.45107794362,12.0563052894662,1211
+"Bignoniaceae","Deplanchea","Deplanchea tetraphylla","Deplanchea tetraphylla (R.Br.) F.Muell. ex Steenis",1965,24.6024061122411,75
+"Burseraceae","Canarium","Canarium australasicum","Canarium australasicum (F.M.Bailey) Leenh.",1795.77304964539,18.2232861214496,141
+"Burseraceae","Canarium","Canarium australianum","Canarium australianum F.Muell.",1384.55109489051,26.7218066027565,578
+"Casuarinaceae","Allocasuarina","Allocasuarina corniculata","Allocasuarina corniculata (F.Muell.) L.A.S.Johnson",346.58064516129,17.0692204813803,31
+"Casuarinaceae","Allocasuarina","Allocasuarina distyla","Allocasuarina distyla (Vent.) L.A.S.Johnson",1216.99100449775,16.3861225491342,1463
+"Casuarinaceae","Allocasuarina","Allocasuarina huegeliana","Allocasuarina huegeliana (Miq.) L.A.S.Johnson",469.619047619048,16.7238094602312,105
+"Casuarinaceae","Allocasuarina","Allocasuarina inophloia","Allocasuarina inophloia (F.Muell. & F.M.Bailey) L.A.S.Johnson",787.16847826087,17.148686590402,184
+"Casuarinaceae","Allocasuarina","Allocasuarina littoralis","Allocasuarina littoralis (Salisb.) L.A.S.Johnson",1040.37657156673,15.8416341764842,16763
+"Casuarinaceae","Allocasuarina","Allocasuarina muelleriana","Allocasuarina muelleriana (Miq.) L.A.S.Johnson",572.767423649178,15.225633000618,1278
+"Casuarinaceae","Allocasuarina","Allocasuarina paludosa","Allocasuarina paludosa (Sieber ex Spreng.) L.A.S.Johnson",863.964548205793,13.9657929622916,2386
+"Casuarinaceae","Allocasuarina","Allocasuarina torulosa","Allocasuarina torulosa (Aiton) L.A.S.Johnson",1222.91813851955,17.0888784313562,10164
+"Casuarinaceae","Allocasuarina","Allocasuarina verticillata","Allocasuarina verticillata (Lam.) L.A.S.Johnson",620.454608884411,14.8939087581095,13328
+"Casuarinaceae","Casuarina","Casuarina cristata","Casuarina cristata Miq.",546.185612788632,18.7151975712175,2253
+"Casuarinaceae","Casuarina","Casuarina cunninghamiana","Casuarina cunninghamiana Miq.",944.538888888889,18.2092129654354,362
+"Casuarinaceae","Casuarina","Casuarina glauca","Casuarina glauca Sieber",1214.43735763098,18.8450645238229,500
+"Casuarinaceae","Casuarina","Casuarina obesa","Casuarina obesa Miq.",459.074074074074,17.4846193290051,162
+"Celastraceae","Celastrus","Celastrus australis","Celastrus australis Harv. & F.Muell.",1009.30188679245,14.7434018153065,757
+"Celastraceae","Denhamia","Denhamia bilocularis","Denhamia bilocularis (F.Muell.) M.P.Simmons",1195.66951566952,17.0493114911593,702
+"Celastraceae","Denhamia","Denhamia cunninghamii","Denhamia cunninghamii (Hook.) M.P.Simmons",722.578571428572,21.1777033646901,841
+"Celastraceae","Denhamia","Denhamia disperma","Denhamia disperma (F.Muell.) M.P.Simmons",1125.08,20.957111269633,77
+"Celastraceae","Denhamia","Denhamia pittosporoides","Denhamia pittosporoides F.Muell.",913.897959183673,19.0845239211102,50
+"Celastraceae","Elaeodendron","Elaeodendron australe","Elaeodendron australe Vent.",1241.84244604317,17.3901978828924,1473
+"Celastraceae","Elaeodendron","Elaeodendron melanocarpum","Elaeodendron melanocarpum F.Muell.",1180.93103448276,22.7349138588741,39
+"Celastraceae","Siphonodon","Siphonodon australis","Siphonodon australis Benth.",1250.08130081301,18.5175135387638,125
+"Celastraceae","Siphonodon","Siphonodon pendulum","Siphonodon pendulum F.M.Bailey",1334.92857142857,25.455059323992,14
+"Cochlospermaceae","Cochlospermum","Cochlospermum fraseri","Cochlospermum fraseri subsp. heteronemum (F.Muell.) Poppend., 1980",926.447368421053,27.4656799717953,38
+"Cochlospermaceae","Cochlospermum","Cochlospermum gillivraei","Cochlospermum gillivraei Benth.",1222.43103448276,24.3842673548337,255
+"Combretaceae","Lumnitzera","Lumnitzera racemosa","Lumnitzera racemosa Willd.",1547.93805309735,25.1933505359301,396
+"Combretaceae","Terminalia","Terminalia canescens","Terminalia bursarina F.Muell.",799.191489361702,27.2486702533478,47
+"Combretaceae","Terminalia","Terminalia grandiflora","Terminalia grandiflora Benth.",1173.89448441247,27.2352118457822,419
+"Combretaceae","Terminalia","Terminalia hadleyana","Terminalia carpentariae C.T.White",1114.02167182663,27.0892673203082,656
+"Combretaceae","Terminalia","Terminalia microcarpa","Terminalia microcarpa Decne.",1599.21153846154,26.7567575528071,163
+"Combretaceae","Terminalia","Terminalia muelleri","Terminalia muelleri Benth.",1501.25,24.0227864980698,42
+"Combretaceae","Terminalia","Terminalia platyphylla","Terminalia platyphylla F.Muell.",941.002923976608,27.2605019731131,342
+"Cornaceae","Alangium","Alangium polyosmoides","Alangium villosum subsp. polyosmoides (F.Muell.) Bloemb.",1413.43673469388,16.5450935558397,494
+"Cunoniaceae","Ackama","Ackama paniculosa","Ackama paniculosa (F.Muell.) Heslewood",1480.00475543478,15.8516531146091,1472
+"Cunoniaceae","Anodopetalum","Anodopetalum biglandulosum","Anodopetalum biglandulosum (A.Cunn. ex Hook.) Hook.fil.",1858.10526315789,9.58212718629,114
+"Cunoniaceae","Callicoma","Callicoma serratifolia","Callicoma serratifolia Andrews",1328.0570379437,16.2550316228131,4109
+"Cunoniaceae","Ceratopetalum","Ceratopetalum apetalum","Ceratopetalum apetalum D.Don",1328.77109345441,15.9619261770144,2650
+"Cunoniaceae","Ceratopetalum","Ceratopetalum gummiferum","Ceratopetalum gummiferum Sm.",1176.86919104991,16.7833247242204,2966
+"Cunoniaceae","Eucryphia","Eucryphia lucida","Eucryphia lucida (Labill.) Baill.",1877.69285714286,9.77052084718432,284
+"Cunoniaceae","Eucryphia","Eucryphia moorei","Eucryphia moorei F.Muell.",1076.82142857143,13.0233135261233,252
+"Cunoniaceae","Gillbeea","Gillbeea adenopetala","Gillbeea adenopetala F.Muell.",2623.61111111111,21.6342593299018,18
+"Cunoniaceae","Karrabina","Karrabina benthamiana","Karrabina benthamiana (F.Muell.) Rozefelds & H.C.Hopkins",1667.51152073733,16.977457756271,435
+"Cunoniaceae","Pseudoweinmannia","Pseudoweinmannia lachnocarpa","Pseudoweinmannia lachnocarpa (F.Muell.) Engl.",1690.98830409357,18.0636940281294,171
+"Cunoniaceae","Pullea","Pullea stutzeri","Pullea stutzeri (F.Muell.) Gibbs",2465.75,20.9149308204651,12
+"Cunoniaceae","Schizomeria","Schizomeria ovata","Schizomeria ovata D.Don",1408.12329459323,16.1767117349471,1980
+"Cunoniaceae","Vesselowskya","Vesselowskya rubifolia","Vesselowskya rubifolia (F.Muell.) Pamp.",1362.80597014925,13.2175995129258,67
+"Cyperaceae","Gahnia","Gahnia aspera","Gahnia aspera (R.Br.) Spreng.",989.236655034256,17.0666365119951,7861
+"Dilleniaceae","Dillenia","Dillenia alata","Dillenia alata (R.Br. ex DC.) Martelli",2033.97272727273,25.0742991534146,254
+"Dilleniaceae","Hibbertia","Hibbertia cuneiformis","Hibbertia cuneiformis (Labill.) Sm.",961.49168207024,16.4766096266713,587
+"Dilleniaceae","Hibbertia","Hibbertia saligna","Hibbertia saligna R.Br. ex DC.",1140.67901234568,15.0980195940277,169
+"Ebenaceae","Diospyros","Diospyros australis","Diospyros australis (R.Br.) F.M.Bailey",1263.52488687783,17.8862179415258,231
+"Ebenaceae","Diospyros","Diospyros pentamera","Diospyros pentamera (Woolls & F.Muell.) F.Muell.",1431.4525862069,17.4148916567879,1427
+"Ehretiaceae","Ehretia","Ehretia acuminata","Ehretia acuminata R.Br.",1235.83673469388,16.7676869606485,49
+"Ehretiaceae","Ehretia","Ehretia saligna","Ehretia saligna var. membranifolia (R.Br.) Randell",682.919642857143,18.5179315635136,224
+"Elaeocarpaceae","Aceratium","Aceratium megalospermum","Aceratium megalospermum (F.Muell.) Balgooy",2574,22.7272725538774,11
+"Elaeocarpaceae","Elaeocarpus","Elaeocarpus angustifolius","Elaeocarpus grandis F.Muell.",1740.93579766537,19.6408641458949,516
+"Elaeocarpaceae","Elaeocarpus","Elaeocarpus eumundi","Elaeocarpus eumundi F.M.Bailey",1635.65263157895,18.9544297067743,95
+"Elaeocarpaceae","Elaeocarpus","Elaeocarpus holopetalus","Elaeocarpus holopetalus F.Muell.",982.350114416476,11.2831712674767,874
+"Elaeocarpaceae","Elaeocarpus","Elaeocarpus kirtonii","Elaeocarpus kirtonii F.Muell. ex F.M.Bailey",1492.38028169014,16.1388106413291,213
+"Elaeocarpaceae","Elaeocarpus","Elaeocarpus obovatus","Elaeocarpus obovatus G.Don",1394.92477570738,18.5088940561846,1503
+"Elaeocarpaceae","Elaeocarpus","Elaeocarpus reticulatus","Elaeocarpus reticulatus Sm.",1194.26944922547,16.068420467032,11907
+"Elaeocarpaceae","Sloanea","Sloanea australis","Sloanea australis (Benth.) F.Muell.",1551.26770126091,17.3891246427505,1032
+"Elaeocarpaceae","Sloanea","Sloanea langii","Sloanea langii F.Muell.",2123.64705882353,22.1825982262107,17
+"Elaeocarpaceae","Sloanea","Sloanea macbrydei","Sloanea macbrydei F.Muell.",2334.66666666667,21.4736111958822,12
+"Elaeocarpaceae","Sloanea","Sloanea woollsii","Sloanea woollsii F.Muell.",1555.0736318408,16.6585737940091,1006
+"Ericaceae","Monotoca","Monotoca scoparia","Monotoca scoparia (Sm.) R.Br.",955.875891583456,14.0209054479813,10571
+"Ericaceae","Trochocarpa","Trochocarpa laurina","Trochocarpa laurina (Rudge) R.Br.",1398.12702828002,17.2151560922657,4353
+"Erythroxylaceae","Erythroxylum","Erythroxylum australe","Erythroxylum australe F.Muell.",657.58064516129,21.5442204013948,31
+"Erythroxylaceae","Erythroxylum","Erythroxylum ellipticum","Erythroxylum ellipticum R.Br. ex Benth.",995.348178137652,27.0919450188455,496
+"Escalloniaceae","Anopterus","Anopterus macleayanus","Anopterus macleayanus F.Muell.",1611.3125,15.9541109076568,448
+"Escalloniaceae","Polyosma","Polyosma cunninghamii","Polyosma cunninghamii Benn.",1445.18164251208,15.7141586303711,1036
+"Escalloniaceae","Polyosma","Polyosma hirsuta","Polyosma hirsuta C.T.White",2186.34782608696,22.3028984069824,23
+"Euphorbiaceae","Alchornea","Alchornea ilicifolia","Alchornea ilicifolia (Js.Sm.) Müll.Arg.",1238.42398489141,18.2404469759313,1062
+"Euphorbiaceae","Claoxylon","Claoxylon australe","Claoxylon australe Baill.",1270.16774193548,16.5324865657613,2230
+"Euphorbiaceae","Croton","Croton insularis","Croton insularis Baill.",1136.04761904762,18.0969179668124,315
+"Euphorbiaceae","Croton","Croton phebalioides","Croton phebalioides F.Muell. ex Müll.Arg.",748.467532467532,18.2894481559852,79
+"Euphorbiaceae","Croton","Croton verreauxii","Croton verreauxii Baill.",1318.8277734678,17.422937678033,1294
+"Euphorbiaceae","Endospermum","Endospermum myrmecophilum","Endospermum myrmecophilum L.S.Sm.",1816.64285714286,27.1077379499163,15
+"Euphorbiaceae","Excoecaria","Excoecaria agallocha","Excoecaria agallocha L.",1416.86153846154,22.0104915080926,497
+"Euphorbiaceae","Excoecaria","Excoecaria dallachyana","Excoecaria dallachyana (Baill.) Benth.",1004.48484848485,18.6638888927421,99
+"Euphorbiaceae","Homalanthus","Homalanthus novoguineensis","Homalanthus novoguineensis (Warb.) K.Schum.",2073.88157894737,24.5043860485679,76
+"Euphorbiaceae","Homalanthus","Homalanthus populifolius","Homalanthus populifolius Graham",1293.51700507614,17.3273699358635,4113
+"Euphorbiaceae","Macaranga","Macaranga involucrata","Macaranga involucrata Baill.",1869.75641025641,25.1321581326998,79
+"Euphorbiaceae","Macaranga","Macaranga tanarius","Macaranga tanarius (L.) Müll.Arg.",1506.10355029586,20.7194107281386,1878
+"Euphorbiaceae","Mallotus","Mallotus discolor","Mallotus discolor F.Muell. ex Benth.",1554.65916398714,19.7160101703509,325
+"Euphorbiaceae","Mallotus","Mallotus mollissimus","Mallotus mollissimus (Geiseler) Airy Shaw",1985.92857142857,22.0288692201887,14
+"Euphorbiaceae","Mallotus","Mallotus polyadenos","Mallotus polyadenos F.Muell.",1785.64705882353,22.3531861024744,18
+"Euphorbiaceae","Rockinghamia","Rockinghamia angustifolia","Rockinghamia angustifolia (Benth.) Airy Shaw",2467.42105263158,21.8662282040245,19
+"Fabaceae","Acacia","Acacia acuminata","Acacia acuminata Benth.",344.069868995633,18.1799490816208,231
+"Fabaceae","Acacia","Acacia anceps","Acacia anceps DC.",377.516483516484,16.5792582690061,217
+"Fabaceae","Acacia","Acacia aneura","Acacia aneura F.Muell. ex Benth.",248.777144408251,20.174699116478,3684
+"Fabaceae","Acacia","Acacia aspera","Acacia aspera Lindl.",642.544615384615,13.9284487445538,325
+"Fabaceae","Acacia","Acacia aulacocarpa","Acacia aulacocarpa A.Cunn. ex Benth.",1280.01226993865,19.7126789093018,165
+"Fabaceae","Acacia","Acacia auriculiformis","Acacia auriculiformis A.Cunn. ex Benth.",1560.93059490085,27.085275023247,737
+"Fabaceae","Acacia","Acacia binervata","Acacia binervata DC.",1300.25075895568,16.3106304543917,1656
+"Fabaceae","Acacia","Acacia brachybotrya","Acacia brachybotrya Benth.",392.006024096385,16.1266761349546,1495
+"Fabaceae","Acacia","Acacia burrowii","Acacia burrowii Maiden",659.213836477987,17.7589884224178,159
+"Fabaceae","Acacia","Acacia carneorum","Acacia carneorum Maiden",218.947368421053,18.8197367762962,342
+"Fabaceae","Acacia","Acacia cheelii","Acacia cheelii Blakely",720.104575163399,16.9837036805994,765
+"Fabaceae","Acacia","Acacia cincinnata","Acacia cincinnata F.Muell.",1428.03225806452,20.8287635311004,32
+"Fabaceae","Acacia","Acacia colletioides","Acacia colletioides Benth.",291.310326659642,17.6961604305263,1898
+"Fabaceae","Acacia","Acacia cyperophylla","Acacia cyperophylla F.Muell. ex Benth.",254.928571428571,23.3348211560931,14
+"Fabaceae","Acacia","Acacia dealbata","Acacia dealbata Link",935.536759211363,12.3672874637148,17427
+"Fabaceae","Acacia","Acacia deanei","Acacia deanei (R.T.Baker) M.B.Welch, Coombs & McGlynn",617.05289532294,16.9686595267867,1796
+"Fabaceae","Acacia","Acacia decurrens","Acacia decurrens Willd.",899.668559628291,15.6812629138432,3881
+"Fabaceae","Acacia","Acacia doratoxylon","Acacia doratoxylon A.Cunn.",615.012738853503,16.2365136495821,1884
+"Fabaceae","Acacia","Acacia elata","Acacia elata A.Cunn. ex Benth.",1113.75173477255,14.9730499616107,1305
+"Fabaceae","Acacia","Acacia excelsa","Acacia excelsa Benth.",424.991913746631,19.8800314571658,371
+"Fabaceae","Acacia","Acacia falcata","Acacia falcata Willd.",991.075005990893,17.4525181758669,4221
+"Fabaceae","Acacia","Acacia falciformis","Acacia falciformis DC.",898.09004258771,13.4360043715812,4937
+"Fabaceae","Acacia","Acacia flavescens","Acacia flavescens A.Cunn. ex Benth.",1350.34166666667,21.5095138669014,254
+"Fabaceae","Acacia","Acacia floribunda","Acacia floribunda (Vent.) Willd.",1034.21526471378,16.0415703756326,3764
+"Fabaceae","Acacia","Acacia hakeoides","Acacia hakeoides A.Cunn. ex Benth.",436.194622279129,16.6738885227453,2347
+"Fabaceae","Acacia","Acacia harpophylla","Acacia harpophylla F.Muell. ex Benth.",579.011006289309,19.682429277672,636
+"Fabaceae","Acacia","Acacia homalophylla","Acacia homalophylla A.Cunn. ex Benth.",473.219858156028,17.6969415448236,282
+"Fabaceae","Acacia","Acacia implexa","Acacia implexa Benth.",839.703905008776,15.2514337276433,12053
+"Fabaceae","Acacia","Acacia irrorata","Acacia irrorata Sieber ex Spreng.",1169.16439953362,16.7205094887133,2591
+"Fabaceae","Acacia","Acacia leptocarpa","Acacia leptocarpa A.Cunn. ex Benth.",1406.35839598997,26.9032685894118,407
+"Fabaceae","Acacia","Acacia ligulata","Acacia ligulata A.Cunn. ex Benth.",318.224427994616,18.1759365306087,6020
+"Fabaceae","Acacia","Acacia longifolia","Acacia longifolia (Andrews) Willd.",1007.21013779528,15.6559235601914,10696
+"Fabaceae","Acacia","Acacia longifolia","Acacia longifolia subsp. sophorae (Labill.) Court",833.412838959602,15.3247994037818,6259
+"Fabaceae","Acacia","Acacia melanoxylon","Acacia melanoxylon R.Br.",931.777152360268,13.3508167298871,31364
+"Fabaceae","Acacia","Acacia oshanesii","Acacia oshanesii F.Muell. & Maiden",1410.97619047619,18.9844245759268,126
+"Fabaceae","Acacia","Acacia parramattensis","Acacia parramattensis Tindale",976.143144654088,16.4805325051074,4003
+"Fabaceae","Acacia","Acacia penninervis","Acacia penninervis Sieber ex DC.",854.818181818182,16.1095446120728,1001
+"Fabaceae","Acacia","Acacia pruinosa","Acacia pruinosa A.Cunn. ex Benth.",823.936507936508,15.1737433917939,126
+"Fabaceae","Acacia","Acacia pycnantha","Acacia pycnantha Benth.",654.72719355541,14.5973230911967,23087
+"Fabaceae","Acacia","Acacia rigens","Acacia rigens A.Cunn. ex G.Don",330.879742765273,16.9049490968514,1555
+"Fabaceae","Acacia","Acacia salicina","Acacia salicina Lindl.",552.198190789472,18.3775938961067,2434
+"Fabaceae","Acacia","Acacia torulosa","Acacia torulosa Benth.",990.429012345679,26.5917951913527,332
+"Fabaceae","Acacia","Acacia trinervata","Acacia trinervata Sieber ex DC.",1001.64423076923,16.2087339162827,104
+"Fabaceae","Acacia","Acacia verniciflua","Acacia verniciflua A.Cunn.",824.274486094316,14.2454151605608,1654
+"Fabaceae","Albizia","Albizia canescens","Albizia canescens Benth.",1087.33333333333,25.3958333333333,12
+"Fabaceae","Albizia","Albizia lebbeck","Albizia lebbeck (L.) Benth.",1209.99248120301,23.721553888536,136
+"Fabaceae","Archidendron","Archidendron grandiflorum","Archidendron grandiflorum (Benth.) I.C.Nielsen",1542.06469002695,17.9625449090634,372
+"Fabaceae","Barklya","Barklya syringifolia","Barklya syringifolia F.Muell.",1185.37037037037,20.1300924795645,27
+"Fabaceae","Callistachys","Callistachys lanceolata","Callistachys lanceolata Vent.",955.082051282051,15.2898290096185,207
+"Fabaceae","Cassia","Cassia marksiana","Cassia marksiana (F.M.Bailey) Domin",1775.13253012048,19.4230171226593,167
+"Fabaceae","Castanospermum","Castanospermum australe","Castanospermum australe A.Cunn. ex Mudie",1554.88439306358,19.6955683967282,875
+"Fabaceae","Daviesia","Daviesia corymbosa","Daviesia corymbosa Sm.",1124.30407911001,15.1526215721857,810
+"Fabaceae","Falcataria","Falcataria toona","Falcataria toona (F.M.Bailey) Gill.K.Br., D.J.Murphy & Ladiges",1654,23.4376302361488,36
+"Fabaceae","Intsia","Intsia bijuga","Intsia bijuga (Colebr.) Kuntze",1656.96296296296,26.0462967907941,30
+"Fabaceae","Jacksonia","Jacksonia scoparia","Jacksonia scoparia R.Br.",1053.07082767978,17.3977544065084,3718
+"Fabaceae","Pongamia","Pongamia pinnata","Pongamia pinnata (L.) Pierre",1628.55769230769,23.9703526130089,179
+"Lauraceae","Cinnamomum","Cinnamomum oliveri","Cinnamomum oliveri F.M.Bailey",1587.47785234899,17.2062080728928,748
+"Lauraceae","Cinnamomum","Cinnamomum virens","Cinnamomum virens R.Baker",1501.44964028777,16.0319994233495,279
+"Lauraceae","Cryptocarya","Cryptocarya cunninghamii","Cryptocarya cunninghamii Meisn.",1616.8679245283,27.0631289931963,54
+"Lauraceae","Cryptocarya","Cryptocarya erythroxylon","Cryptocarya erythroxylon Maiden & Betche",1409.375,16.3452303033126,305
+"Lauraceae","Cryptocarya","Cryptocarya foveolata","Cryptocarya foveolata C.T.White & Francis",1378.28632478632,13.9542023055574,234
+"Lauraceae","Cryptocarya","Cryptocarya glaucescens","Cryptocarya glaucescens R.Br.",1416.23076923077,16.762383473503,2297
+"Lauraceae","Cryptocarya","Cryptocarya hypospodia","Cryptocarya hypospodia F.Muell.",1674.52173913043,20.6009059574293,25
+"Lauraceae","Cryptocarya","Cryptocarya laevigata","Cryptocarya laevigata Blume",1583.21641791045,19.3235903213273,402
+"Lauraceae","Cryptocarya","Cryptocarya mackinnoniana","Cryptocarya mackinnoniana F.Muell.",2417.5,21.3733797073364,18
+"Lauraceae","Cryptocarya","Cryptocarya microneura","Cryptocarya microneura Meisn.",1374.0563434266,17.3479797692992,2634
+"Lauraceae","Cryptocarya","Cryptocarya obovata","Cryptocarya obovata R.Br.",1507.98799630656,17.8235765036233,1086
+"Lauraceae","Cryptocarya","Cryptocarya rigida","Cryptocarya rigida Meisn.",1481.73089519651,16.9643672829632,1838
+"Lauraceae","Cryptocarya","Cryptocarya triplinervis","Cryptocarya triplinervis R.Br.",1498.69732937685,19.4977497488526,733
+"Lauraceae","Endiandra","Endiandra compressa","Endiandra compressa C.T.White",1822.36363636364,18.1939392089844,12
+"Lauraceae","Endiandra","Endiandra crassiflora","Endiandra crassiflora C.T.White & Francis",1611.92366412214,15.4790394615581,131
+"Lauraceae","Endiandra","Endiandra discolor","Endiandra discolor Benth.",1566.85272459499,18.3572656311237,689
+"Lauraceae","Endiandra","Endiandra hypotephra","Endiandra hypotephra F.Muell.",2067.36363636364,23.2666669325395,11
+"Lauraceae","Endiandra","Endiandra introrsa","Endiandra introrsa C.T.White",1850.28,16.4348888778687,75
+"Lauraceae","Endiandra","Endiandra muelleri","Endiandra muelleri Meisn.",1497.56422764228,17.1527913426965,617
+"Lauraceae","Endiandra","Endiandra palmerstonii","Endiandra palmerstonii (F.M.Bailey) C.T.White",3501.2,20.8937498092651,10
+"Lauraceae","Endiandra","Endiandra pubens","Endiandra pubens Meisn.",1657.56057007126,18.4653305180565,422
+"Lauraceae","Endiandra","Endiandra sieberi","Endiandra sieberi Nees",1398.43703703704,17.3441743974332,1119
+"Lauraceae","Endiandra","Endiandra virens","Endiandra virens F.Muell.",1501.32352941176,17.8295957060421,68
+"Lauraceae","Litsea","Litsea breviumbellata","Litsea breviumbellata C.K.Allen",1813.11111111111,26.473379611969,36
+"Lauraceae","Litsea","Litsea leefeana","Litsea leefeana (F.Muell.) Merr.",1951.32432432432,21.4029277595314,37
+"Lauraceae","Litsea","Litsea reticulata","Litsea reticulata Benth. & Hook.fil. ex F.Muell.",1466.08606557377,16.3136953708253,753
+"Lauraceae","Neolitsea","Neolitsea brassii","Neolitsea brassii C.K.Allen",1650.83333333333,25.5670139524672,38
+"Lauraceae","Neolitsea","Neolitsea dealbata","Neolitsea dealbata (R.Br.) Merr.",1499.25868864207,17.6675937988134,2801
+"Malvaceae","Camptostemon","Camptostemon schultzii","Camptostemon schultzii Mast.",1733.23595505618,27.0959893844547,308
+"Myrtaceae","Agonis","Agonis flexuosa","Agonis flexuosa (Muhl. ex Willd.) Sweet",934.222661396574,16.4733860533542,812
+"Myrtaceae","Angophora","Angophora costata","Angophora costata subsp. costata",914.339622641509,15.091666545508,53
+"Myrtaceae","Angophora","Angophora floribunda","Angophora floribunda (Sm.) Sweet",885.260173787112,15.9440236721066,13913
+"Myrtaceae","Angophora","Angophora subvelutina","Angophora subvelutina F.Muell.",1058.47539936102,17.3000852109525,1566
+"Myrtaceae","Angophora","Angophora woodsiana","Angophora woodsiana F.M.Bailey",1207.34417344173,18.8216689660297,369
+"Myrtaceae","Archirhodomyrtus","Archirhodomyrtus beckleri","Archirhodomyrtus beckleri (F.Muell.) A.J.Scott",1611.69270833333,17.4911613528218,1348
+"Myrtaceae","Backhousia","Backhousia citriodora","Backhousia citriodora F.Muell.",1378.11320754717,18.9087263683103,54
+"Myrtaceae","Backhousia","Backhousia leptopetala","Backhousia leptopetala (F.Muell.) M.G.Harr.",1252.35661764706,17.5559129714966,277
+"Myrtaceae","Backhousia","Backhousia myrtifolia","Backhousia myrtifolia Hook. & Harv.",1105.91806543385,16.7240777543395,3542
+"Myrtaceae","Backhousia","Backhousia subargentea","Backhousia subargentea (C.T.White) M.G.Harr.",1133.17647058824,19.6091913615956,68
+"Myrtaceae","Callistemon","Callistemon citrinus","Callistemon citrinus (Curtis) Skeels",1090.4030699261,16.1475483247541,1789
+"Myrtaceae","Callistemon","Callistemon paludosus","Callistemon sieberi DC.",747.719111969112,14.2939068419593,1036
+"Myrtaceae","Callistemon","Callistemon salignus","Callistemon salignus (Sm.) Colvill ex Sweet",1265.48061257739,17.9398786598248,3117
+"Myrtaceae","Callistemon","Callistemon viminalis","Callistemon viminalis (Sol. ex Gaertn.) G.Don",1063.93401015228,17.4535109778951,806
+"Myrtaceae","Corymbia","Corymbia abbreviata","Corymbia abbreviata (Blakely & Jacobs) K.D.Hill & L.A.S.Johnson",962.515151515152,27.3712121212121,33
+"Myrtaceae","Corymbia","Corymbia abergiana","Corymbia abergiana (F.Muell.) K.D.Hill & L.A.S.Johnson",1368.7,20.1366668701172,10
+"Myrtaceae","Corymbia","Corymbia calophylla","Corymbia calophylla (Lindl.) K.D.Hill & L.A.S.Johnson",828.347222222222,17.1293981292891,1017
+"Myrtaceae","Corymbia","Corymbia citriodora","Corymbia citriodora (Hook.) K.D.Hill & L.A.S.Johnson",1069.32341110217,17.4223853922236,1251
+"Myrtaceae","Corymbia","Corymbia confertiflora","Corymbia confertiflora (F.Muell.) K.D.Hill & L.A.S.Johnson",1073.98271155596,27.1877691947514,1100
+"Myrtaceae","Corymbia","Corymbia dichromophloia","Corymbia dichromophloia (F.Muell.) K.D.Hill & L.A.S.Johnson",868.614775725593,26.7823933598863,1517
+"Myrtaceae","Corymbia","Corymbia eximia","Corymbia eximia (Schauer) K.D.Hill & L.A.S.Johnson",999.259972489684,16.6206413154917,1467
+"Myrtaceae","Corymbia","Corymbia ferruginea","Corymbia ferruginea (Schauer) K.D.Hill & L.A.S.Johnson",940.418918918919,26.9385810611484,1117
+"Myrtaceae","Corymbia","Corymbia foelscheana","Corymbia foelscheana (F.Muell.) K.D.Hill & L.A.S.Johnson",1118.12748344371,27.2244860904896,1210
+"Myrtaceae","Corymbia","Corymbia grandifolia","Corymbia grandifolia (R.Br. ex Benth.) K.D.Hill & L.A.S.Johnson",988.81971465629,27.1975032395735,772
+"Myrtaceae","Corymbia","Corymbia gummifera","Corymbia gummifera (Gaertn.) K.D.Hill & L.A.S.Johnson",1161.75808681228,16.626628130353,10970
+"Myrtaceae","Corymbia","Corymbia haematoxylon","Corymbia haematoxylon (Maiden) K.D.Hill & L.A.S.Johnson",874.203389830509,16.8597458661613,59
+"Myrtaceae","Corymbia","Corymbia intermedia","Corymbia intermedia (R.T.Baker) K.D.Hill & L.A.S.Johnson",1382.37539574853,18.5083154426447,4474
+"Myrtaceae","Corymbia","Corymbia maculata","Corymbia maculata (Hook.) K.D.Hill & L.A.S.Johnson",1027.16244066227,17.1378309532105,8788
+"Myrtaceae","Corymbia","Corymbia polycarpa","Corymbia polycarpa (F.Muell.) K.D.Hill & L.A.S.Johnson",1170.50349206349,27.085301604498,1596
+"Myrtaceae","Corymbia","Corymbia ptychocarpa","Corymbia ptychocarpa (F.Muell.) K.D.Hill & L.A.S.Johnson",1244.23773584906,26.8802672836016,268
+"Myrtaceae","Corymbia","Corymbia setosa","Corymbia setosa (Schauer) K.D.Hill & L.A.S.Johnson",888.036885245902,26.7353825490983,244
+"Myrtaceae","Corymbia","Corymbia terminalis","Corymbia terminalis (F.Muell.) K.D.Hill & L.A.S.Johnson",625.714049586777,25.7540530449103,1211
+"Myrtaceae","Corymbia","Corymbia tessellaris","Corymbia tessellaris (F.Muell.) K.D.Hill & L.A.S.Johnson",985.232258064515,20.8111088814274,648
+"Myrtaceae","Corymbia","Corymbia torelliana","Corymbia torelliana (F.Muell.) K.D.Hill & L.A.S.Johnson",1303.43909774436,19.8099811783411,678
+"Myrtaceae","Corymbia","Corymbia trachyphloia","Corymbia trachyphloia (F.Muell.) K.D.Hill & L.A.S.Johnson",769.422390109891,17.3566764252526,1456
+"Myrtaceae","Eucalyptus","Eucalyptus accedens","Eucalyptus accedens Fitzg.",598.723076923077,17.4892948590792,65
+"Myrtaceae","Eucalyptus","Eucalyptus acmenoides","Eucalyptus acmenoides Schauer",1239.99390801097,17.5846596374186,3305
+"Myrtaceae","Eucalyptus","Eucalyptus alba","Eucalyptus alba Reinw. ex Blume",1504.75862068966,27.2498563569168,29
+"Myrtaceae","Eucalyptus","Eucalyptus albens","Eucalyptus albens Miq.",701.482269503546,15.4080969898413,141
+"Myrtaceae","Eucalyptus","Eucalyptus amplifolia","Eucalyptus amplifolia Naudin",945.603085553997,16.7404599089442,1432
+"Myrtaceae","Eucalyptus","Eucalyptus amygdalina","Eucalyptus amygdalina Labill.",780.155844155844,11.9221861021859,84
+"Myrtaceae","Eucalyptus","Eucalyptus andrewsii","Eucalyptus andrewsii Maiden",883.095371669004,14.013540206417,713
+"Myrtaceae","Eucalyptus","Eucalyptus andrewsii","Eucalyptus campanulata R.T.Baker & H.G.Sm.",1124.27212806026,13.8498038320667,2124
+"Myrtaceae","Eucalyptus","Eucalyptus angophoroides","Eucalyptus angophoroides R.T.Baker",848.456,13.7104133682251,625
+"Myrtaceae","Eucalyptus","Eucalyptus apodophylla","Eucalyptus apodophylla Blakely & Jacobs",1188.28571428571,26.7738094329834,14
+"Myrtaceae","Eucalyptus","Eucalyptus astringens","Eucalyptus astringens (Maiden) Maiden",527.21052631579,15.4278508738468,19
+"Myrtaceae","Eucalyptus","Eucalyptus badjensis","Eucalyptus badjensis Beuzev. & Welch",923.171428571429,10.5072618212019,35
+"Myrtaceae","Eucalyptus","Eucalyptus baileyana","Eucalyptus baileyana F.Muell.",1153.21810699588,18.7652262934932,243
+"Myrtaceae","Eucalyptus","Eucalyptus bancroftii","Eucalyptus bancroftii (Maiden) Maiden",1244.3816254417,19.0608804621882,283
+"Myrtaceae","Eucalyptus","Eucalyptus baueriana","Eucalyptus baueriana Schauer",862.889830508474,15.5598929076545,717
+"Myrtaceae","Eucalyptus","Eucalyptus baxteri","Eucalyptus baxteri (Benth.) Maiden & Blakely",921.945378151261,13.6128851305537,246
+"Myrtaceae","Eucalyptus","Eucalyptus benthamii","Eucalyptus benthamii Maiden & Cambage",851.19397993311,16.8552395694099,897
+"Myrtaceae","Eucalyptus","Eucalyptus blakelyi","Eucalyptus blakelyi Maiden",753.071571624328,14.9250786172033,9487
+"Myrtaceae","Eucalyptus","Eucalyptus blaxlandii","Eucalyptus blaxlandii Maiden & Cambage",981.452488687783,12.3036953485929,442
+"Myrtaceae","Eucalyptus","Eucalyptus bosistoana","Eucalyptus bosistoana F.Muell.",903.980307692307,14.7319076954768,1644
+"Myrtaceae","Eucalyptus","Eucalyptus botryoides","Eucalyptus botryoides Sm.",1051.50721153846,15.7246369235218,3541
+"Myrtaceae","Eucalyptus","Eucalyptus bridgesiana","Eucalyptus bridgesiana F.Muell. ex R.T.Baker",805.02935816967,13.2433682575137,4945
+"Myrtaceae","Eucalyptus","Eucalyptus camaldulensis","Eucalyptus camaldulensis Denham",539.38527131783,16.4413889086524,1291
+"Myrtaceae","Eucalyptus","Eucalyptus cameronii","Eucalyptus cameronii Blakely & Mc Kie",1121.95125,13.7615000033379,800
+"Myrtaceae","Eucalyptus","Eucalyptus campaspe","Eucalyptus campaspe S.Moore",319.25,18.0354166030884,12
+"Myrtaceae","Eucalyptus","Eucalyptus camphora","Eucalyptus camphora R.T.Baker",1009.59183673469,12.2575679798515,49
+"Myrtaceae","Eucalyptus","Eucalyptus capitellata","Eucalyptus capitellata Sm.",1162.53428093645,17.4691193271241,1212
+"Myrtaceae","Eucalyptus","Eucalyptus carnea","Eucalyptus carnea F.Muell. ex R.T.Baker",1295.47452229299,17.7598116006062,1573
+"Myrtaceae","Eucalyptus","Eucalyptus cinerea","Eucalyptus cinerea F.Muell. ex Benth.",782.18315018315,13.7410103846819,546
+"Myrtaceae","Eucalyptus","Eucalyptus cladocalyx","Eucalyptus cladocalyx F.Muell.",615.647533206832,14.2761078799246,4239
+"Myrtaceae","Eucalyptus","Eucalyptus cloeziana","Eucalyptus cloeziana F.Muell.",1190.42857142857,20.5215475899833,35
+"Myrtaceae","Eucalyptus","Eucalyptus cneorifolia","Eucalyptus cneorifolia A.Cunn. ex DC.",531.444214876033,15.6338843255004,490
+"Myrtaceae","Eucalyptus","Eucalyptus conica","Eucalyptus conica H.Deane & Maiden",695.260330578512,16.5013257531095,484
+"Myrtaceae","Eucalyptus","Eucalyptus consideniana","Eucalyptus consideniana Maiden",942.456200787402,14.0189017414108,2033
+"Myrtaceae","Eucalyptus","Eucalyptus coolabah","Eucalyptus coolabah Blakely & Jacobs",402.79480840544,20.5678306347949,3236
+"Myrtaceae","Eucalyptus","Eucalyptus cornuta","Eucalyptus cornuta Labill.",738.666666666667,15.492647002725,56
+"Myrtaceae","Eucalyptus","Eucalyptus crebra","Eucalyptus crebra F.Muell.",789.793348401679,17.0719307269338,9296
+"Myrtaceae","Eucalyptus","Eucalyptus dalrympleana","Eucalyptus dalrympleana Maiden",999.366754617414,10.952773196087,1518
+"Myrtaceae","Eucalyptus","Eucalyptus dawsonii","Eucalyptus dawsonii R.T.Baker",679.5,16.9442842781034,468
+"Myrtaceae","Eucalyptus","Eucalyptus dealbata","Eucalyptus dealbata A.Cunn. ex Schauer",752.708571428572,15.9824098583144,2450
+"Myrtaceae","Eucalyptus","Eucalyptus deanei","Eucalyptus deanei Maiden",1015.63276836158,15.2179770864785,1062
+"Myrtaceae","Eucalyptus","Eucalyptus delegatensis","Eucalyptus delegatensis F.Muell. ex R.T.Baker",1357.54838709677,8.56465056250172,63
+"Myrtaceae","Eucalyptus","Eucalyptus diversicolor","Eucalyptus diversicolor F.Muell.",1045.48760330579,15.2300447747727,242
+"Myrtaceae","Eucalyptus","Eucalyptus dives","Eucalyptus dives Schauer",903.749257201913,11.8965158461908,7747
+"Myrtaceae","Eucalyptus","Eucalyptus elaeophloia","Eucalyptus elaeophloia Chappill, Crisp & Prober",1163.5,8.16909730434418,12
+"Myrtaceae","Eucalyptus","Eucalyptus eugenioides","Eucalyptus eugenioides Sieber ex Spreng.",1006.84963648381,16.1692883683133,3030
+"Myrtaceae","Eucalyptus","Eucalyptus fastigata","Eucalyptus fastigata H.Deane & Maiden",961.941589648798,11.4965018293553,2705
+"Myrtaceae","Eucalyptus","Eucalyptus fibrosa","Eucalyptus fibrosa F.Muell.",884.523196364325,17.0628471712207,5287
+"Myrtaceae","Eucalyptus","Eucalyptus foecunda","Eucalyptus leptophylla F.Muell. ex Miq.",369.298103480022,16.307200940532,5434
+"Myrtaceae","Eucalyptus","Eucalyptus fraxinoides","Eucalyptus fraxinoides H.Deane & Maiden",970.091463414634,10.7788998382847,328
+"Myrtaceae","Eucalyptus","Eucalyptus globulus","Eucalyptus globulus Labill.",875.121951219512,12.8962466133965,1907
+"Myrtaceae","Eucalyptus","Eucalyptus globulus","Eucalyptus globulus subsp. bicostata (Maiden, Blakely & Simmonds) J.B.Kirkp.",975.371666666667,12.3279826347033,1200
+"Myrtaceae","Eucalyptus","Eucalyptus globulus","Eucalyptus globulus subsp. maidenii (F.Muell.) J.B.Kirkp.",853.308529945554,13.4447217446274,551
+"Myrtaceae","Eucalyptus","Eucalyptus gomphocephala","Eucalyptus gomphocephala A.Cunn. ex DC.",713.597269624573,17.2261376429743,316
+"Myrtaceae","Eucalyptus","Eucalyptus goniocalyx","Eucalyptus goniocalyx F.Muell.",798.929824561404,13.9001096256992,114
+"Myrtaceae","Eucalyptus","Eucalyptus grandis","Eucalyptus grandis W.Hill ex Maiden",1459.78644067797,18.66187849853,298
+"Myrtaceae","Eucalyptus","Eucalyptus gunnii","Eucalyptus gunnii Hook.fil.",1366.33333333333,9.68527774810791,16
+"Myrtaceae","Eucalyptus","Eucalyptus haemastoma","Eucalyptus haemastoma Sm.",1218.90476190476,16.9830575153618,2600
+"Myrtaceae","Eucalyptus","Eucalyptus jacksonii","Eucalyptus jacksonii Maiden",1167.12987012987,14.8200755676666,77
+"Myrtaceae","Eucalyptus","Eucalyptus laevopinea","Eucalyptus laevopinea R.T.Baker",953.550535077289,13.8904726593163,1682
+"Myrtaceae","Eucalyptus","Eucalyptus largeana","Eucalyptus largeana Blakely & Beuzev.",1192.50354609929,16.2705555530305,705
+"Myrtaceae","Eucalyptus","Eucalyptus largiflorens","Eucalyptus largiflorens F.Muell.",339.637189582069,17.163990261818,9907
+"Myrtaceae","Eucalyptus","Eucalyptus leucoxylon","Eucalyptus leucoxylon F.Muell.",588.121273209549,14.8061339368744,9432
+"Myrtaceae","Eucalyptus","Eucalyptus longicornis","Eucalyptus longicornis (F.Muell.) Maiden",324.9375,17.3663194576899,96
+"Myrtaceae","Eucalyptus","Eucalyptus longifolia","Eucalyptus longifolia Link & Otto",983.468968192398,15.5657017913505,2606
+"Myrtaceae","Eucalyptus","Eucalyptus macrorhyncha","Eucalyptus macrorhyncha F.Muell.",787.664634146341,13.6073424176472,164
+"Myrtaceae","Eucalyptus","Eucalyptus major","Eucalyptus major (Maiden) Blakely",876.244897959184,18.3461733448262,49
+"Myrtaceae","Eucalyptus","Eucalyptus malacoxylon","Eucalyptus malacoxylon Blakely",864.464646464646,13.2223485696195,99
+"Myrtaceae","Eucalyptus","Eucalyptus mannifera","Eucalyptus mannifera Mudie",805.306837318962,12.3104019341705,2974
+"Myrtaceae","Eucalyptus","Eucalyptus mannifera","Eucalyptus mannifera subsp. mannifera",964.647119341564,11.5086076769809,973
+"Myrtaceae","Eucalyptus","Eucalyptus marginata","Eucalyptus marginata Sm.",831.813067150635,17.0491454683501,553
+"Myrtaceae","Eucalyptus","Eucalyptus megacarpa","Eucalyptus megacarpa F.Muell.",1020.03921568627,15.1255719614964,55
+"Myrtaceae","Eucalyptus","Eucalyptus melliodora","Eucalyptus melliodora A.Cunn. ex Schauer",717.977636997147,14.3462754805103,15790
+"Myrtaceae","Eucalyptus","Eucalyptus microcarpa","Eucalyptus microcarpa (Maiden) Maiden",582.660184409053,15.1930609109916,11932
+"Myrtaceae","Eucalyptus","Eucalyptus microcorys","Eucalyptus microcorys F.Muell.",1368.40457227139,17.7144622705679,6810
+"Myrtaceae","Eucalyptus","Eucalyptus microtheca","Eucalyptus microtheca F.Muell.",660.90625,26.2049618491105,896
+"Myrtaceae","Eucalyptus","Eucalyptus miniata","Eucalyptus miniata A.Cunn. ex Schauer",1319.74458152718,27.059847711841,3011
+"Myrtaceae","Eucalyptus","Eucalyptus moluccana","Eucalyptus moluccana Roxb.",890.902496382055,17.2286337865934,5531
+"Myrtaceae","Eucalyptus","Eucalyptus muelleriana","Eucalyptus muelleriana Howitt",949.872761545712,14.347221572707,4249
+"Myrtaceae","Eucalyptus","Eucalyptus nitens","Eucalyptus nitens (H.Deane & Maiden) Maiden",1283.7191011236,9.77881557619974,356
+"Myrtaceae","Eucalyptus","Eucalyptus notabilis","Eucalyptus notabilis Maiden",1121.66211604096,15.6889504800478,293
+"Myrtaceae","Eucalyptus","Eucalyptus nova-anglica","Eucalyptus nova-anglica H.Deane & Maiden",900.965079365079,13.0120502865504,315
+"Myrtaceae","Eucalyptus","Eucalyptus obliqua","Eucalyptus obliqua L'Hér.",947.34117706086,12.9447918206186,19972
+"Myrtaceae","Eucalyptus","Eucalyptus occidentalis","Eucalyptus occidentalis Endl.",502.654929577465,15.4221830771003,142
+"Myrtaceae","Eucalyptus","Eucalyptus odorata","Eucalyptus odorata Behr",477.332882273342,15.8160667429758,3698
+"Myrtaceae","Eucalyptus","Eucalyptus oligantha","Eucalyptus oligantha Schauer",1393.58208955224,26.933333297274,67
+"Myrtaceae","Eucalyptus","Eucalyptus oreades","Eucalyptus oreades F.Muell. ex R.T.Baker",1158.0405643739,11.9281452589355,567
+"Myrtaceae","Eucalyptus","Eucalyptus ovata","Eucalyptus ovata Labill.",848.251617814998,13.5169283739278,5279
+"Myrtaceae","Eucalyptus","Eucalyptus paniculata","Eucalyptus paniculata Sm.",1106.19421070347,16.8107357567627,3049
+"Myrtaceae","Eucalyptus","Eucalyptus patens","Eucalyptus patens Benth.",900.78431372549,16.252859433492,51
+"Myrtaceae","Eucalyptus","Eucalyptus pauciflora","Eucalyptus pauciflora Sieber ex Spreng.",1062.41126892462,9.94392201121633,6410
+"Myrtaceae","Eucalyptus","Eucalyptus pellita","Eucalyptus pellita F.Muell.",2092.39130434783,22.4259058496226,23
+"Myrtaceae","Eucalyptus","Eucalyptus phoenicea","Eucalyptus phoenicea F.Muell.",1024.05,27.1540104269981,481
+"Myrtaceae","Eucalyptus","Eucalyptus pilularis","Eucalyptus pilularis Sm.",1296.09951845907,17.5162353084456,7553
+"Myrtaceae","Eucalyptus","Eucalyptus piperita","Eucalyptus piperita Sm.",1159.69473684211,15.9828508176302,97
+"Myrtaceae","Eucalyptus","Eucalyptus planchoniana","Eucalyptus planchoniana F.Muell.",1304.24561403509,18.5227047133864,571
+"Myrtaceae","Eucalyptus","Eucalyptus platyphylla","Eucalyptus platyphylla F.Muell.",1337.62921348315,23.6866572090749,179
+"Myrtaceae","Eucalyptus","Eucalyptus propinqua","Eucalyptus propinqua H.Deane & Maiden",1297.28446159242,17.8864579864737,2862
+"Myrtaceae","Eucalyptus","Eucalyptus pruinosa","Eucalyptus pruinosa Schauer",757.339568345324,27.001336897706,696
+"Myrtaceae","Eucalyptus","Eucalyptus punctata","Eucalyptus punctata DC.",991.172466344934,16.1504757241425,7951
+"Myrtaceae","Eucalyptus","Eucalyptus quadrangulata","Eucalyptus quadrangulata H.Deane & Maiden",1254.19666048237,15.0910328173239,539
+"Myrtaceae","Eucalyptus","Eucalyptus racemosa","Eucalyptus racemosa Cav.",1156.85159867695,16.5473392196369,4561
+"Myrtaceae","Eucalyptus","Eucalyptus radiata","Eucalyptus radiata A.Cunn. ex DC.",983.497478164597,12.606983234909,8140
+"Myrtaceae","Eucalyptus","Eucalyptus radiata","Eucalyptus radiata subsp. radiata",887.751624548737,12.4499197763657,4156
+"Myrtaceae","Eucalyptus","Eucalyptus regnans","Eucalyptus regnans F.Muell.",1366.21909340659,11.2932377465806,2913
+"Myrtaceae","Eucalyptus","Eucalyptus resinifera","Eucalyptus resinifera Sm.",1248.96226415094,18.6444967737738,53
+"Myrtaceae","Eucalyptus","Eucalyptus robertsonii","Eucalyptus radiata subsp. robertsonii (Blakely) L.A.S.Johnson & Blaxell",1090.7225950783,11.2417039439182,894
+"Myrtaceae","Eucalyptus","Eucalyptus robusta","Eucalyptus robusta Sm.",1308.52171537831,18.204719839901,3765
+"Myrtaceae","Eucalyptus","Eucalyptus rubida","Eucalyptus rubida H.Deane & Maiden",859.24504084014,11.8326254270458,4285
+"Myrtaceae","Eucalyptus","Eucalyptus rudderi","Eucalyptus rudderi Maiden",1177.8125,17.9195313453674,16
+"Myrtaceae","Eucalyptus","Eucalyptus rummeryi","Eucalyptus rummeryi Maiden",1379.12844036697,17.8867737306367,109
+"Myrtaceae","Eucalyptus","Eucalyptus saligna","Eucalyptus saligna Sm.",1226.25391344383,16.4022291488191,4359
+"Myrtaceae","Eucalyptus","Eucalyptus salmonophloia","Eucalyptus salmonophloia F.Muell.",330.55601659751,17.3570539466573,241
+"Myrtaceae","Eucalyptus","Eucalyptus salubris","Eucalyptus salubris F.Muell.",308.924528301887,17.6806014303891,212
+"Myrtaceae","Eucalyptus","Eucalyptus seeana","Eucalyptus seeana Maiden",1212.31778929188,18.4412851630097,579
+"Myrtaceae","Eucalyptus","Eucalyptus siderophloia","Eucalyptus siderophloia Benth.",1261.8721347694,18.1531701792475,3641
+"Myrtaceae","Eucalyptus","Eucalyptus sideroxylon","Eucalyptus sideroxylon A.Cunn. ex Woolls",703.035423452769,16.1597499369798,2459
+"Myrtaceae","Eucalyptus","Eucalyptus sieberi","Eucalyptus sieberi L.A.S.Johnson",1016.96962101464,13.6758016700947,9998
+"Myrtaceae","Eucalyptus","Eucalyptus smithii","Eucalyptus smithii F.Muell. ex R.T.Baker",964.718804920914,13.7464740640878,1138
+"Myrtaceae","Eucalyptus","Eucalyptus stellulata","Eucalyptus stellulata Sieber ex DC.",950.699780861943,10.4263452623254,1369
+"Myrtaceae","Eucalyptus","Eucalyptus stricta","Eucalyptus stricta Sieber ex Spreng.",1137.78669724771,12.9057530416261,437
+"Myrtaceae","Eucalyptus","Eucalyptus tereticornis","Eucalyptus tereticornis Sm.",1037.22523276493,17.427672886402,9693
+"Myrtaceae","Eucalyptus","Eucalyptus tetrodonta","Eucalyptus tetrodonta F.Muell.",1245.45349106936,27.0026008864341,4347
+"Myrtaceae","Eucalyptus","Eucalyptus thozetiana","Eucalyptus thozetiana F.Muell. ex R.T.Baker",532.461538461538,21.9588141074547,26
+"Myrtaceae","Eucalyptus","Eucalyptus tintinnans","Eucalyptus tintinnans (Blakely & Jacobs) L.A.S.Johnson & K.D.Hill",1085.16796875,27.2090494558215,257
+"Myrtaceae","Eucalyptus","Eucalyptus todtiana","Eucalyptus todtiana F.Muell.",699.616580310881,18.7318437605942,193
+"Myrtaceae","Eucalyptus","Eucalyptus torquata","Eucalyptus torquata Luehm.",441.678260869565,16.8805072618567,115
+"Myrtaceae","Eucalyptus","Eucalyptus umbra","Eucalyptus umbra F.Muell. ex R.T.Baker",1171.45656670114,17.549118854144,1999
+"Myrtaceae","Eucalyptus","Eucalyptus viminalis","Eucalyptus viminalis Labill.",855.474118767864,12.7630980743913,9489
+"Myrtaceae","Eucalyptus","Eucalyptus viridis","Eucalyptus viridis R.T.Baker",528.490536277602,16.2676590338866,634
+"Myrtaceae","Eucalyptus","Eucalyptus wandoo","Eucalyptus wandoo subsp. wandoo",673.48,17.1359998957316,75
+"Myrtaceae","Eucalyptus","Eucalyptus willisii","Eucalyptus willisii Ladiges, Humphries & Brooker",769.550617283951,13.5942952650565,810
+"Myrtaceae","Gossia","Gossia hillii","Gossia hillii (Benth.) N.Snow & Guymer",1503.57396449704,18.9113905641454,169
+"Myrtaceae","Leptospermum","Leptospermum brachyandrum","Leptospermum brachyandrum (F.Muell.) Druce",980.896551724138,17.3856321203298,87
+"Myrtaceae","Leptospermum","Leptospermum erubescens","Leptospermum erubescens Schauer",416.182692307692,16.7774438582934,104
+"Myrtaceae","Leptospermum","Leptospermum laevigatum","Leptospermum laevigatum (Gaertn.) F.Muell.",942.644077784327,15.6351723679389,3965
+"Myrtaceae","Leptospermum","Leptospermum lanigerum","Leptospermum lanigerum (Aiton) Sm.",912.01921289123,13.1598866320558,3250
+"Myrtaceae","Leptospermum","Leptospermum myrtifolium","Leptospermum myrtifolium Sieber ex DC.",987.413301662708,10.4743616416732,842
+"Myrtaceae","Leptospermum","Leptospermum nitidum","Leptospermum nitidum Hook.fil.",2171.33333333333,8.78750001501154,108
+"Myrtaceae","Lindsayomyrtus","Lindsayomyrtus racemoides","Lindsayomyrtus racemoides (Greves) Craven",3269,23.1051473056569,17
+"Myrtaceae","Lophostemon","Lophostemon confertus","Lophostemon confertus (R.Br.) Paul G.Wilson & J.T.Waterh.",1392.34860828242,17.9083800092491,5984
+"Myrtaceae","Lophostemon","Lophostemon grandiflorus","Lophostemon grandiflorus (Benth.) Paul G.Wilson & J.T.Waterh.",970.401709401709,26.9332443465534,469
+"Myrtaceae","Lophostemon","Lophostemon suaveolens","Lophostemon suaveolens (Sol. ex Gaertn.) Paul G.Wilson & J.T.Waterh.",1317.32224938875,19.5399022146659,2063
+"Myrtaceae","Melaleuca","Melaleuca acuminata","Melaleuca acuminata F.Muell.",424.48,15.9038333020891,176
+"Myrtaceae","Melaleuca","Melaleuca armillaris","Melaleuca armillaris (Gaertn.) Sm.",858.965870307167,15.0415102076612,343
+"Myrtaceae","Melaleuca","Melaleuca bracteata","Melaleuca bracteata F.Muell.",891.598039215686,18.359616023419,513
+"Myrtaceae","Melaleuca","Melaleuca cajuputi","Melaleuca cajuputi Powell",1426.56937799043,27.1194777602784,210
+"Myrtaceae","Melaleuca","Melaleuca cordata","Melaleuca cordata Turcz.",348.528301886792,17.6851021658699,106
+"Myrtaceae","Melaleuca","Melaleuca decora","Melaleuca decora (Salisb.) Britten",940.538857878918,17.3951445604507,2333
+"Myrtaceae","Melaleuca","Melaleuca ericifolia","Melaleuca ericifolia Sm.",904.88504672897,14.8576986025427,4434
+"Myrtaceae","Melaleuca","Melaleuca halmaturorum","Melaleuca halmaturorum F.Muell. ex Miq.",485.13891285591,15.6466889467807,1238
+"Myrtaceae","Melaleuca","Melaleuca leucadendra","Melaleuca leucadendra (L.) L.",1265.31748466258,26.4451112045101,671
+"Myrtaceae","Melaleuca","Melaleuca linariifolia","Melaleuca linariifolia Sm.",1130.20539083558,17.3651033601992,3739
+"Myrtaceae","Melaleuca","Melaleuca quinquenervia","Melaleuca quinquenervia (Cav.) S.T.Blake",1358.82572864322,18.7518333358381,5192
+"Myrtaceae","Melaleuca","Melaleuca radula","Melaleuca radula Lindl.",709.15294117647,18.4076634724935,255
+"Myrtaceae","Melaleuca","Melaleuca saligna","Melaleuca saligna Schauer",1192.75862068966,17.634195557956,29
+"Myrtaceae","Melaleuca","Melaleuca styphelioides","Melaleuca styphelioides Sm.",1098.78947368421,17.3517323814035,3831
+"Myrtaceae","Melaleuca","Melaleuca viridiflora","Melaleuca viridiflora Sol. ex Gaertn.",1219.49835526316,26.9850106051094,2451
+"Myrtaceae","Osbornia","Osbornia octodonta","Osbornia octodonta F.Muell.",1487.49438202247,24.0469102109416,110
+"Myrtaceae","Rhodamnia","Rhodamnia argentea","Rhodamnia argentea Benth.",1519.36363636364,17.7072680375793,178
+"Myrtaceae","Rhodamnia","Rhodamnia glauca","Rhodamnia spongiosa (F.M.Bailey) Domin",2158.38095238095,22.235119047619,21
+"Myrtaceae","Rhodamnia","Rhodamnia rubescens","Rhodamnia rubescens (Benth.) Miq.",1351.78189390618,17.2910711715118,9145
+"Myrtaceae","Rhodamnia","Rhodamnia sessiliflora","Rhodamnia sessiliflora Benth.",2587.75268817204,22.3264336124543,93
+"Myrtaceae","Rhodomyrtus","Rhodomyrtus macrocarpa","Rhodomyrtus macrocarpa Benth.",1970.54545454545,24.9348486120051,11
+"Myrtaceae","Rhodomyrtus","Rhodomyrtus psidioides","Rhodomyrtus psidioides (G.Don) Benth.",1471.84448025786,18.6006648112073,1358
+"Myrtaceae","Syncarpia","Syncarpia glomulifera","Syncarpia glomulifera (Sm.) Nied.",1256.5928765768,17.2221370440381,8129
+"Myrtaceae","Syncarpia","Syncarpia hillii","Syncarpia hillii F.M.Bailey",1449.9,20.7012497901916,21
+"Myrtaceae","Syzygium","Syzygium angophoroides","Syzygium angophoroides (F.Muell.) B.Hyland",1271.59813084112,26.8348130734167,108
+"Myrtaceae","Syzygium","Syzygium australe","Syzygium australe (J.C.Wendl. ex Link) B.Hyland",1322.00672430355,17.4543948022364,1089
+"Myrtaceae","Syzygium","Syzygium cormiflorum","Syzygium cormiflorum (F.Muell.) B.Hyland",2615.05263157895,21.5734648118939,115
+"Myrtaceae","Syzygium","Syzygium corynanthum","Syzygium corynanthum (F.Muell.) L.A.S.Johnson",1568.48076923077,17.3449520331163,156
+"Myrtaceae","Syzygium","Syzygium crebrinerve","Syzygium crebrinerve (C.T.White) L.A.S.Johnson",1545.46332046332,16.9109073918759,260
+"Myrtaceae","Syzygium","Syzygium floribundum","Syzygium floribundum F.Muell.",1273.86784140969,18.6199430894222,456
+"Myrtaceae","Syzygium","Syzygium forte","Syzygium forte (F.Muell.) B.Hyland",1567.8,26.8948332977295,54
+"Myrtaceae","Syzygium","Syzygium francisii","Syzygium francisii (F.M.Bailey) L.A.S.Johnson",1521.34567901235,18.3175926355668,329
+"Myrtaceae","Syzygium","Syzygium gustavioides","Syzygium gustavioides (F.M.Bailey) B.Hyland",3167.05555555556,21.3097221586439,18
+"Myrtaceae","Syzygium","Syzygium hemilamprum","Syzygium hemilamprum (F.Muell.) Craven & Biffin",1967.28571428571,20.6520831244332,14
+"Myrtaceae","Syzygium","Syzygium ingens","Syzygium ingens (C.Moore) Craven & Biffin",1605.22,17.1895139185588,300
+"Myrtaceae","Syzygium","Syzygium kuranda","Syzygium kuranda (F.M.Bailey) B.Hyland",2380.36842105263,21.9482451991031,19
+"Myrtaceae","Syzygium","Syzygium luehmannii","Syzygium luehmannii (F.Muell.) L.A.S.Johnson",1633.79905437352,18.9832742884931,450
+"Myrtaceae","Syzygium","Syzygium nervosum","Syzygium nervosum DC.",1548.72839506173,27.0937244038523,82
+"Myrtaceae","Syzygium","Syzygium oleosum","Syzygium oleosum (F.Muell.) B.Hyland",1488.53247941446,18.1296736821055,1147
+"Myrtaceae","Syzygium","Syzygium smithii","Syzygium smithii (Poir.) Nied.",1237.76320766612,16.1765656005298,8202
+"Myrtaceae","Syzygium","Syzygium suborbiculare","Syzygium suborbiculare (Benth.) T.G.Hartley & L.M.Perry",1523.81938325991,27.0476504632555,479
+"Myrtaceae","Taxandria","Taxandria juniperina","Taxandria juniperina (Schauer) J.R.Wheeler & N.G.Marchant",999.042553191489,15.317819209809,47
+"Myrtaceae","Tristania","Tristania neriifolia","Tristania neriifolia (Sieber ex Sims) R.Br.",1178.72375690608,15.9043968527357,182
+"Myrtaceae","Tristaniopsis","Tristaniopsis exiliflora","Tristaniopsis exiliflora (F.Muell.) Paul G.Wilson & J.T.Waterh.",1848.67857142857,22.5208332198007,28
+"Myrtaceae","Tristaniopsis","Tristaniopsis laurina","Tristaniopsis laurina (Sm.) Paul G.Wilson & J.T.Waterh.",1137.39484451719,16.1443518027541,2463
+"Paracryphiaceae","Quintinia","Quintinia sieberi","Quintinia sieberi A.DC.",1368.7078891258,14.3698205520858,469
+"Phyllanthaceae","Actephila","Actephila grandifolia","Actephila grandifolia (Müll.Arg.) Baill.",1700.95652173913,18.952536251234,92
+"Phyllanthaceae","Bridelia","Bridelia exaltata","Bridelia exaltata F.Muell.",1413.8064516129,18.593921716068,285
+"Phyllanthaceae","Cleistanthus","Cleistanthus cunninghamii","Cleistanthus cunninghamii (Müll.Arg.) Müll.Arg.",1366.69817073171,17.9990473331475,658
+"Phyllanthaceae","Glochidion","Glochidion ferdinandi","Glochidion ferdinandi (Müll.Arg.) F.M.Bailey",1286.74494081711,18.0529602171432,8171
+"Phyllanthaceae","Glochidion","Glochidion harveyanum","Glochidion harveyanum Domin",2117.03125,22.8682290911674,32
+"Phyllanthaceae","Glochidion","Glochidion lobocarpum","Glochidion lobocarpum (Benth.) F.M.Bailey",1164.86956521739,21.7157607700514,28
+"Picrodendraceae","Austrobuxus","Austrobuxus swainii","Austrobuxus swainii (Beuzev. & C.T.White) Airy Shaw",1778.88518518519,17.5589584580174,540
+"Picrodendraceae","Dissiliaria","Dissiliaria baloghioides","Dissiliaria baloghioides F.Muell. ex Baill.",1417.34285714286,19.3158332824707,35
+"Proteaceae","Banksia","Banksia aemula","Banksia aemula R.Br.",1330.98107494322,18.6601343725235,1365
+"Proteaceae","Banksia","Banksia attenuata","Banksia attenuata R.Br.",753.645914396887,17.817663691851,1054
+"Proteaceae","Banksia","Banksia dentata","Banksia dentata L.fil.",1463.97597042514,26.9567544940659,544
+"Proteaceae","Banksia","Banksia grandis","Banksia grandis Willd.",890.824649298597,16.3381596232703,1019
+"Proteaceae","Banksia","Banksia ilicifolia","Banksia ilicifolia R.Br.",828.420147420147,17.5629606879607,410
+"Proteaceae","Banksia","Banksia integrifolia","Banksia integrifolia L.fil.",1185.55969807868,17.2057410743623,5515
+"Proteaceae","Banksia","Banksia marginata","Banksia marginata Cav.",811.868798955613,13.8726929709691,18655
+"Proteaceae","Banksia","Banksia menziesii","Banksia menziesii R.Br.",752.06435006435,18.5832742865328,778
+"Proteaceae","Banksia","Banksia nobilis","Banksia nobilis (Lindl.) A.R.Mast & K.R.Thiele",488.152173913043,16.1383152630018,46
+"Proteaceae","Banksia","Banksia robur","Banksia robur Cav.",1346.68710550045,18.6966749738206,1167
+"Proteaceae","Banksia","Banksia serrata","Banksia serrata L.fil.",1123.7934966693,15.864600978695,9182
+"Proteaceae","Banksia","Banksia sessilis","Banksia sessilis var. sessilis",800.277777777778,16.8506943384806,18
+"Proteaceae","Cardwellia","Cardwellia sublimis","Cardwellia sublimis F.Muell.",2559.08695652174,21.7864129992499,69
+"Proteaceae","Carnarvonia","Carnarvonia araliifolia","Carnarvonia araliifolia F.Muell.",2467.06896551724,22.1443967490361,29
+"Proteaceae","Cenarrhenes","Cenarrhenes nitida","Cenarrhenes nitida Labill.",2076.00826446281,8.95931473448257,245
+"Proteaceae","Darlingia","Darlingia darlingiana","Darlingia darlingiana (F.Muell.) L.A.S.Johnson",2334.93333333333,21.8747221628825,15
+"Proteaceae","Floydia","Floydia praealta","Floydia praealta (F.Muell.) L.A.S.Johnson & B.G.Briggs",1731.10638297872,18.8360814946763,94
+"Proteaceae","Grevillea","Grevillea heliosperma","Grevillea heliosperma R.Br.",1192.25736738703,26.9966600901486,515
+"Proteaceae","Grevillea","Grevillea hilliana","Grevillea hilliana F.Muell.",1733.5358490566,19.7205498965281,267
+"Proteaceae","Grevillea","Grevillea huegelii","Grevillea huegelii Meisn.",305.561659848042,17.2224917258525,1711
+"Proteaceae","Grevillea","Grevillea robusta","Grevillea robusta A.Cunn. ex R.Br.",1060.45034013605,17.4312981826107,2958
+"Proteaceae","Hakea","Hakea cycloptera","Hakea cycloptera R.Br.",453.635627530364,16.1780701726072,258
+"Proteaceae","Hakea","Hakea laurina","Hakea laurina R.Br.",658.678723404255,15.098040763368,479
+"Proteaceae","Hakea","Hakea leucoptera","Hakea leucoptera R.Br.",345.975409836066,18.8957992577162,488
+"Proteaceae","Hakea","Hakea lorea","Hakea lorea (R.Br.) R.Br.",449.199324324324,23.2925535214914,296
+"Proteaceae","Hakea","Hakea mitchellii","Hakea mitchellii Meisn.",469.705042816366,15.3052549334961,2121
+"Proteaceae","Hakea","Hakea vittata","Hakea vittata R.Br.",518.949253731343,15.3651990306911,677
+"Proteaceae","Helicia","Helicia ferruginea","Helicia ferruginea F.Muell.",1802.10638297872,17.7879876278816,188
+"Proteaceae","Hicksbeachia","Hicksbeachia pinnatifolia","Hicksbeachia pinnatifolia F.Muell.",1786.66933638444,18.5857551692552,875
+"Proteaceae","Macadamia","Macadamia ternifolia","Macadamia ternifolia F.Muell.",1524.77777777778,18.9452546437581,36
+"Proteaceae","Persoonia","Persoonia lanceolata","Persoonia lanceolata Andrews",1204.52601156069,16.9467051776158,1816
+"Proteaceae","Persoonia","Persoonia linearis","Persoonia linearis Andrews",988.790573670015,15.3552101275651,16427
+"Proteaceae","Persoonia","Persoonia longifolia","Persoonia longifolia R.Br.",957.915824915825,15.7884118276012,298
+"Proteaceae","Persoonia","Persoonia media","Persoonia media R.Br.",1460.53582089552,15.7412810937682,671
+"Proteaceae","Petrophile","Petrophile diversifolia","Petrophile diversifolia R.Br.",972.194244604317,15.2148381583125,139
+"Proteaceae","Placospermum","Placospermum coriaceum","Placospermum coriaceum C.T.White & W.D.Francis",2289.8,21.8286113739014,15
+"Proteaceae","Xylomelum","Xylomelum occidentale","Xylomelum occidentale R.Br.",880.625,17.2570549249649,176
+"Proteaceae","Xylomelum","Xylomelum pyriforme","Xylomelum pyriforme (Gaertn.) Knight",1109.498699948,16.2363841383642,1958
+"Proteaceae","Xylomelum","Xylomelum salicinum","Xylomelum salicinum A.Cunn. ex R.Br.",1130.89215686275,19.8211601107728,102
+"Putranjivaceae","Drypetes","Drypetes deplanchei","Drypetes deplanchei (Brongn. & Gris) Merr.",1340.82665222102,19.7294307550656,1993
+"Rousseaceae","Abrophyllum","Abrophyllum ornans","Abrophyllum ornans (F.Muell.) Benth.",1564.91666666667,17.8752015970087,372
+"Rousseaceae","Cuttsia","Cuttsia viburnea","Cuttsia viburnea F.Muell.",1491.04117647059,16.6043382420259,342
+"Rutaceae","Acradenia","Acradenia frankliniae","Acradenia frankliniae Kippist",1798.72580645161,11.6072581506545,62
+"Rutaceae","Acronychia","Acronychia octandra","Acronychia octandra (F.Muell.) T.G.Hartley",1692.75,16.9453663661562,116
+"Rutaceae","Bosistoa","Bosistoa pentacocca","Bosistoa pentacocca (F.Muell.) Baill.",1613.3,18.5258335113525,10
+"Rutaceae","Bosistoa","Bosistoa transversa","Bosistoa transversa J.F.Bailey & C.T.White",1764.07368421053,18.3278508838854,95
+"Rutaceae","Brombya","Brombya platynema","Brombya platynema F.Muell.",2271.72222222222,22.758333630032,18
+"Rutaceae","Flindersia","Flindersia australis","Flindersia australis R.Br.",1251.69743589744,18.7532478748224,391
+"Rutaceae","Flindersia","Flindersia bennettii","Flindersia bennettii F.Muell. ex C.Moore",1624.33450704225,19.4883802575125,289
+"Rutaceae","Flindersia","Flindersia brayleyana","Flindersia brayleyana F.Muell.",2207.28571428571,20.7537699199858,21
+"Rutaceae","Flindersia","Flindersia collina","Flindersia collina (F.M.Bailey) F.M.Bailey",914.573248407643,18.7260615840839,157
+"Rutaceae","Flindersia","Flindersia dissosperma","Flindersia dissosperma (F.Muell.) Domin",635.333333333333,22.6744441986084,15
+"Rutaceae","Flindersia","Flindersia ifflana","Flindersia ifflana F.Muell.",1803.94444444444,22.808333184984,18
+"Rutaceae","Flindersia","Flindersia maculosa","Flindersia maculosa (Lindl.) F.Muell.",379.770833333333,20.8568577766418,48
+"Rutaceae","Flindersia","Flindersia pimenteliana","Flindersia pimenteliana F.Muell.",2436.15384615385,21.5262825305645,13
+"Rutaceae","Flindersia","Flindersia schottiana","Flindersia schottiana F.Muell.",1612.54912280702,19.0001461698298,575
+"Rutaceae","Flindersia","Flindersia xanthoxyla","Flindersia xanthoxyla (A.Cunn. ex Hook.) Domin",1426.39784946237,18.475761700702,93
+"Rutaceae","Halfordia","Halfordia kendack","Halfordia kendack (Montrouz.) Guillaumin",1630.38582677165,18.6906495206938,132
+"Rutaceae","Melicope","Melicope vitiflora","Melicope vitiflora (F.Muell.) T.G.Hartley",1808.6779661017,18.440872083276,472
+"Rutaceae","Microcitrus","Microcitrus australasica","Citrus australasica F.Muell.",1590.6815920398,18.3368573592077,201
+"Rutaceae","Nematolepis","Nematolepis squamea","Nematolepis squamea (Labill.) Paul G.Wilson",1394.83149171271,12.6559162139893,375
+"Rutaceae","Pentaceras","Pentaceras australe","Pentaceras australe (F.Muell.) Hook.fil.",1293.7027027027,19.1761824633624,74
+"Rutaceae","Zanthoxylum","Zanthoxylum brachyacanthum","Zanthoxylum brachyacanthum F.Muell.",1374.36305732484,16.6785297636773,158
+"Rutaceae","Zanthoxylum","Zanthoxylum ovalifolium","Zanthoxylum ovalifolium Wight",2005.72727272727,20.950757633556,11
+"Thymelaeaceae","Pimelea","Pimelea linifolia","Pimelea linifolia subsp. collina (R.Br.) Threlfall",950.587962962963,15.2004821830326,216
