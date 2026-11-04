@@ -33,7 +33,7 @@ Generated figures are written to `figures/`, which is not tracked.
 | File | Rows | Role |
 |----------------------|----------------------------:|----------------------|
 | [`data/vessel_areas.csv`](data/vessel_areas.csv) | 150,303 | Combined, taxonomically aligned vessel and image-area measurements used to calculate Dh and VLF. |
-| [`data/climate_preferences.csv`](data/climate_preferences.csv) | 565 | Species-level MAP and mean annual temperature (MAT) summaries derived from occurrence records and WorldClim 2.1. |
+| [`data/climate_preferences.csv`](data/climate_preferences.csv) | 494 | Species-level MAP and mean annual temperature (MAT) summaries derived from occurrence records and WorldClim 2.1 (`n_obs` = retained records). |
 | [`data/tracheophyte_climate_preferences.csv`](data/tracheophyte_climate_preferences.csv) | 23,589 | Climate summaries for Australian native tracheophytes, used to show the climatic coverage of the study sample. |
 
 ### Measurement and derived files
@@ -42,7 +42,7 @@ Generated figures are written to `figures/`, which is not tracked.
 |------------------------------------|------------------------------------|
 | [`data/vessel_measurements.csv`](data/vessel_measurements.csv) | QuPath measurement export from the earlier image-analysis phase. |
 | [`data/2026_measurements.csv`](data/2026_measurements.csv) | Additional QuPath measurements incorporated in the current analysis. |
-| [`data/xylem_stats.csv`](data/xylem_stats.csv) | Analysis-ready species-level summary for the 480 study species. |
+| [`data/xylem_stats.csv`](data/xylem_stats.csv) | Analysis-ready summary for the 480 study taxa (474 species plus infraspecific taxa), keyed by `scientificName`. Written by `climate analyses.Rmd` and used for all models and figures. |
 | [`data/apc_names.csv`](data/apc_names.csv) | Species names supplied to the Australian Plant Census alignment workflow. |
 | [`data/gbif_namematched.csv`](data/gbif_namematched.csv) | Output used to connect accepted plant names with GBIF names. |
 | [`data/native_sample_export.csv`](data/native_sample_export.csv) | List of sampled Australian native species. |
@@ -99,25 +99,20 @@ The shortest reproducible route starts from the processed CSV files already in `
 
     ``` r
     install.packages(c(
-      "APCalign", "easystats", "ggeffects", "glmmTMB",
+      "APCalign", "DHARMa", "easystats", "ggeffects", "glmmTMB",
       "patchwork", "rmarkdown", "scales", "terra", "tidyverse"
     ))
     ```
 
-3.  Create the ignored output directory and supply the family lookup expected by the final Zanne *et al.* comparison chunk. This lookup is reconstructed from the tracked processed data because `climate analyses.Rmd` currently refers to `apc_names` without loading it:
+3.  Create the ignored output directory and render the analysis:
 
     ``` r
     dir.create("figures", showWarnings = FALSE)
-
-    analysis_env <- new.env(parent = globalenv())
-    analysis_env$apc_names <- read.csv("data/vessel_areas.csv") |>
-      dplyr::distinct(apc_name, family) |>
-      dplyr::rename(accepted_name = apc_name)
-
-    rmarkdown::render("climate analyses.Rmd", envir = analysis_env)
+    rmarkdown::render("climate analyses.Rmd")
+    rmarkdown::render("model_checks.Rmd")
     ```
 
-The notebook fits the Dh and VLF genus-centered mixed models, fits the pooled comparison models, reports model summaries and performance measures, and writes the manuscript figures to `figures/`. The `analysis_env` setup affects only the supplementary comparison; it is not used by the primary models.
+The notebook writes `data/xylem_stats.csv`, fits the Dh and VLF genus-centered mixed models and the pooled comparison models, reports model summaries, performance measures and the Table 2 variance partition, and writes the manuscript figures to `figures/` and the tables requested by the reviewers to `tables/`. `model_checks.Rmd` then reads `data/xylem_stats.csv` and runs the model checks and sensitivity analyses for the Supporting Information.
 
 To run the supporting Liu *et al.* comparison:
 
