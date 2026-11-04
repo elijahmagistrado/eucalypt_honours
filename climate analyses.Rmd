@@ -184,6 +184,25 @@ anova(xylem_VLF_regular_model, xylem_VLF_mixed_model)
 ```
 
 
+## Within-genus prediction helper
+```{r}
+# Predicts each genus line at its own genus mean MAP and family, over its own MAP range
+predict_within_genus <- function(model, data) {
+  newdata <- data |>
+    group_by(genus, family, genus_mean_MAP) |>
+    filter(n() >= 2) |>
+    reframe(x = seq(min(diff_from_genus_MAP), max(diff_from_genus_MAP), length.out = 50)) |>
+    mutate(diff_from_genus_MAP = x)
+  pred <- predict(model, newdata = newdata, re.form = NULL, se.fit = TRUE)
+  newdata |>
+    mutate(predicted = pred$fit,
+           conf.low = pred$fit - 1.96 * pred$se.fit,
+           conf.high = pred$fit + 1.96 * pred$se.fit,
+           x_scaled = genus_mean_MAP + x)
+}
+```
+
+
 # Plotting Dh
 ## Colour palettes
 ```{r}
@@ -214,7 +233,8 @@ Dh_family_pred <- ggpredict(
   type = "random"
 )
 
-Dh_family_pred <- Dh_family_pred |> left_join(selected_genera, by = c("group" = "family"))
+# Copy with genus column for the genus panels (keeps one row per family for the family panels)
+Dh_family_pred_genus <- as_tibble(Dh_family_pred) |> inner_join(selected_genera, by = c("group" = "family"))
 
 # ── 3. Compute axis breaks from data range ────────────────────────────────────
 Dh_y_range <- exp(range(xylem_Dh_genus$log_Dh, na.rm = TRUE))
@@ -314,24 +334,8 @@ global_mean_MAP <- mean(xylem_Dh_genus$genus_mean_MAP, na.rm = TRUE)
 Dh_avg_within_scaled <- as_tibble(Dh_avg_within_pred) %>%
   mutate(x_scaled = x + global_mean_MAP)
 
-# ── 2. Within-genus marginal effects per genus ────────────────────────────────
-Dh_within_pred <- ggpredict(
-  xylem_Dh_mixed_model,
-  terms = c("diff_from_genus_MAP [all]", "genus [all]"),
-  type = "random"
-)
-
-# ── 3. Scale within-genus x to across-genus x-axis ───────────────────────────
-genus_means <- xylem_Dh_genus %>%
-  group_by(genus) %>%
-  summarise(genus_mean_MAP = mean(genus_mean_MAP, na.rm = TRUE), .groups = "drop")
-
-Dh_within_pred_scaled <- Dh_within_pred %>%
-  as_tibble() %>%
-  rename(genus = group) %>%
-  left_join(genus_means, by = "genus") %>%
-  mutate(x_scaled = x + genus_mean_MAP) |> 
-  left_join(selected_genera, by = "genus")
+# ── 2. Within-genus predictions per genus, on the across-genus x-axis ─────────
+Dh_within_pred_scaled <- predict_within_genus(xylem_Dh_mixed_model, xylem_Dh_genus)
 
 # Full dataset with family info, minus genus column for background
 family_background <- xylem_Dh_genus %>%
@@ -385,7 +389,7 @@ ggplot() +
   ) +
   # Family-level lines — coloured (intercept shifts only, parallel slopes)
   geom_line(
-    data = as_tibble(Dh_family_pred |> filter(group %in% selected_genera$family)) |> rename(family = group),
+    data = Dh_family_pred_genus |> rename(family = group),
     aes(x = x, y = predicted, col = genus),
     linewidth = 0.75, inherit.aes = FALSE,
     linetype = 2
@@ -447,7 +451,8 @@ VLF_family_pred <- ggpredict(
   type = "random"
 )
 
-VLF_family_pred <- VLF_family_pred |> left_join(selected_genera, by = c("group" = "family"))
+# Copy with genus column for the genus panels (keeps one row per family for the family panels)
+VLF_family_pred_genus <- as_tibble(VLF_family_pred) |> inner_join(selected_genera, by = c("group" = "family"))
 
 # ── 3. Compute axis breaks from data range ────────────────────────────────────
 VLF_y_range <- exp(range(xylem_VLF_genus$log_VLF, na.rm = TRUE))
@@ -540,24 +545,8 @@ global_mean_MAP <- mean(xylem_VLF_genus$genus_mean_MAP, na.rm = TRUE)
 VLF_avg_within_scaled <- as_tibble(VLF_avg_within_pred) %>%
   mutate(x_scaled = x + global_mean_MAP)
 
-# ── 2. Within-genus marginal effects per genus ────────────────────────────────
-VLF_within_pred <- ggpredict(
-  xylem_VLF_mixed_model,
-  terms = c("diff_from_genus_MAP [all]", "genus [all]"),
-  type = "random"
-)
-
-# ── 3. Scale within-genus x to across-genus x-axis ───────────────────────────
-genus_means <- xylem_VLF_genus %>%
-  group_by(genus) %>%
-  summarise(genus_mean_MAP = mean(genus_mean_MAP, na.rm = TRUE), .groups = "drop")
-
-VLF_within_pred_scaled <- VLF_within_pred %>%
-  as_tibble() %>%
-  rename(genus = group) %>%
-  left_join(genus_means, by = "genus") %>%
-  mutate(x_scaled = x + genus_mean_MAP) |> 
-  left_join(selected_genera, by = "genus")
+# ── 2. Within-genus predictions per genus, on the across-genus x-axis ─────────
+VLF_within_pred_scaled <- predict_within_genus(xylem_VLF_mixed_model, xylem_VLF_genus)
 
 
 # Full dataset with family info, minus genus column for background
@@ -605,7 +594,7 @@ ggplot() +
   ) +
   # Family-level lines — coloured (intercept shifts only, parallel slopes)
   geom_line(
-    data = as_tibble(VLF_family_pred |> filter(group %in% selected_genera$family)) |> rename(family = group),
+    data = VLF_family_pred_genus |> rename(family = group),
     aes(x = x, y = predicted, col = genus),
     linewidth = 0.75, inherit.aes = FALSE,
     linetype = 2
