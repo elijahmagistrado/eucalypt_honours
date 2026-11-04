@@ -1,0 +1,238 @@
+---
+title: "Model checks and sensitivity analyses (Supporting Information)"
+author: "Elijah Magistrado"
+output: html_document
+---
+
+Checks of the genus-centered models (Eq. 4) fitted in `climate analyses.Rmd`:
+convergence and singularity, residual diagnostics, influence of single genera, tests and
+confidence intervals for the random effects, sensitivity to the two largest genera, and
+complete model tables. Tables are written to `tables/` and figures to `figures/`.
+
+All models are fitted with glmmTMB by maximum likelihood (glmmTMB does not use REML by
+default), to the same 480 taxa, with a Gaussian error distribution on natural-log traits.
+Genus names are unique within families, so `(1 | family) + (... | genus)` is a nested
+structure.
+
+## Packages and data
+```{r setup, message = FALSE}
+library(tidyverse)
+library(glmmTMB)
+library(performance)
+library(DHARMa)
+
+figure_dir <- "figures"
+table_dir <- "tables"
+dir.create(figure_dir, showWarnings = FALSE)
+dir.create(table_dir, showWarnings = FALSE)
+
+# Written by climate analyses.Rmd
+xylem_stats <- read.csv("data/xylem_stats.csv", header = T)
+
+# Log-transform a trait and MAP, and split log MAP into the genus mean
+# (across-genus term) and the deviation from it (within-genus term), as in climate analyses.Rmd
+center_by_genus <- function(data, trait, log_name) {
+  data |>
+    group_by(genus) |>
+    mutate(
+      "{log_name}" := log(.data[[trait]]),
+      log_MAP = log(MAP),
+      genus_mean_MAP = mean(log(MAP))
+    ) |>
+    ungroup() |>
+    mutate(diff_from_genus_MAP = log_MAP - genus_mean_MAP)
+}
+
+traits <- list(
+  Dh = center_by_genus(xylem_stats, "mean_Dh", "log_y"),
+  VLF = center_by_genus(xylem_stats, "mean_VLF", "log_y")
+)
+
+# Genera are nested in families (each genus belongs to one family)
+stopifnot(all(tapply(xylem_stats$family, xylem_stats$genus, n_distinct) == 1))
+```
+
+## Models
+```{r}
+# Eq. 4, the reduced models for likelihood-ratio tests of the random effects, and the pooled model (Eq. 5)
+fit_models <- function(data) {
+  list(
+    full           = glmmTMB(log_y ~ genus_mean_MAP + diff_from_genus_MAP + (1 | family) + (diff_from_genus_MAP | genus), data = data),
+    no_genus_slope = glmmTMB(log_y ~ genus_mean_MAP + diff_from_genus_MAP + (1 | family) + (1 | genus), data = data),
+    no_genus       = glmmTMB(log_y ~ genus_mean_MAP + diff_from_genus_MAP + (1 | family), data = data),
+    no_family      = glmmTMB(log_y ~ genus_mean_MAP + diff_from_genus_MAP + (diff_from_genus_MAP | genus), data = data),
+    pooled         = glmmTMB(log_y ~ log_MAP, data = data)
+  )
+}
+models <- map(traits, fit_models)
+```
+
+## Convergence and singularity
+```{r}
+convergence <- imap_dfr(models, \(m, trait) tibble(
+  trait = trait,
+  optimiser_code = m$full$fit$convergence,
+  optimiser_message = m$full$fit$message,
+  hessian_positive_definite = m$full$sdr$pdHess,
+  singular_fit = check_singularity(m$full)
+))
+write.csv(convergence, file.path(table_dir, "model_convergence.csv"), row.names = F)
+convergence
+```
+
+## Residual diagnostics
+```{r}
+# Simulation-based residuals (DHARMa). For glmmTMB the simulations re-draw the random
+# effects, so the tests check the whole model, not only the residual term.
+residual_tests <- imap_dfr(models, function(m, trait) {
+  res <- simulateResiduals(m$full, n = 1000, seed = 1)
+  png(file.path(figure_dir, paste0("figS_residuals_", trait, ".png")), width = 2000, height = 1000, res = 200)
+  plot(res)
+  dev.off()
+  tibble(
+    trait = trait,
+    uniformity_KS_p = testUniformity(res, plot = FALSE)$p.value,
+    dispersion_p = testDispersion(res, plot = FALSE)$p.value,
+    outliers_p = testOutliers(res, type = "bootstrap", plot = FALSE)$p.value,
+    quantiles_vs_fitted_p = testQuantiles(res, plot = FALSE)$p.value
+  )
+})
+write.csv(residual_tests, file.path(table_dir, "residual_tests.csv"), row.names = F)
+residual_tests
+
+# Conventional checks on the conditional residuals
+imap(models, \(m, trait) list(normality = check_normality(m$full), heteroscedasticity = check_heteroscedasticity(m$full)))
+
+# Robustness to non-normal residuals: refit Eq. 4 with Student-t errors
+t_refit <- imap_dfr(traits, function(data, trait) {
+  m_t <- glmmTMB(log_y ~ genus_mean_MAP + diff_from_genus_MAP + (1 | family) + (diff_from_genus_MAP | genus),
+                 family = t_family(), data = data)
+  map_dfr(list(Gaussian = models[[trait]]$full, `Student t` = m_t), .id = "error_distribution", \(m) {
+    s <- summary(m)$coefficients$cond
+    tibble(across = s["genus_mean_MAP", 1], across_se = s["genus_mean_MAP", 2], across_p = s["genus_mean_MAP", 4],
+           within = s["diff_from_genus_MAP", 1], within_se = s["diff_from_genus_MAP", 2], within_p = s["diff_from_genus_MAP", 4],
+           t_df = if (family(m)$family == "t") family_params(m)[[1]] else NA_real_, AIC = AIC(m))
+  }) |> mutate(trait = trait, .before = 1)
+})
+write.csv(t_refit, file.path(table_dir, "t_distribution_refit.csv"), row.names = F)
+t_refit
+```
+
+## Influence of single genera
+```{r}
+# Refit Eq. 4 without one genus at a time and record the change in the two fixed slopes
+leave_one_genus_out <- imap_dfr(traits, function(data, trait) {
+  full <- summary(models[[trait]]$full)$coefficients$cond
+  map_dfr(sort(unique(data$genus)), function(g) {
+    m <- glmmTMB(log_y ~ genus_mean_MAP + diff_from_genus_MAP + (1 | family) + (diff_from_genus_MAP | genus),
+                 data = filter(data, genus != g))
+    s <- summary(m)$coefficients$cond
+    tibble(trait = trait, genus_removed = g, n_taxa = sum(data$genus == g),
+           across = s["genus_mean_MAP", 1], within = s["diff_from_genus_MAP", 1],
+           across_p = s["genus_mean_MAP", 4], within_p = s["diff_from_genus_MAP", 4],
+           # Change in units of the full-model SE
+           across_change_se = (across - full["genus_mean_MAP", 1]) / full["genus_mean_MAP", 2],
+           within_change_se = (within - full["diff_from_genus_MAP", 1]) / full["diff_from_genus_MAP", 2])
+  })
+})
+write.csv(leave_one_genus_out, file.path(table_dir, "leave_one_genus_out.csv"), row.names = F)
+
+leave_one_genus_out |>
+  group_by(trait) |>
+  summarise(across_min = min(across), across_max = max(across), within_min = min(within), within_max = max(within),
+            max_abs_change_se = max(abs(c(across_change_se, within_change_se))),
+            refits_with_across_p_over_0.05 = sum(across_p > 0.05), refits_with_within_p_over_0.05 = sum(within_p > 0.05))
+
+# The five most influential genera for each trait
+leave_one_genus_out |>
+  mutate(max_change_se = pmax(abs(across_change_se), abs(within_change_se))) |>
+  group_by(trait) |>
+  slice_max(max_change_se, n = 5)
+```
+
+## Random effects: likelihood-ratio tests and confidence intervals
+```{r}
+# Tests on the boundary (variance = 0) are conservative: the reported P values are upper bounds
+lrt <- function(reduced, full, label) {
+  a <- anova(reduced, full)
+  tibble(test = label, chisq = a$Chisq[2], df = a$`Chi Df`[2], p = a$`Pr(>Chisq)`[2])
+}
+random_effect_tests <- imap_dfr(models, \(m, trait) bind_rows(
+  lrt(m$no_genus_slope, m$full, "Genus random slope (variance and correlation)"),
+  lrt(m$no_genus, m$no_genus_slope, "Genus random intercept"),
+  lrt(m$no_family, m$full, "Family random intercept")
+) |> mutate(trait = trait, .before = 1))
+write.csv(random_effect_tests, file.path(table_dir, "random_effect_tests.csv"), row.names = F)
+random_effect_tests
+
+# Wald 95% CIs, computed on the log-SD scale and back-transformed
+random_effect_ci <- imap_dfr(models, \(m, trait) {
+  ci <- confint(m$full, parm = "theta_", method = "wald")
+  tibble(trait = trait, parameter = rownames(ci), estimate = ci[, "Estimate"], conf.low = ci[, "2.5 %"], conf.high = ci[, "97.5 %"])
+})
+write.csv(random_effect_ci, file.path(table_dir, "random_effect_ci.csv"), row.names = F)
+random_effect_ci
+
+# Range of genus slopes implied by the random-slope SD (fixed slope +/- 1.96 SD)
+imap_dfr(models, \(m, trait) {
+  b <- fixef(m$full)$cond["diff_from_genus_MAP"]
+  sd_slope <- attr(VarCorr(m$full)$cond$genus, "stddev")[2]
+  tibble(trait = trait, mean_slope = b, sd_slope = sd_slope, lower = b - 1.96 * sd_slope, upper = b + 1.96 * sd_slope)
+})
+```
+
+## Sensitivity to the two largest genera
+```{r}
+fixed_summary <- function(m, label, data) {
+  s <- summary(m)$coefficients$cond
+  r <- r2(m)
+  tibble(subset = label, n_taxa = nrow(data), n_genera = n_distinct(data$genus),
+         across = s["genus_mean_MAP", 1], across_se = s["genus_mean_MAP", 2], across_p = s["genus_mean_MAP", 4],
+         within = s["diff_from_genus_MAP", 1], within_se = s["diff_from_genus_MAP", 2], within_p = s["diff_from_genus_MAP", 4],
+         r2_marginal = r$R2_marginal, r2_conditional = r$R2_conditional)
+}
+subsets <- list("All taxa" = character(), "Without Eucalyptus" = "Eucalyptus",
+                "Without Acacia" = "Acacia", "Without Eucalyptus and Acacia" = c("Eucalyptus", "Acacia"))
+
+sensitivity <- map_dfr(c(Dh = "mean_Dh", VLF = "mean_VLF"), .id = "trait", function(trait_col) {
+  imap_dfr(subsets, function(drop, label) {
+    data <- center_by_genus(filter(xylem_stats, !genus %in% drop), trait_col, "log_y")
+    m <- glmmTMB(log_y ~ genus_mean_MAP + diff_from_genus_MAP + (1 | family) + (diff_from_genus_MAP | genus), data = data)
+    fixed_summary(m, label, data)
+  })
+})
+write.csv(sensitivity, file.path(table_dir, "sensitivity_large_genera.csv"), row.names = F)
+sensitivity
+```
+
+## Complete model tables
+```{r}
+# Both models of each trait use the same 480 taxa and maximum likelihood, so AIC is comparable
+model_comparison <- imap_dfr(models, \(m, trait) {
+  map_dfr(c(mixed = "full", pooled = "pooled"), .id = "model", \(name) {
+    fit <- m[[name]]
+    ll <- logLik(fit)
+    r <- r2(fit)
+    tibble(n = nobs(fit), parameters = attr(ll, "df"), logLik = as.numeric(ll), AIC = AIC(fit), BIC = BIC(fit),
+           r2_marginal = if (name == "full") r$R2_marginal else r$R2,
+           r2_conditional = if (name == "full") r$R2_conditional else NA_real_)
+  }) |> mutate(trait = trait, .before = 1, delta_AIC = AIC - min(AIC))
+})
+write.csv(model_comparison, file.path(table_dir, "model_comparison.csv"), row.names = F)
+model_comparison
+
+# All fixed and random parameters with 95% CIs
+model_parameters <- imap_dfr(models, \(m, trait) {
+  map_dfr(c(mixed = "full", pooled = "pooled"), .id = "model", \(name) {
+    as_tibble(parameters::model_parameters(m[[name]], effects = "all"))
+  }) |> mutate(trait = trait, .before = 1)
+})
+write.csv(model_parameters, file.path(table_dir, "model_parameters.csv"), row.names = F)
+model_parameters
+```
+
+
+## Session information
+```{r}
+sessionInfo()
+```
