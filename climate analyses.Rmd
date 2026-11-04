@@ -76,6 +76,34 @@ sample_distribution <- xylem_stats |> group_by(genus, family) |> summarise(n_spe
 ```
 
 
+## Genus sizes and trees and images per taxon (reviewer requests)
+```{r}
+dir.create("tables", showWarnings = FALSE)
+
+# Genera by number of taxa: singletons inform only the across-genus term and genus intercepts
+tibble(genus_size = cut(as.vector(table(xylem_stats$genus)), c(0, 1, 9, Inf), labels = c("1", "2-9", ">=10"))) |> count(genus_size)
+
+# Each image file name holds the tree code of its slide (for example 1_1452_x.jpg -> 1452).
+# Images with a missing code ("--") count as separate trees.
+image_table <- vessel_areas |>
+  filter(scientificName %in% xylem_stats$scientificName) |>
+  distinct(scientificName, image_id, other) |>
+  mutate(tree_code = str_remove(other, "_x[ .(].*$|_x$") |> str_remove("^(1|kb)_"),
+         tree_code = if_else(str_detect(tree_code, "^-+$|^x[.]jpg$"), image_id, tree_code))
+
+sample_structure <- image_table |>
+  group_by(scientificName) |>
+  summarise(trees = n_distinct(tree_code), images = n())
+write.csv(sample_structure, "tables/sample_structure_per_taxon.csv", row.names = F)
+
+sample_structure |>
+  summarise(taxa = n(), total_trees = sum(trees), total_images = sum(images),
+            mean_trees_per_taxon = mean(trees), median_trees_per_taxon = median(trees),
+            mean_images_per_taxon = mean(images), images_per_tree = sum(images) / sum(trees))
+sample_structure |> count(trees, name = "taxa")
+```
+
+
 ## Fig. 2 Whittaker plot
 ```{r}
 ggplot() +
@@ -209,6 +237,51 @@ variance_table <- function(model, data) {
 
 variance_table(xylem_Dh_mixed_model, xylem_Dh_genus)
 variance_table(xylem_VLF_mixed_model, xylem_VLF_genus)
+```
+
+
+## Slope interpretation (log-log elasticities)
+```{r}
+# Natural logs: a slope b means the trait changes by (2^b - 1) x 100 % when MAP doubles
+elasticity_table <- function(model, label) {
+  s <- summary(model)$coefficients$cond
+  s <- s[rownames(s) != "(Intercept)", , drop = FALSE]
+  tibble(model = label, term = rownames(s), slope = s[, 1],
+         conf.low = s[, 1] - 1.96 * s[, 2], conf.high = s[, 1] + 1.96 * s[, 2]) |>
+    mutate(across(c(slope, conf.low, conf.high),
+                  list(pct_doubling = \(b) 100 * (2^b - 1), pct_plus10 = \(b) 100 * (1.1^b - 1))))
+}
+
+slope_interpretation <- bind_rows(
+  elasticity_table(xylem_Dh_mixed_model, "Dh mixed"),
+  elasticity_table(xylem_Dh_regular_model, "Dh pooled"),
+  elasticity_table(xylem_VLF_mixed_model, "VLF mixed"),
+  elasticity_table(xylem_VLF_regular_model, "VLF pooled")
+)
+write.csv(slope_interpretation, "tables/slope_interpretation.csv", row.names = F)
+slope_interpretation |> select(model, term, slope, conf.low, conf.high, slope_pct_doubling, slope_pct_plus10)
+```
+
+
+## Within-genus slopes for genera with >= 10 taxa
+```{r}
+# Fitted within-genus slope of each genus (fixed slope + genus BLUP) with an approximate 95% CI.
+# SE = sqrt(var(fixed slope) + conditional var(BLUP)); their covariance is ignored, as in arm::se.coef.
+genus_slopes <- function(model, genera) {
+  b <- fixef(model)$cond["diff_from_genus_MAP"]
+  v <- vcov(model)$cond["diff_from_genus_MAP", "diff_from_genus_MAP"]
+  as.data.frame(ranef(model, condVar = TRUE)) |>
+    filter(grpvar == "genus", term == "diff_from_genus_MAP", grp %in% genera) |>
+    transmute(genus = as.character(grp), slope = b + condval, se = sqrt(v + condsd^2),
+              conf.low = slope - 1.96 * se, conf.high = slope + 1.96 * se)
+}
+
+genus_slope_table <- bind_rows(
+  genus_slopes(xylem_Dh_mixed_model, selected_genera$genus) |> mutate(trait = "Dh"),
+  genus_slopes(xylem_VLF_mixed_model, selected_genera$genus) |> mutate(trait = "VLF")
+) |> left_join(selected_genera |> ungroup() |> select(genus, n), by = "genus")
+write.csv(genus_slope_table, "tables/genus_slopes.csv", row.names = F)
+genus_slope_table
 ```
 
 
