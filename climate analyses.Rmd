@@ -46,9 +46,13 @@ ggsave("figures/whittaker_plot.png", scale = 1, width = 7.96, height = 7.96, uni
 
 ## Calculating Dh and VLF
 ```{r}
+# Unique image key: the same tree code can appear under two original names
+vessel_areas <- vessel_areas |> 
+  mutate(image_id = paste0(family_original, " ", species_name, "_", state, "_", other))
+
 xylem_Dh <- vessel_areas |> 
   filter(Name == "vessel"|Classification == "vessel") |>
-  group_by(scientificName, genus, other) |> 
+  group_by(scientificName, image_id) |> 
   summarise(sample_Dh = sum((2*radius)^5)/ sum((2*radius)^4),
             n_vessels = n()) |> 
   group_by(scientificName) |> 
@@ -61,10 +65,10 @@ xylem_Dh <- vessel_areas |>
   drop_na() 
 
 xylem_VLF <- vessel_areas |> 
-  group_by(scientificName, other) |> 
+  group_by(scientificName, image_id) |> 
   mutate(sample_lumen_area = max(Area.µm.2)) |> 
   filter(Name %in% c("vessel", "part")|Classification %in% c("vessel", "part")) |> 
-  group_by(scientificName, other) |> 
+  group_by(scientificName, image_id) |> 
   summarise(vessel_area = sum(Area.µm.2),
             sample_lumen_frac = vessel_area/max(sample_lumen_area)) |> 
   distinct() |>
