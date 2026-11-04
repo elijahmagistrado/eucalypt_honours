@@ -396,12 +396,12 @@ ggplot() +
   scale_y_continuous(
     breaks = Dh_y_breaks,
     labels = \(x) round(exp(x), 1),
-    name = expression(italic(D)[h] ~ "(μm)")
+    name = expression(italic(D)[h] ~ "(μm, log scale)")
   ) +
   scale_x_continuous(
     breaks = Dh_x_breaks,
     labels = \(x) round(exp(x), 0),
-    name = "Mean Annual Precipitation (mm)"
+    name = "Mean Annual Precipitation\n(mm, log scale)"
   ) +
   labs(
     colour = "Family", fill = "Family"
@@ -509,14 +509,14 @@ ggplot() +
   scale_y_continuous(
     breaks = Dh_y_breaks,
     labels = \(x) round(exp(x), 1),
-    name = expression(italic(D)[h] ~ "(μm)")
+    name = expression(italic(D)[h] ~ "(μm, log scale)")
   ) +
   scale_colour_manual(values = genus_colours$color) +
   scale_fill_manual(values = genus_colours$color) +
   scale_x_continuous(
     breaks = Dh_x_breaks,
     labels = \(x) round(exp(x), 0),
-    name = "Mean Annual Precipitation (mm)"
+    name = "Mean Annual Precipitation\n(mm, log scale)"
   ) +
   theme_classic() +
   theme(
@@ -607,12 +607,12 @@ ggplot() +
   scale_y_continuous(
     breaks = VLF_y_breaks,
     labels = \(x) round(exp(x), 1),
-    name = "VLF (%)"
+    name = "VLF (%, log scale)"
   ) +
   scale_x_continuous(
     breaks = VLF_x_breaks,
     labels = \(x) round(exp(x), 0),
-    name = "Mean Annual Precipitation (mm)"
+    name = "Mean Annual Precipitation\n(mm, log scale)"
   ) +
   labs(
     colour = "Family", fill = "Family"
@@ -714,14 +714,14 @@ ggplot() +
   scale_y_continuous(
     breaks = VLF_y_breaks,
     labels = \(x) round(exp(x), 1),
-    name = "VLF (%)"
+    name = "VLF (%, log scale)"
   ) +
   scale_colour_manual(values = genus_colours$color) +
   scale_fill_manual(values = genus_colours$color) +
   scale_x_continuous(
     breaks = VLF_x_breaks,
     labels = \(x) round(exp(x), 0),
-    name = "Mean Annual Precipitation (mm)"
+    name = "Mean Annual Precipitation\n(mm, log scale)"
   ) +
   theme_classic() +
   theme(
@@ -796,8 +796,8 @@ Dh_genus <- ggplot() +
     guide = guide_legend(
     )
   ) +
-  scale_y_continuous(breaks = Dh_y_breaks, labels = \(x) round(exp(x), 1), name = expression(italic(D)[h] ~ "(μm)")) +
-  scale_x_continuous(breaks = Dh_x_breaks, labels = \(x) round(exp(x), 0), name = "Mean Annual Precipitation (mm)") +
+  scale_y_continuous(breaks = Dh_y_breaks, labels = \(x) round(exp(x), 1), name = expression(italic(D)[h] ~ "(μm, log scale)")) +
+  scale_x_continuous(breaks = Dh_x_breaks, labels = \(x) round(exp(x), 0), name = "Mean Annual Precipitation\n(mm, log scale)") +
   theme_classic() +
   theme(
     legend.position = "none",
@@ -823,8 +823,8 @@ VLF_genus <- ggplot() +
     guide = guide_legend(
     )
   ) +
-  scale_y_continuous(breaks = VLF_y_breaks, labels = \(x) round(exp(x), 1), name = "VLF (%)") +
-  scale_x_continuous(breaks = VLF_x_breaks, labels = \(x) round(exp(x), 0), name = "Mean Annual Precipitation (mm)") +
+  scale_y_continuous(breaks = VLF_y_breaks, labels = \(x) round(exp(x), 1), name = "VLF (%, log scale)") +
+  scale_x_continuous(breaks = VLF_x_breaks, labels = \(x) round(exp(x), 0), name = "Mean Annual Precipitation\n(mm, log scale)") +
   theme_classic() +
   theme(
     legend.position = "none",
@@ -874,8 +874,8 @@ ggplot() +
   scale_y_log10() +
   theme_classic() +
   facet_wrap(~family) +
-  xlab("Vessel density"~ (mm^-2)) +
-  ylab("Mean vessel area"~ (mm^2)) +
+  xlab("Vessel density"~ (mm^-2*", log scale")) +
+  ylab("Mean vessel area"~ (mm^2*", log scale")) +
   theme(legend.position = "right",
         legend.direction = "vertical",
         axis.title = element_text(size = 10),
