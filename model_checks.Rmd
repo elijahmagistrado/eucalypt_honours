@@ -86,7 +86,7 @@ convergence
 # effects, so the tests check the whole model, not only the residual term.
 residual_tests <- imap_dfr(models, function(m, trait) {
   res <- simulateResiduals(m$full, n = 1000, seed = 1)
-  png(file.path(figure_dir, paste0("figS_residuals_", trait, ".png")), width = 2000, height = 1000, res = 200)
+  png(file.path(figure_dir, paste0(c(Dh = "figS3a", VLF = "figS3b")[[trait]], ".png")), width = 2000, height = 1000, res = 200)
   plot(res)
   dev.off()
   tibble(
