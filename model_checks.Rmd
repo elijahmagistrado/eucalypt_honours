@@ -87,6 +87,7 @@ convergence
 residual_tests <- imap_dfr(models, function(m, trait) {
   res <- simulateResiduals(m$full, n = 1000, seed = 1)
   png(file.path(figure_dir, paste0(c(Dh = "figS3a", VLF = "figS3b")[[trait]], ".png")), width = 2000, height = 1000, res = 200)
+  par(pty = "s")
   plot(res)
   dev.off()
   tibble(

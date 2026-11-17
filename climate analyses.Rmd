@@ -112,7 +112,7 @@ ggplot() +
   geom_point(data = xylem_stats, aes(x = MAT, y =  MAP), size = 0.05, alpha = 1) +
   theme_classic() +
   xlim(0, 30) +
-  theme(legend.position = "none") +
+  theme(aspect.ratio = 1, legend.position = "none") +
   xlab("Mean annual temperature (ºC)") +
   ylab("Mean annual precipitation (mm)") 
 
@@ -842,7 +842,7 @@ VLF_genus <- ggplot() +
 
 # --- Combine with patchwork ---
 combined_plot <- Dh_genus + VLF_genus + plot_layout(guides = "collect") + plot_annotation(tag_levels = 'a', tag_suffix = ')')
-combined_plot & theme(legend.position = "bottom", legend.box = "vertical", legend.spacing.y = unit(0, "pt"), legend.margin = margin(0, 0, 0, 0), legend.text = element_text(size = 7), legend.title = element_text(size = 7.5, face = "bold"))
+combined_plot & theme(aspect.ratio = 1, legend.position = "bottom", legend.box = "vertical", legend.spacing.y = unit(0, "pt"), legend.margin = margin(0, 0, 0, 0), legend.text = element_text(size = 7), legend.title = element_text(size = 7.5, face = "bold"))
 
 ggsave("figures/fig4.png", scale = 1, width = 15.92, height = 9.5, units = "cm", dpi = 330)
 
@@ -884,7 +884,7 @@ ggplot() +
   facet_wrap(~family) +
   xlab("Vessel density"~ (mm^-2*", log scale")) +
   ylab("Mean vessel area"~ (mm^2*", log scale")) +
-  theme(legend.position = "right",
+  theme(aspect.ratio = 1, legend.position = "right",
         legend.direction = "vertical",
         axis.title = element_text(size = 10),
         strip.text = element_text(size = 8)) +
@@ -929,7 +929,7 @@ ggplot(matched_long, aes(x = zanne, y = this_study)) +
   facet_wrap(~ variable, scales = "free") +
   labs(x = "Zanne et al. (2010), log scale", y = "This study, log scale") +
   theme_classic() +
-  theme(strip.background = element_rect(fill = "grey95"))
+  theme(aspect.ratio = 1, strip.background = element_rect(fill = "grey95"))
 
 ggsave("figures/zanne_matched_species.png", scale = 1, width = 15.92, height = 8, units = "cm", dpi = 330)
 ```
