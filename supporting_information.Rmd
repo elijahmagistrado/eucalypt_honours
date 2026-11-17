@@ -1,0 +1,268 @@
+---
+title: "Supporting Information"
+output:
+  pdf_document:
+    latex_engine: xelatex
+    fig_caption: true
+geometry: "a4paper, margin=2.2cm"
+fontsize: 10pt
+header-includes:
+  - \usepackage{caption}
+  - \captionsetup{font=small, labelfont=bf, labelsep=period, justification=raggedright, singlelinecheck=false}
+  - \renewcommand{\thetable}{S\arabic{table}}
+  - \renewcommand{\thefigure}{S\arabic{figure}}
+  - \AtBeginDocument{\renewcommand{\figurename}{Fig.}\renewcommand{\listfigurename}{Figures}\renewcommand{\listtablename}{Tables}}
+  - \usepackage{float}
+  - \floatplacement{figure}{H}
+---
+
+```{r setup, include = FALSE}
+# Figures and tables requested by the reviewers. Render climate analyses.Rmd
+# and model_checks.Rmd first; they write figures/ and tables/.
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE,
+                      fig.align = "center", out.width = "100%")
+library(tidyverse)
+library(kableExtra)
+
+read_table <- function(file) read.csv(file.path("tables", file))
+figure <- function(name) file.path("figures", paste0(name, ".pdf"))
+
+xylem_stats <- read.csv("data/xylem_stats.csv")
+sample_structure <- read_table("sample_structure_per_taxon.csv")
+model_parameters <- read_table("model_parameters.csv")
+model_comparison <- read_table("model_comparison.csv")
+random_ci <- read_table("random_effect_ci.csv")
+random_tests <- read_table("random_effect_tests.csv")
+genus_slope_table <- read_table("genus_slopes.csv")
+convergence <- read_table("model_convergence.csv")
+residual_tests <- read_table("residual_tests.csv")
+leave_one_out <- read_table("leave_one_genus_out.csv")
+sensitivity <- read_table("sensitivity_large_genera.csv")
+
+f1 <- function(x) formatC(x, format = "f", digits = 1)
+f2 <- function(x) formatC(x, format = "f", digits = 2)
+f3 <- function(x) formatC(x, format = "f", digits = 3)
+p_value <- function(p) case_when(is.na(p) ~ "", p < 0.001 ~ "< 0.001", TRUE ~ f3(p))
+ci <- function(low, high, format = f2) paste0(format(low), " to ", format(high))
+pct_doubling <- function(b) 100 * (2^b - 1)
+
+trait_label <- c(Dh = "D\\textsubscript{h}", VLF = "VLF")
+term_label <- c(
+  "(Intercept)" = "Intercept",
+  genus_mean_MAP = "$b_{across}$",
+  diff_from_genus_MAP = "$b_{within}$",
+  log_MAP = "$b_{pooled}$"
+)
+
+# Typographic minus sign for negative numbers in table cells
+minus <- function(x) gsub("(^|[ (])-(?=[0-9.])", "\\1$-$", x, perl = TRUE)
+
+si_table <- function(data, caption, align = NULL, ...) {
+  data |>
+    mutate(across(where(is.character), minus)) |>
+    kbl(format = "latex", booktabs = TRUE, escape = FALSE, linesep = "",
+        caption = caption, align = align, ...) |>
+    kable_styling(latex_options = "HOLD_position", font_size = 8)
+}
+
+# Italic genus, epithet and infraspecific epithet; roman rank and authority
+italic_name <- function(name) {
+  words <- strsplit(name, " ")[[1]]
+  italic <- seq_along(words) <= 2
+  rank <- which(words %in% c("subsp.", "var.", "f."))
+  if (length(rank) > 0) italic[rank[1] + 1] <- TRUE
+  words <- str_replace_all(words, "&", "\\\\&")
+  words[italic] <- paste0("\\textit{", words[italic], "}")
+  paste(words, collapse = " ")
+}
+```
+
+\listoffigures
+\listoftables
+
+\newpage
+
+```{r start-at-s2, results = "asis"}
+# Fig. S1 of the manuscript is not made by the code
+cat("\\setcounter{figure}{1}")
+```
+
+```{r fig-s2, fig.cap = "Mean vessel area and vessel density of the study taxa (points) and of Zanne et al. (2010) (hexagons), for families with $\\geq$ 10 taxa. Both axes are log scales."}
+knitr::include_graphics(figure("figS2"))
+```
+
+```{r fig-s3, fig.show = "hold", fig.cap = "DHARMa residual diagnostics of the mixed models for (a) D\\textsubscript{h} (top) and (b) VLF (bottom)."}
+knitr::include_graphics(c(figure("figS3a"), figure("figS3b")))
+```
+
+```{r fig-s4, fig.cap = "Mean vessel area and vessel density of the species in both this study and Zanne et al. (2010). Dashed line, 1:1. Both axes are log scales."}
+knitr::include_graphics(figure("zanne_matched_species"))
+```
+
+\newpage
+
+```{r table-s1}
+taxa_per_tree_count <- cut(sample_structure$trees, c(0, 1, 2, 3, 5, 10, Inf),
+                           labels = c("1", "2", "3", "4-5", "6-10", "> 10"))
+tree_distribution <- table(taxa_per_tree_count)
+tibble(
+  Quantity = c("Taxa", "Genera", "Families", "Trees (slides)", "Images",
+               "Trees per taxon, mean (median, range)", "Images per tree",
+               paste("Taxa with", names(tree_distribution),
+                     ifelse(names(tree_distribution) == "1", "tree", "trees"))),
+  Value = c(
+    nrow(xylem_stats), n_distinct(xylem_stats$genus), n_distinct(xylem_stats$family),
+    format(sum(sample_structure$trees), big.mark = ","),
+    format(sum(sample_structure$images), big.mark = ","),
+    sprintf("%.1f (%d, %d-%d)", mean(sample_structure$trees),
+            as.integer(median(sample_structure$trees)),
+            min(sample_structure$trees), max(sample_structure$trees)),
+    f2(sum(sample_structure$images) / sum(sample_structure$trees)),
+    as.vector(tree_distribution)
+  )
+) |>
+  si_table("Sample structure.", align = "lr")
+```
+
+```{r table-s2}
+model_parameters |>
+  filter(Effects == "fixed", !is.na(z)) |>
+  transmute(
+    Trait = trait_label[trait], Model = str_to_sentence(model),
+    Term = term_label[Parameter], Estimate = f3(Coefficient), SE = f3(SE),
+    `95\\% CI` = ci(CI_low, CI_high, f3), z = f2(z), P = p_value(p),
+    `\\% per MAP doubling (95\\% CI)` = ifelse(
+      Parameter == "(Intercept)", "",
+      paste0(f1(pct_doubling(Coefficient)), " (",
+             ci(pct_doubling(CI_low), pct_doubling(CI_high), f1), ")")
+    )
+  ) |>
+  si_table("Fixed effects of the mixed and pooled models (natural-log traits and MAP).",
+           align = "lllrrlrrl") |>
+  collapse_rows(columns = 1:2, latex_hline = "major", valign = "top")
+```
+
+```{r table-s3}
+model_comparison |>
+  transmute(
+    Trait = trait_label[trait], Model = str_to_sentence(model), n,
+    Parameters = parameters, `log-likelihood` = f2(logLik), AIC = f2(AIC),
+    `$\\Delta$AIC` = f2(delta_AIC), BIC = f2(BIC),
+    `Marginal R\\textsuperscript{2}` = f3(r2_marginal),
+    `Conditional R\\textsuperscript{2}` = ifelse(is.na(r2_conditional), "", f3(r2_conditional))
+  ) |>
+  si_table("Fit of the mixed and pooled models (maximum likelihood, same 480 taxa).",
+           align = "llrrrrrrrr") |>
+  collapse_rows(columns = 1, latex_hline = "major", valign = "top")
+```
+
+```{r table-s4}
+ci_label <- c(
+  "Std.Dev.(Intercept)|family" = "Family intercept (SD)",
+  "Std.Dev.(Intercept)|genus" = "Genus intercept (SD)",
+  "Std.Dev.diff_from_genus_MAP|genus" = "Genus slope (SD)",
+  "Cor.diff_from_genus_MAP.(Intercept)|genus" = "Genus intercept-slope correlation"
+)
+test_for <- c(
+  "Family intercept (SD)" = "Family random intercept",
+  "Genus intercept (SD)" = "Genus random intercept",
+  "Genus slope (SD)" = "Genus random slope (variance and correlation)"
+)
+random_ci |>
+  mutate(Term = ci_label[parameter], test = test_for[Term]) |>
+  left_join(random_tests, by = c("trait", "test")) |>
+  transmute(
+    Trait = trait_label[trait], Term, Estimate = f3(estimate),
+    `95\\% CI` = ci(conf.low, conf.high, f2),
+    `LRT $\\chi^2$ (df)` = ifelse(is.na(chisq), "", sprintf("%.1f (%d)", chisq, df)),
+    P = p_value(p)
+  ) |>
+  si_table("Random effects of the mixed models, with 95\\% Wald CIs and likelihood-ratio tests (LRT).",
+           align = "llrlrr") |>
+  collapse_rows(columns = 1, latex_hline = "major", valign = "top")
+```
+
+```{r table-s5}
+genus_slope_table |>
+  arrange(trait, desc(n)) |>
+  transmute(
+    Trait = trait_label[trait], Genus = paste0("\\textit{", genus, "}"),
+    Taxa = n, Slope = f2(slope), SE = f2(se),
+    `95\\% CI` = ci(conf.low, conf.high, f2)
+  ) |>
+  si_table("Within-genus slopes of the genera with $\\geq$ 10 taxa, with approximate 95\\% CIs.",
+           align = "llrrrl") |>
+  collapse_rows(columns = 1, latex_hline = "major", valign = "top")
+```
+
+```{r table-s6}
+checks <- convergence |> left_join(residual_tests, by = "trait")
+check_rows <- list(
+  "Optimiser message" = checks$optimiser_message,
+  "Hessian positive definite" = ifelse(checks$hessian_positive_definite, "Yes", "No"),
+  "Singular fit" = ifelse(checks$singular_fit, "Yes", "No"),
+  "DHARMa uniformity (Kolmogorov--Smirnov), P" = f3(checks$uniformity_KS_p),
+  "DHARMa dispersion, P" = f3(checks$dispersion_p),
+  "DHARMa outliers (bootstrap), P" = f2(checks$outliers_p),
+  "DHARMa quantiles against fitted values, P" = f3(checks$quantiles_vs_fitted_p),
+  "Normality of conditional residuals, P" = p_value(checks$normality_p),
+  "Heteroscedasticity, P" = f3(checks$heteroscedasticity_p)
+)
+tibble(Check = names(check_rows)) |>
+  bind_cols(as_tibble(do.call(rbind, check_rows),
+                      .name_repair = ~ unname(trait_label[checks$trait]))) |>
+  si_table("Convergence and residual tests of the mixed models.", align = "lrr")
+```
+
+```{r table-s7}
+leave_one_out |>
+  group_by(trait) |>
+  summarise(
+    `$b_{across}$ range` = ci(min(across), max(across), f3),
+    `$b_{within}$ range` = ci(min(within), max(within), f3),
+    `Largest change (SE)` = f2(max(abs(c(across_change_se, within_change_se)))),
+    `Genus with largest change` = paste0(
+      "\\textit{",
+      genus_removed[which.max(pmax(abs(across_change_se), abs(within_change_se)))],
+      "}"
+    ),
+    `Refits with $b_{across}$ P > 0.05` = sum(across_p > 0.05),
+    `Refits with $b_{within}$ P < 0.05` = sum(within_p < 0.05),
+    .groups = "drop"
+  ) |>
+  mutate(trait = trait_label[trait]) |>
+  rename(Trait = trait) |>
+  si_table("Mixed models refitted without one genus at a time. Changes are in units of the full-model SE.",
+           align = "llllrrr") |>
+  column_spec(2:7, width = "2cm")
+```
+
+```{r table-s8}
+sensitivity |>
+  transmute(
+    Trait = trait_label[trait],
+    Subset = str_replace_all(subset, "(Eucalyptus|Acacia)", "\\\\textit{\\1}"),
+    Taxa = n_taxa, Genera = n_genera,
+    `$b_{across}$ (SE)` = paste0(f3(across), " (", f3(across_se), ")"),
+    `P (across)` = p_value(across_p),
+    `$b_{within}$ (SE)` = paste0(f3(within), " (", f3(within_se), ")"),
+    `P (within)` = p_value(within_p)
+  ) |>
+  si_table("Mixed models refitted without \\textit{Eucalyptus}, \\textit{Acacia} or both.",
+           align = "llrrrrrr") |>
+  collapse_rows(columns = 1, latex_hline = "major", valign = "top")
+```
+
+\newpage
+
+```{r table-s9}
+xylem_stats |>
+  left_join(sample_structure, by = "scientificName") |>
+  arrange(family, scientificName) |>
+  transmute(Family = family, Taxon = map_chr(scientificName, italic_name),
+            Trees = trees, Images = n_images) |>
+  kbl(format = "latex", booktabs = TRUE, escape = FALSE, longtable = TRUE,
+      linesep = "", align = "llrr", caption = "Trees and images per taxon.") |>
+  kable_styling(latex_options = "repeat_header", font_size = 8) |>
+  column_spec(2, width = "9cm")
+```
