@@ -106,7 +106,9 @@ residual_tests <- imap_dfr(models, function(m, trait) {
     uniformity_KS_p = testUniformity(res, plot = FALSE)$p.value,
     dispersion_p = testDispersion(res, plot = FALSE)$p.value,
     outliers_p = testOutliers(res, type = "bootstrap", plot = FALSE)$p.value,
-    quantiles_vs_fitted_p = testQuantiles(res, plot = FALSE)$p.value
+    quantiles_vs_fitted_p = testQuantiles(res, plot = FALSE)$p.value,
+    normality_p = as.numeric(check_normality(m$full)),
+    heteroscedasticity_p = as.numeric(check_heteroscedasticity(m$full))
   )
 })
 write.csv(residual_tests, file.path(table_dir, "residual_tests.csv"), row.names = F)
