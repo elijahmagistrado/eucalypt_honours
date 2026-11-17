@@ -17,6 +17,12 @@ library(glmmTMB)
 library(easystats)
 library(ggeffects)
 library(scales)
+
+# Vector PDF with embedded fonts (Quartz on macOS, where cairo needs XQuartz; cairo elsewhere)
+pdf_device <- function(filename, width, height, ...) {
+  if (capabilities("aqua")) grDevices::quartz(type = "pdf", file = filename, width = width, height = height, ...)
+  else grDevices::cairo_pdf(filename, width = width, height = height, ...)
+}
 ```
 
 
@@ -116,7 +122,8 @@ ggplot() +
   xlab("Mean annual temperature (ºC)") +
   ylab("Mean annual precipitation (mm)") 
 
-ggsave("figures/fig3.png", scale = 1, width = 7.96, height = 7.96, units = "cm", dpi = 330)
+ggsave("figures/fig3.png", scale = 1, width = 8.4, height = 8.4, units = "cm", dpi = 600)
+ggsave("figures/fig3.pdf", scale = 1, width = 8.4, height = 8.4, units = "cm", device = pdf_device)
 ```
 
 
@@ -532,7 +539,8 @@ Dh_genus_facet
 ```{r}
 Dh_genus_facet / Dh_family_facet + plot_annotation(tag_levels = 'a', tag_suffix = ')')
 
-ggsave("figures/fig5.png", scale = 1, width = 15.92, height = 23, units = "cm", dpi = 330)
+ggsave("figures/fig5.png", scale = 1, width = 17.3, height = 23, units = "cm", dpi = 600)
+ggsave("figures/fig5.pdf", scale = 1, width = 17.3, height = 23, units = "cm", device = pdf_device)
 ```
 
 
@@ -739,7 +747,8 @@ VLF_genus_facet
 ```{r}
 VLF_genus_facet / VLF_family_facet  + plot_annotation(tag_levels = 'a', tag_suffix = ')')
 
-ggsave("figures/fig6.png", scale = 1, width = 15.92, height = 23, units = "cm", dpi = 330)
+ggsave("figures/fig6.png", scale = 1, width = 17.3, height = 23, units = "cm", dpi = 600)
+ggsave("figures/fig6.pdf", scale = 1, width = 17.3, height = 23, units = "cm", device = pdf_device)
 ```
 
 # Fig. 3 Overall plots
@@ -844,7 +853,8 @@ VLF_genus <- ggplot() +
 combined_plot <- Dh_genus + VLF_genus + plot_layout(guides = "collect") + plot_annotation(tag_levels = 'a', tag_suffix = ')')
 combined_plot & theme(aspect.ratio = 1, legend.position = "bottom", legend.box = "vertical", legend.spacing.y = unit(0, "pt"), legend.margin = margin(0, 0, 0, 0), legend.text = element_text(size = 7), legend.title = element_text(size = 7.5, face = "bold"))
 
-ggsave("figures/fig4.png", scale = 1, width = 15.92, height = 9.5, units = "cm", dpi = 330)
+ggsave("figures/fig4.png", scale = 1, width = 17.3, height = 10.7, units = "cm", dpi = 600)
+ggsave("figures/fig4.pdf", scale = 1, width = 17.3, height = 10.7, units = "cm", device = pdf_device)
 
 ```
 
@@ -891,7 +901,8 @@ ggplot() +
   labs(fill = "Count")
 
 
-ggsave("figures/figS2.png", scale = 1, width = 15.94, height = 14, units = "cm",dpi = 330)
+ggsave("figures/figS2.png", scale = 1, width = 17.3, height = 16.4, units = "cm", dpi = 600)
+ggsave("figures/figS2.pdf", scale = 1, width = 17.3, height = 16.4, units = "cm", device = pdf_device)
 ```
 
 ## Fig. S1b Direct comparison with Zanne et al. (2010) for shared species
@@ -931,5 +942,6 @@ ggplot(matched_long, aes(x = zanne, y = this_study)) +
   theme_classic() +
   theme(aspect.ratio = 1, strip.background = element_rect(fill = "grey95"))
 
-ggsave("figures/zanne_matched_species.png", scale = 1, width = 15.92, height = 8, units = "cm", dpi = 330)
+ggsave("figures/zanne_matched_species.png", scale = 1, width = 17.3, height = 9.5, units = "cm", dpi = 600)
+ggsave("figures/zanne_matched_species.pdf", scale = 1, width = 17.3, height = 9.5, units = "cm", device = pdf_device)
 ```

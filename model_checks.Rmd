@@ -21,6 +21,12 @@ library(glmmTMB)
 library(performance)
 library(DHARMa)
 
+# Vector PDF with embedded fonts (Quartz on macOS, where cairo needs XQuartz; cairo elsewhere)
+pdf_device <- function(filename, width, height, ...) {
+  if (capabilities("aqua")) grDevices::quartz(type = "pdf", file = filename, width = width, height = height, ...)
+  else grDevices::cairo_pdf(filename, width = width, height = height, ...)
+}
+
 figure_dir <- "figures"
 table_dir <- "tables"
 dir.create(figure_dir, showWarnings = FALSE)
@@ -86,7 +92,12 @@ convergence
 # effects, so the tests check the whole model, not only the residual term.
 residual_tests <- imap_dfr(models, function(m, trait) {
   res <- simulateResiduals(m$full, n = 1000, seed = 1)
-  png(file.path(figure_dir, paste0(c(Dh = "figS3a", VLF = "figS3b")[[trait]], ".png")), width = 2000, height = 1000, res = 200)
+  name <- file.path(figure_dir, c(Dh = "figS3a", VLF = "figS3b")[[trait]])
+  ragg::agg_png(paste0(name, ".png"), width = 17.3, height = 10.1, units = "cm", res = 600, pointsize = 9)
+  par(pty = "s")
+  plot(res)
+  dev.off()
+  pdf_device(paste0(name, ".pdf"), width = 17.3 / 2.54, height = 10.1 / 2.54, pointsize = 9)
   par(pty = "s")
   plot(res)
   dev.off()
