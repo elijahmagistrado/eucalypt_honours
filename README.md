@@ -1,6 +1,6 @@
 # Within- and across-genus scaling of vessel diameter reveals consistent hydraulic responses to rainfall
 
-Data and analysis code accompanying the manuscript by Elijah Magistrado, Isaac Towers, Jugo Ilic, Zoe Ball, and Daniel Falster, prepared for submission to *New Phytologist*.
+Data and analysis code accompanying the manuscript by Elijah Magistrado, Isaac Towers, Jugo Ilic, Zoe Ball, and Daniel Falster, submitted to *Annals of Botany*.
 
 ## Study overview
 
@@ -18,13 +18,15 @@ The historical slides are curated by the Forestry Corporation of New South Wales
 | Path | Description |
 |------------------------------------|------------------------------------|
 | [`climate analyses.Rmd`](climate%20analyses.Rmd) | Primary analysis: trait calculation, model fitting, model comparison, and manuscript figures. |
+| [`model_checks.Rmd`](model_checks.Rmd) | Model checks and sensitivity analyses requested by the reviewers (Supporting Information). |
+| [`supporting_information.Rmd`](supporting_information.Rmd) | Builds the Supporting Information PDF from the figures and tables. |
 | [`preprocessing.Rmd`](preprocessing.Rmd) | Upstream workflow for taxonomic alignment, GBIF filtering, WorldClim extraction, and assembly of vessel measurements. |
 | [`liu_comparison.Rmd`](liu_comparison.Rmd) | Supporting reanalysis of the Liu *et al.* (2019) dataset. |
 | [`QuPath scripts/`](QuPath%20scripts/) | Groovy scripts used to calibrate images and assist vessel-lumen segmentation in QuPath. |
 | [`data/`](data/) | Tracked measurement, climate-summary, taxonomic, and comparison datasets. |
 | [`eucalypt_honours.Rproj`](eucalypt_honours.Rproj) | RStudio project file. |
 
-Generated figures are written to `figures/`, which is not tracked.
+Generated figures (PNG and vector PDF), tables and the Supporting Information PDF are written to `figures/`, `tables/` and `supporting_information.pdf`, which are not tracked.
 
 ## Data files
 
@@ -85,7 +87,7 @@ Names were aligned to the Australian Plant Census and Australian Plant Name Inde
 
 Species-level climate values were derived from [GBIF](https://www.gbif.org/) occurrence data and [WorldClim 2.1](https://www.worldclim.org/data/worldclim21.html) historical bioclimatic rasters for 1970-2000 at 30 arc-second resolution. For the sampled species, records were restricted to Australia, year `>= 1900`, human observations, and coordinate uncertainty `<= 1,000 m`. Species with fewer than 10 retained occurrences were excluded. MAP and MAT were averaged across the retained records for each species.
 
-The multi-gigabyte occurrence downloads, intermediate Parquet files, and WorldClim rasters are not tracked. Their derived species-level summaries are tracked. The GBIF download DOI or download key is not recorded in the current repository and should be added to the manuscript and an archival release before publication.
+The multi-gigabyte occurrence downloads, intermediate Parquet files, and WorldClim rasters are not tracked. Their derived species-level summaries are tracked. The study-species occurrences come from GBIF download `0035920-260409193756587` (GBIF.org, 21 April 2026, <https://doi.org/10.15468/dl.88g9fd>), saved as `data/gbif_sample_occs.parquet`. The download used for `tracheophyte_climate_preferences.csv` is not yet recorded.
 
 ## Reproducing the results
 
@@ -99,7 +101,7 @@ The shortest reproducible route starts from the processed CSV files already in `
 
     ``` r
     install.packages(c(
-      "APCalign", "DHARMa", "easystats", "ggeffects", "glmmTMB",
+      "APCalign", "DHARMa", "easystats", "ggeffects", "glmmTMB", "kableExtra", "ragg",
       "patchwork", "rmarkdown", "scales", "terra", "tidyverse"
     ))
     ```
@@ -110,6 +112,7 @@ The shortest reproducible route starts from the processed CSV files already in `
     dir.create("figures", showWarnings = FALSE)
     rmarkdown::render("climate analyses.Rmd")
     rmarkdown::render("model_checks.Rmd")
+    rmarkdown::render("supporting_information.Rmd")
     ```
 
 The notebook writes `data/xylem_stats.csv`, fits the Dh and VLF genus-centered mixed models and the pooled comparison models, reports model summaries, performance measures and the Table 2 variance partition, and writes the manuscript figures to `figures/` and the tables requested by the reviewers to `tables/`. `model_checks.Rmd` then reads `data/xylem_stats.csv` and runs the model checks and sensitivity analyses for the Supporting Information.
@@ -133,7 +136,7 @@ Several download and export statements are intentionally commented, so upstream 
 
 ## Software environment
 
-The manuscript reports R 4.5.3, easystats 0.7.5, glmmTMB 1.1.14, and tidyverse 2.0.0. The workflows also load APCalign, ggeffects, patchwork, scales, and terra. This repository does not currently contain an `renv` lockfile, so versions other than those reported in the manuscript are not pinned.
+The manuscript reports R 4.5.3, easystats 0.7.5, glmmTMB 1.1.14, and tidyverse 2.0.0. The workflows also load APCalign, DHARMa, ggeffects, kableExtra, patchwork, ragg, scales, and terra. `supporting_information.Rmd` also needs a LaTeX installation (for example `tinytex::install_tinytex()`). This repository does not currently contain an `renv` lockfile, so versions other than those reported in the manuscript are not pinned.
 
 Image measurements were made with QuPath 0.6.0. The Groovy scripts alone do not recreate the full image-analysis environment because the source images, manual corrections, and `Vessel ID` pixel classifier are not included.
 
@@ -145,13 +148,13 @@ The data and code needed to inspect and rerun the primary statistical analysis a
 
 This is a live GitHub repository. For a stable publication record, cite a tagged release or a DOI-bearing archive once one is available. Until then, record the commit hash used for an analysis. Original wood-slide images and untracked third-party source files are outside this GitHub deposit; see the provenance notes above.
 
-This structure is intended to support the [New Phytologist data-sharing requirement](https://nph.onlinelibrary.wiley.com/hub/journal/14698137/about/author-guidelines), which asks that data, materials, and code integral to a paper be available for review, verification, and replication.
+This structure is intended to meet the [Annals of Botany data and materials policy](https://academic.oup.com/aob/pages/General_Instructions), which strongly encourages authors to make all data and software code on which the conclusions of the paper rely available to readers, and requires publicly available datasets to be cited with an identifier such as a DOI.
 
 ## Citation
 
 ### Manuscript
 
-Magistrado E, Towers I, Ilic J, Ball Z, Falster D. 2026. Within- and across-genus scaling of vessel diameter reveals consistent hydraulic responses to rainfall. Manuscript prepared for submission to *New Phytologist*.
+Magistrado E, Towers I, Ilic J, Ball Z, Falster D. 2026. Within- and across-genus scaling of vessel diameter reveals consistent hydraulic responses to rainfall. Manuscript submitted to *Annals of Botany*.
 
 Replace this provisional citation with the article DOI and final bibliographic details after publication.
 
