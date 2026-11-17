@@ -10,3 +10,9 @@ Mixed effects model test/demo.qmd
 Mixed effects model test/vessel_size_model.html
 Mixed effects model test/vessel_size_model.qmd
 figures/.DS_Store
+
+# Generated outputs (made again by the notebooks)
+/figures/
+/tables/
+/supporting_information.pdf
+*.html
