@@ -24,6 +24,7 @@ The historical slides are curated by the Forestry Corporation of New South Wales
 | [`liu_comparison.Rmd`](liu_comparison.Rmd) | Supporting reanalysis of the Liu *et al.* (2019) dataset. |
 | [`QuPath scripts/`](QuPath%20scripts/) | Groovy scripts used to calibrate images and assist vessel-lumen segmentation in QuPath. |
 | [`data/`](data/) | Tracked measurement, climate-summary, taxonomic, and comparison datasets. |
+| [`images/`](images/) | Micrograph for Fig. S1, which is not made by the code. |
 | [`eucalypt_honours.Rproj`](eucalypt_honours.Rproj) | RStudio project file. |
 
 Generated figures (PNG and vector PDF), tables and the Supporting Information PDF are written to `figures/`, `tables/` and `supporting_information.pdf`, which are not tracked.

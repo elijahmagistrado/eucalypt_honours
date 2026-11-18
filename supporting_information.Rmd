@@ -83,9 +83,9 @@ italic_name <- function(name) {
 
 \newpage
 
-```{r start-at-s2, results = "asis"}
-# Fig. S1 of the manuscript is not made by the code
-cat("\\setcounter{figure}{1}")
+```{r fig-s1, fig.cap = "Comparison of the full vessel area measurements (green lines) and part vessel measurements (blue lines) from the unmodified (left) and modified (right) images. Note the difference seen in the vessel in the top right of the images. The image is a sample of \\textit{Acacia falciformis} collected from New South Wales, Australia."}
+# Fig. S1 is a micrograph; it is not made by the code
+knitr::include_graphics("images/figS1.jpg")
 ```
 
 ```{r fig-s2, fig.cap = paste0("Mean vessel area and vessel density of the study taxa (points) in the families with $\\geq$ 10 taxa, compared with all ", n_zanne, " species of Zanne et al. (2010) (hexagons, the same in each panel; colour, number of species per hexagon). Both axes are log scales.")}
