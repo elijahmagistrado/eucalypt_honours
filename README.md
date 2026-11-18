@@ -31,32 +31,34 @@ Generated figures (PNG and vector PDF), tables and the Supporting Information PD
 
 ## Data files
 
+Each file name starts with its type: `raw_` for the original QuPath vessel measurement exports, `processed_` for files made from other data, and `reference_` for published datasets from other studies.
+
 ### Files used directly in the primary analysis
 
 | File | Rows | Role |
 |----------------------|----------------------------:|----------------------|
-| [`data/vessel_areas.csv`](data/vessel_areas.csv) | 150,303 | Combined, taxonomically aligned vessel and image-area measurements used to calculate Dh and VLF. |
-| [`data/climate_preferences.csv`](data/climate_preferences.csv) | 494 | Species-level MAP and mean annual temperature (MAT) summaries derived from occurrence records and WorldClim 2.1 (`n_obs` = retained records). |
-| [`data/tracheophyte_climate_preferences.csv`](data/tracheophyte_climate_preferences.csv) | 23,589 | Climate summaries for Australian native tracheophytes, used to show the climatic coverage of the study sample. |
+| [`data/processed_vessel_measurements.csv`](data/processed_vessel_measurements.csv) | 150,303 | Combined, taxonomically aligned vessel and image-area measurements used to calculate Dh and VLF. |
+| [`data/processed_species_climate_preferences.csv`](data/processed_species_climate_preferences.csv) | 494 | Species-level MAP and mean annual temperature (MAT) summaries derived from occurrence records and WorldClim 2.1 (`n_obs` = retained records). |
+| [`data/processed_tracheophyte_climate_preferences.csv`](data/processed_tracheophyte_climate_preferences.csv) | 23,589 | Climate summaries for Australian native tracheophytes, used to show the climatic coverage of the study sample. |
 
 ### Measurement and derived files
 
 | File | Description |
 |------------------------------------|------------------------------------|
-| [`data/vessel_measurements.csv`](data/vessel_measurements.csv) | QuPath measurement export from the earlier image-analysis phase. |
-| [`data/2026_measurements.csv`](data/2026_measurements.csv) | Additional QuPath measurements incorporated in the current analysis. |
-| [`data/xylem_stats.csv`](data/xylem_stats.csv) | Analysis-ready summary for the 480 study taxa (474 species plus infraspecific taxa), keyed by `scientificName`. Written by `climate analyses.Rmd` and used for all models and figures. |
-| [`data/apc_names.csv`](data/apc_names.csv) | Species names supplied to the Australian Plant Census alignment workflow. |
-| [`data/gbif_namematched.csv`](data/gbif_namematched.csv) | Output used to connect accepted plant names with GBIF names. |
-| [`data/native_sample_export.csv`](data/native_sample_export.csv) | List of sampled Australian native species. |
+| [`data/raw_vessel_measurements_2023.csv`](data/raw_vessel_measurements_2023.csv) | QuPath measurement export from the earlier image-analysis phase. |
+| [`data/raw_vessel_measurements_2026.csv`](data/raw_vessel_measurements_2026.csv) | Additional QuPath measurements incorporated in the current analysis. |
+| [`data/processed_species_xylem_stats.csv`](data/processed_species_xylem_stats.csv) | Analysis-ready summary for the 480 study taxa (474 species plus infraspecific taxa), keyed by `scientificName`. Written by `climate analyses.Rmd` and used for all models and figures. |
+| [`data/processed_apc_names.csv`](data/processed_apc_names.csv) | Species names supplied to the Australian Plant Census alignment workflow. |
+| [`data/processed_gbif_namematched.csv`](data/processed_gbif_namematched.csv) | Output used to connect accepted plant names with GBIF names. |
+| [`data/processed_native_species_list.csv`](data/processed_native_species_list.csv) | List of sampled Australian native species. |
 
 ### External comparison and plotting files
 
 | File | Description |
 |------------------------------------|------------------------------------|
-| [`data/Liu2019.csv`](data/Liu2019.csv) | Data used for the supporting reanalysis of Liu *et al.* (2019). |
-| [`data/zanne_data.csv`](data/zanne_data.csv) | Wood-anatomy data from Zanne *et al.* (2010), used to compare trait measurements. |
-| [`data/genus_facet_labels.csv`](data/genus_facet_labels.csv) | Genus labels used in exploratory or supporting figures. |
+| [`data/reference_liu2019.csv`](data/reference_liu2019.csv) | Data used for the supporting reanalysis of Liu *et al.* (2019). |
+| [`data/reference_zanne2010.csv`](data/reference_zanne2010.csv) | Wood-anatomy data from Zanne *et al.* (2010), used to compare trait measurements. |
+| [`data/processed_genus_facet_labels.csv`](data/processed_genus_facet_labels.csv) | Genus labels used in exploratory or supporting figures. |
 
 ### Key variables and units
 
@@ -88,7 +90,7 @@ Names were aligned to the Australian Plant Census and Australian Plant Name Inde
 
 Species-level climate values were derived from [GBIF](https://www.gbif.org/) occurrence data and [WorldClim 2.1](https://www.worldclim.org/data/worldclim21.html) historical bioclimatic rasters for 1970-2000 at 30 arc-second resolution. For the sampled species, records were restricted to Australia, year `>= 1900`, human observations, and coordinate uncertainty `<= 1,000 m`. Species with fewer than 10 retained occurrences were excluded. MAP and MAT were averaged across the retained records for each species.
 
-The multi-gigabyte occurrence downloads, intermediate Parquet files, and WorldClim rasters are not tracked. Their derived species-level summaries are tracked. The study-species occurrences come from GBIF download `0035920-260409193756587` (GBIF.org, 21 April 2026, <https://doi.org/10.15468/dl.88g9fd>), saved as `data/gbif_sample_occs.parquet`. The download used for `tracheophyte_climate_preferences.csv` is not yet recorded.
+The multi-gigabyte occurrence downloads, intermediate Parquet files, and WorldClim rasters are not tracked. Their derived species-level summaries are tracked. The study-species occurrences come from GBIF download `0035920-260409193756587` (GBIF.org, 21 April 2026, <https://doi.org/10.15468/dl.88g9fd>), saved as `data/gbif_sample_occs.parquet`. The download used for `processed_tracheophyte_climate_preferences.csv` is not yet recorded.
 
 ## Reproducing the results
 
@@ -116,7 +118,7 @@ The shortest reproducible route starts from the processed CSV files already in `
     rmarkdown::render("supporting_information.Rmd")
     ```
 
-The notebook writes `data/xylem_stats.csv`, fits the Dh and VLF genus-centered mixed models and the pooled comparison models, reports model summaries, performance measures and the Table 2 variance partition, and writes the manuscript figures to `figures/` and the tables requested by the reviewers to `tables/`. `model_checks.Rmd` then reads `data/xylem_stats.csv` and runs the model checks and sensitivity analyses for the Supporting Information.
+The notebook writes `data/processed_species_xylem_stats.csv`, fits the Dh and VLF genus-centered mixed models and the pooled comparison models, reports model summaries, performance measures and the Table 2 variance partition, and writes the manuscript figures to `figures/` and the tables requested by the reviewers to `tables/`. `model_checks.Rmd` then reads `data/processed_species_xylem_stats.csv` and runs the model checks and sensitivity analyses for the Supporting Information.
 
 To run the supporting Liu *et al.* comparison:
 

@@ -33,7 +33,7 @@ dir.create(figure_dir, showWarnings = FALSE)
 dir.create(table_dir, showWarnings = FALSE)
 
 # Written by climate analyses.Rmd
-xylem_stats <- read.csv("data/xylem_stats.csv", header = T)
+xylem_stats <- read.csv("data/processed_species_xylem_stats.csv", header = T)
 
 # Log-transform a trait and MAP, and split log MAP into the genus mean
 # (across-genus term) and the deviation from it (within-genus term), as in climate analyses.Rmd

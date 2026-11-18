@@ -17,8 +17,8 @@ library(scales)
 
 ## Importing and name-matching data
 ```{r}
-vessel_areas_2023 <- read.csv("data/vessel_measurements.csv", header = T) 
-vessel_areas_2026 <- read.csv("data/2026_measurements.csv", header = T) 
+vessel_areas_2023 <- read.csv("data/raw_vessel_measurements_2023.csv", header = T) 
+vessel_areas_2026 <- read.csv("data/raw_vessel_measurements_2026.csv", header = T) 
 
 vessel_areas <- bind_rows(vessel_areas_2023, vessel_areas_2026) |>  
   separate(Image, c("family_original", "other"), sep = " ", extra = "merge") |>
@@ -44,15 +44,15 @@ vessel_areas <- vessel_areas %>% left_join(apc_names %>% dplyr::select(original_
 # Updated taxonomy used for GBIF occurrence species name
 # write.csv(apc_names %>% filter(native_anywhere_in_aus == "native") %>% 
 #           dplyr::select(accepted_name) %>% 
-#           rename(scientificName = accepted_name), "data/apc_names.csv", row.names = F)
-# apc_names <- read.csv("data/apc_names.csv", header = T)
+#           rename(scientificName = accepted_name), "data/processed_apc_names.csv", row.names = F)
+# apc_names <- read.csv("data/processed_apc_names.csv", header = T)
 
-gbif_names <- read.csv("data/gbif_namematched.csv", header = T) |> filter(grepl("SPECIES|VARIETY", rank)) 
+gbif_names <- read.csv("data/processed_gbif_namematched.csv", header = T) |> filter(grepl("SPECIES|VARIETY", rank)) 
 
 vessel_areas <- vessel_areas |> 
   left_join(gbif_names %>% dplyr::select(species, verbatimScientificName, scientificName), by = c("accepted_name" = "verbatimScientificName"), multiple = "first") %>% rename(apc_name = accepted_name, gbif_name = species) |> filter(!state %in% c("kb", "PNG", "1"))
 
-write.csv(vessel_areas, "./data/vessel_areas.csv", row.names = F)
+write.csv(vessel_areas, "./data/processed_vessel_measurements.csv", row.names = F)
 ```
 
 
@@ -147,7 +147,7 @@ tracheophyte_climate_preferences <- tracheophyte_climate_preferences |> filter(s
 rm(gbif_filtered)
 gc()
 
-# write.csv(tracheophyte_climate_preferences, "data/tracheophyte_climate_preferences.csv", row.names = F)
+# write.csv(tracheophyte_climate_preferences, "data/processed_tracheophyte_climate_preferences.csv", row.names = F)
 ```
 
 
@@ -192,7 +192,7 @@ climate_preferences <- data_AU |>
   filter(n_obs >= 10)
 
 
-# write.csv(climate_preferences, "data/climate_preferences.csv", row.names = F)
+# write.csv(climate_preferences, "data/processed_species_climate_preferences.csv", row.names = F)
 
 ```
 

@@ -28,9 +28,9 @@ pdf_device <- function(filename, width, height, ...) {
 
 ## Loading all required data
 ```{r}
-vessel_areas <- read.csv("data/vessel_areas.csv", header = T)
-tracheophyte_climate_preferences <- read.csv("data/tracheophyte_climate_preferences.csv", header = T)
-climate_preferences <- read.csv("data/climate_preferences.csv", header = T)
+vessel_areas <- read.csv("data/processed_vessel_measurements.csv", header = T)
+tracheophyte_climate_preferences <- read.csv("data/processed_tracheophyte_climate_preferences.csv", header = T)
+climate_preferences <- read.csv("data/processed_species_climate_preferences.csv", header = T)
 ```
 
 
@@ -73,7 +73,7 @@ xylem_VLF <- vessel_areas |>
 xylem_stats <- xylem_Dh |> left_join(xylem_VLF |> dplyr::select(scientificName, mean_VLF), by = "scientificName") |> 
   dplyr::select(family, genus, species, scientificName, mean_Dh, mean_VLF, MAP, MAT, n_obs, n_vessels, n_images, n_vessels_per_image)
 
-write.csv(xylem_stats, "./data/xylem_stats.csv", row.names = F)
+write.csv(xylem_stats, "./data/processed_species_xylem_stats.csv", row.names = F)
 
 # Filtering families and genera to plot later
 selected_families <- xylem_stats |> group_by(family) |> summarise(n = n()) |> filter(n >= 10)
@@ -862,7 +862,7 @@ ggsave("figures/fig4.pdf", scale = 1, width = 17.3, height = 10.7, units = "cm",
 # Other
 ## Fig. S1 Zanne et al. (2010) comparison
 ```{r}
-zanne_data <- read.csv("data/zanne_data.csv", header = T)
+zanne_data <- read.csv("data/reference_zanne2010.csv", header = T)
 
 # Calculating same variables on our data (study taxa only, one value per image)
 taxon_vessel_metrics <- vessel_areas |>
