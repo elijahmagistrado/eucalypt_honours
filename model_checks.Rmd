@@ -101,6 +101,8 @@ residual_tests <- imap_dfr(models, function(m, trait) {
   par(pty = "s")
   plot(res)
   dev.off()
+  # The bootstrap outlier test uses R's random numbers; the seed of simulateResiduals() does not cover it
+  set.seed(1)
   tibble(
     trait = trait,
     uniformity_KS_p = testUniformity(res, plot = FALSE)$p.value,
