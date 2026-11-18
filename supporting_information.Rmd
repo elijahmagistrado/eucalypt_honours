@@ -28,6 +28,7 @@ read_table <- function(file) read.csv(file.path("tables", file))
 figure <- function(name) file.path("figures", paste0(name, ".pdf"))
 
 xylem_stats <- read.csv("data/xylem_stats.csv")
+n_zanne <- format(nrow(read.csv("data/zanne_data.csv")), big.mark = ",")
 sample_structure <- read_table("sample_structure_per_taxon.csv")
 model_parameters <- read_table("model_parameters.csv")
 model_comparison <- read_table("model_comparison.csv")
@@ -87,11 +88,11 @@ italic_name <- function(name) {
 cat("\\setcounter{figure}{1}")
 ```
 
-```{r fig-s2, fig.cap = "Mean vessel area and vessel density of the study taxa (points) and of Zanne et al. (2010) (hexagons), for families with $\\geq$ 10 taxa. Both axes are log scales."}
+```{r fig-s2, fig.cap = paste0("Mean vessel area and vessel density of the study taxa (points) in the families with $\\geq$ 10 taxa, compared with all ", n_zanne, " species of Zanne et al. (2010) (hexagons, the same in each panel; colour, number of species per hexagon). Both axes are log scales.")}
 knitr::include_graphics(figure("figS2"))
 ```
 
-```{r fig-s3, fig.show = "hold", fig.cap = "DHARMa residual diagnostics of the mixed models for (a) D\\textsubscript{h} (top) and (b) VLF (bottom)."}
+```{r fig-s3, fig.show = "hold", fig.cap = "DHARMa residual diagnostics of the mixed models for (a) D\\textsubscript{h} (top) and (b) VLF (bottom). The outlier test in the plots is the DHARMa default (binomial) test; Table S6 gives the bootstrap test."}
 knitr::include_graphics(c(figure("figS3a"), figure("figS3b")))
 ```
 
@@ -151,7 +152,7 @@ model_comparison |>
     `Marginal R\\textsuperscript{2}` = f3(r2_marginal),
     `Conditional R\\textsuperscript{2}` = ifelse(is.na(r2_conditional), "", f3(r2_conditional))
   ) |>
-  si_table("Fit of the mixed and pooled models (maximum likelihood, same 480 taxa).",
+  si_table("Fit of the mixed and pooled models (maximum likelihood, same 480 taxa). For the pooled models, the marginal R\\textsuperscript{2} is the ordinary R\\textsuperscript{2}.",
            align = "llrrrrrrrr") |>
   collapse_rows(columns = 1, latex_hline = "major", valign = "top")
 ```
@@ -177,8 +178,15 @@ random_ci |>
     `LRT $\\chi^2$ (df)` = ifelse(is.na(chisq), "", sprintf("%.1f (%d)", chisq, df)),
     P = p_value(p)
   ) |>
-  si_table("Random effects of the mixed models, with 95\\% Wald CIs and likelihood-ratio tests (LRT).",
-           align = "llrlrr") |>
+  si_table(paste(
+    "Random effects of the mixed models, with 95\\% Wald CIs and likelihood-ratio tests (LRT).",
+    "CIs of the SDs were calculated on the log-SD scale and back-transformed.",
+    "Reduced models: genus slope, the full model without the genus random slope and its correlation (df = 2);",
+    "genus intercept, the model with random intercepts only (family and genus) without the genus intercept;",
+    "family intercept, the full model without the family intercept.",
+    "P values of the variance terms are conservative because the null value is on the boundary of the parameter space."
+  ), align = "llrlrr",
+  caption.short = "Random effects of the mixed models, with 95\\% Wald CIs and likelihood-ratio tests (LRT).") |>
   collapse_rows(columns = 1, latex_hline = "major", valign = "top")
 ```
 
@@ -190,8 +198,12 @@ genus_slope_table |>
     Taxa = n, Slope = f2(slope), SE = f2(se),
     `95\\% CI` = ci(conf.low, conf.high, f2)
   ) |>
-  si_table("Within-genus slopes of the genera with $\\geq$ 10 taxa, with approximate 95\\% CIs.",
-           align = "llrrrl") |>
+  si_table(paste(
+    "Within-genus slopes of the genera with $\\geq$ 10 taxa (fixed within-genus slope plus the genus random slope),",
+    "with approximate 95\\% CIs. The SE combines the variance of the fixed slope and the conditional variance",
+    "of the genus random slope, and omits their covariance."
+  ), align = "llrrrl",
+  caption.short = "Within-genus slopes of the genera with $\\geq$ 10 taxa, with approximate 95\\% CIs.") |>
   collapse_rows(columns = 1, latex_hline = "major", valign = "top")
 ```
 
@@ -215,6 +227,14 @@ tibble(Check = names(check_rows)) |>
 ```
 
 ```{r table-s7}
+# Number of refits with P < 0.05; the genera on the minority side (which change the result) are named
+count_sig <- function(p, genus) {
+  sig <- p < 0.05
+  odd <- if (sum(sig) > length(p) / 2) !sig else sig
+  if (!any(odd)) return(as.character(sum(sig)))
+  paste0(sum(sig), " (", paste0("\\textit{", genus[odd], "}, P = ", f3(p[odd]), collapse = "; "), ")")
+}
+
 leave_one_out |>
   group_by(trait) |>
   summarise(
@@ -226,13 +246,14 @@ leave_one_out |>
       genus_removed[which.max(pmax(abs(across_change_se), abs(within_change_se)))],
       "}"
     ),
-    `Refits with $b_{across}$ P > 0.05` = sum(across_p > 0.05),
-    `Refits with $b_{within}$ P < 0.05` = sum(within_p < 0.05),
+    `Refits with $b_{across}$ P < 0.05` = count_sig(across_p, genus_removed),
+    `Refits with $b_{within}$ P < 0.05` = count_sig(within_p, genus_removed),
     .groups = "drop"
   ) |>
   mutate(trait = trait_label[trait]) |>
   rename(Trait = trait) |>
-  si_table("Mixed models refitted without one genus at a time. Changes are in units of the full-model SE.",
+  si_table(sprintf("Mixed models refitted without one genus at a time (%d refits for each trait). Changes are in units of the full-model SE. In brackets, the removed genus that changes the result at P = 0.05.",
+                   n_distinct(leave_one_out$genus_removed)),
            align = "llllrrr") |>
   column_spec(2:7, width = "2cm")
 ```
