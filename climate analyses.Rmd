@@ -929,12 +929,14 @@ matched_long <- bind_rows(
   matched_zanne |> transmute(species, variable = "Mean vessel area (A)", zanne = A_zanne, this_study = A_this_study),
   matched_zanne |> transmute(species, variable = "Vessel density (N)", zanne = N_zanne, this_study = N_this_study)
 )
-matched_labels <- matched_summary |> mutate(label = sprintf("n = %d, r = %.2f", n, r_log10))
+# Labels in the lower-right corner of each panel, at data positions (-Inf is NaN on a log scale)
+matched_labels <- matched_summary |> mutate(label = sprintf("n = %d, r = %.2f", n, r_log10)) |>
+  left_join(matched_long |> group_by(variable) |> summarise(x = max(zanne), y = min(this_study)), by = "variable")
 
 ggplot(matched_long, aes(x = zanne, y = this_study)) +
   geom_abline(slope = 1, intercept = 0, linetype = 2, colour = "grey50") +
   geom_point(size = 1, shape = 1) +
-  geom_text(data = matched_labels, aes(x = -Inf, y = Inf, label = label), hjust = -0.1, vjust = 1.5, size = 2.5, inherit.aes = FALSE) +
+  geom_text(data = matched_labels, aes(x = x, y = y, label = label), hjust = 1, vjust = 0, size = 2.5, inherit.aes = FALSE) +
   scale_x_log10() +
   scale_y_log10() +
   facet_wrap(~ variable, scales = "free") +
